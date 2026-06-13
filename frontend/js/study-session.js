@@ -76,6 +76,7 @@
             const selector = document.getElementById('course-selector');
             const selectedCourseKey = selector.value;
             const materialText = document.getElementById('study-material').value.trim();
+            const classContext = typeof getCourseContextForPrompt === 'function' ? getCourseContextForPrompt(selectedCourseKey) : '';
 
             if (!materialText) {
                 showNotification("Error", "Please paste or write study material first.", "error");
@@ -112,8 +113,8 @@
                     activeSession.questionsList = JSON.parse(JSON.stringify(courseRecallQuestions[selectedCourseKey] || []));
                 } else {
                     // Use the backend Gemini endpoint to generate custom cards.
-                    const systemInstruction = "You are StudentU, a helpful study coach. Break the given study materials into atomic concept cards. Return only a valid JSON array of objects, with no markdown code blocks. Each object must have keys: title (3-5 words max), difficulty (Beginner, Intermediate, or Advanced), feynman (simple explanation using the Feynman technique), analogy (real world analogy), mistake (common mistake), whyItMatters (one sentence connecting it to the bigger topic).";
-                    const prompt = `Break this material into atomic concept cards. Return JSON array: [{title, difficulty, feynman, analogy, mistake, whyItMatters}]. Material: ${materialText}`;
+                    const systemInstruction = "You are StudentU, a helpful study coach. Break the given study materials into atomic concept cards using the class syllabus, professor signals, current chapter, weak topics, and uploaded materials as priority context. Return only a valid JSON array of objects, with no markdown code blocks. Each object must have keys: title (3-5 words max), difficulty (Beginner, Intermediate, or Advanced), feynman (simple explanation using the Feynman technique), analogy (real world analogy), mistake (common mistake), whyItMatters (one sentence connecting it to the bigger topic).";
+                    const prompt = `Class context:\n${classContext || 'No class portfolio context available.'}\n\nBreak this material into atomic concept cards. Return JSON array: [{title, difficulty, feynman, analogy, mistake, whyItMatters}]. Material: ${materialText}`;
 
                     const responseText = await callGeminiAPI(prompt, systemInstruction, true);
                     let cleaned = responseText.trim();
@@ -135,7 +136,7 @@
                         }));
 
                         try {
-                            const questionPrompt = `Generate active recall checkpoint questions for these concept cards. Return a JSON array where each object has: cardIndexTrigger (number, between 0 and ${activeSession.cardsList.length - 1}), difficulty (EASY, MEDIUM, or HARD), question (string), options (array of 4 strings), correct (number, index of correct option 0-3), explanation (string). Concepts: ${JSON.stringify(activeSession.cardsList.map(c => ({ title: c.title, feynman: c.feynman })))}`;
+                            const questionPrompt = `Generate active recall checkpoint questions for these concept cards using the class context, syllabus priorities, professor comments, weak topics, and current chapter. Return a JSON array where each object has: cardIndexTrigger (number, between 0 and ${activeSession.cardsList.length - 1}), difficulty (EASY, MEDIUM, or HARD), question (string), options (array of 4 strings), correct (number, index of correct option 0-3), explanation (string).\n\nClass context:\n${classContext || 'No class portfolio context available.'}\n\nConcepts: ${JSON.stringify(activeSession.cardsList.map(c => ({ title: c.title, feynman: c.feynman })))}`;
                             const qResponse = await callGeminiAPI(questionPrompt, "You are a quiz generator. Return only a valid JSON array of multiple-choice questions.", true);
                             let qCleaned = qResponse.trim();
                             if (qCleaned.startsWith("```json")) qCleaned = qCleaned.substring(7);

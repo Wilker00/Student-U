@@ -514,9 +514,9 @@
 
                         <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
                             <h3 class="text-sm font-bold text-ink-400 mb-3">AI Backend</h3>
-                            <p class="text-xs text-ink-50 leading-relaxed">Live AI generation runs through the StudentU backend. API keys are configured in <span class="font-mono text-ink-300">backend/.env</span>, never in the browser.</p>
-                            <div class="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2">
-                                <p class="text-[10px] text-emerald-700 font-semibold">No client-side API key storage.</p>
+                            <p class="text-xs text-ink-50 leading-relaxed">Live AI generation runs through the StudentU backend. When backend AI is not configured, StudentU automatically falls back to offline simulation.</p>
+                            <div class="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2">
+                                <p class="text-[10px] text-amber-700 font-semibold">No browser API keys. Backend-only AI with safe fallback.</p>
                             </div>
                         </div>
                     </div>
@@ -689,76 +689,48 @@
 
         <!-- ===== PROFILE / CLASSES TAB ===== -->
         <section id="tab-profile" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
-            <div class="mb-8 reveal">
-                <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">My Classes</h1>
-                <p class="text-sm text-ink-50 mt-1">Manage your courses, upload materials, and track your learning portfolio.</p>
+            <div class="mb-8 reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">My Classes</h1>
+                    <p class="text-sm text-ink-50 mt-1">Build a living portfolio for each class: syllabus, notes, photos, professor comments, chapters, and progress.</p>
+                </div>
+                <button onclick="createClassPortfolio()" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 w-full sm:w-auto justify-center">
+                    <img src="assets/icons/plus.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
+                    Add Class
+                </button>
             </div>
 
-            <!-- Classes Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8 reveal reveal-d1">
-                <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 rounded-xl bg-accent-blue/10 flex items-center justify-center">
-                            <img src="assets/icons/light_at_the_end_of_tunnel.svg" alt="" class="asset-icon w-5 h-5">
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-bold text-ink-400">Neural Networks &amp; Backpropagation</h3>
-                            <div class="text-[11px] text-ink-50">CS 489 &middot; Dr. Chen &middot; 12 cards</div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 reveal reveal-d1">
+                <div class="lg:col-span-4 space-y-4">
+                    <div id="class-portfolio-list" class="space-y-3"></div>
+
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                        <h2 class="text-sm font-bold text-ink-400 mb-4">Add Material</h2>
+                        <div class="space-y-3">
+                            <select id="class-material-type" class="w-full bg-surface-100 border border-surface-300 rounded-xl px-3 py-2.5 text-xs text-ink-300 focus:outline-none">
+                                <option value="Syllabus">Syllabus</option>
+                                <option value="Lecture Notes">Lecture Notes</option>
+                                <option value="Photo Notes">Photo Notes</option>
+                                <option value="Professor Notes">Professor Notes</option>
+                                <option value="Professor Comment">Professor Comment</option>
+                                <option value="Assignment">Assignment</option>
+                                <option value="Exam Feedback">Exam Feedback</option>
+                            </select>
+                            <input id="class-material-title" type="text" placeholder="Title or topic" class="w-full bg-surface-100 border border-surface-300 rounded-xl px-3 py-2.5 text-xs text-ink-300 placeholder:text-ink-50/70 focus:outline-none">
+                            <textarea id="class-material-notes" rows="4" placeholder="Paste notes, professor comments, chapter hints, or key reminders..." class="w-full bg-surface-100 border border-surface-300 rounded-xl px-3 py-2.5 text-xs text-ink-300 placeholder:text-ink-50/70 resize-none focus:outline-none"></textarea>
+                            <label class="btn-outline rounded-xl px-3 py-2.5 text-xs font-medium flex items-center justify-center gap-2 cursor-pointer">
+                                <img src="assets/icons/upload.svg" alt="" class="asset-icon w-4 h-4">
+                                Attach File or Photo
+                                <input id="class-material-file" type="file" accept=".txt,.pdf,.doc,.docx,.ppt,.pptx,image/*" class="hidden">
+                            </label>
+                            <button onclick="addClassMaterial()" class="w-full btn-primary rounded-xl py-2.5 text-xs font-semibold">Save to Selected Class</button>
                         </div>
                     </div>
-                    <div class="progress-track mb-2"><div class="progress-fill bg-accent-blue" style="width:78%"></div></div>
-                    <div class="flex justify-between text-[11px] text-ink-50 mb-4">
-                        <span>78% retention</span><span>3 sessions</span>
-                    </div>
-                    <button onclick="switchTab('workspace'); document.getElementById('course-selector').value='neuro'; handleCourseChange();" class="w-full py-2 btn-primary rounded-xl text-xs font-medium">Start Session</button>
                 </div>
-                <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 rounded-xl bg-accent-teal/10 flex items-center justify-center">
-                            <img src="assets/icons/exam.svg" alt="" class="asset-icon w-5 h-5">
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-bold text-ink-400">Calculus III &mdash; Multivariable</h3>
-                            <div class="text-[11px] text-ink-50">MATH 321 &middot; Prof. Rodriguez &middot; 8 cards</div>
-                        </div>
-                    </div>
-                    <div class="progress-track mb-2"><div class="progress-fill bg-accent-teal" style="width:65%"></div></div>
-                    <div class="flex justify-between text-[11px] text-ink-50 mb-4">
-                        <span>65% retention</span><span>2 sessions</span>
-                    </div>
-                    <button onclick="switchTab('workspace'); document.getElementById('course-selector').value='calc'; handleCourseChange();" class="w-full py-2 btn-primary rounded-xl text-xs font-medium">Start Session</button>
-                </div>
-                <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 rounded-xl bg-accent-warm/10 flex items-center justify-center">
-                            <img src="assets/icons/diploma_1.svg" alt="" class="asset-icon w-5 h-5">
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-bold text-ink-400">History of Art &mdash; Renaissance</h3>
-                            <div class="text-[11px] text-ink-50">ART 210 &middot; Dr. Moreau &middot; 15 cards</div>
-                        </div>
-                    </div>
-                    <div class="progress-track mb-2"><div class="progress-fill bg-accent-warm" style="width:82%"></div></div>
-                    <div class="flex justify-between text-[11px] text-ink-50 mb-4">
-                        <span>82% retention</span><span>4 sessions</span>
-                    </div>
-                    <button onclick="switchTab('workspace'); document.getElementById('course-selector').value='hist'; handleCourseChange();" class="w-full py-2 btn-primary rounded-xl text-xs font-medium">Start Session</button>
-                </div>
-                <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 rounded-xl bg-accent-yellow/10 flex items-center justify-center">
-                            <img src="assets/icons/ratings.svg" alt="" class="asset-icon w-5 h-5">
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-bold text-ink-400">Macroeconomics &mdash; Fiscal Policy</h3>
-                            <div class="text-[11px] text-ink-50">ECON 202 &middot; Prof. Kim &middot; 10 cards</div>
-                        </div>
-                    </div>
-                    <div class="progress-track mb-2"><div class="progress-fill bg-accent-yellow" style="width:71%"></div></div>
-                    <div class="flex justify-between text-[11px] text-ink-50 mb-4">
-                        <span>71% retention</span><span>2 sessions</span>
-                    </div>
-                    <button onclick="switchTab('workspace'); document.getElementById('course-selector').value='macro'; handleCourseChange();" class="w-full py-2 btn-primary rounded-xl text-xs font-medium">Start Session</button>
+
+                <div class="lg:col-span-8 space-y-5">
+                    <div id="class-portfolio-detail" class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm min-h-[360px]"></div>
+                    <div id="class-context-panel" class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm"></div>
                 </div>
             </div>
 

@@ -1,4 +1,4 @@
-with open(r"c:\Users\simok38\.gemini\antigravity-ide\scratch\Student-U\index.html", "r", encoding="utf-8", errors="ignore") as f:
+with open(r"c:\Users\simok38\.gemini\antigravity-ide\scratch\Student-U\frontend\index.html", "r", encoding="utf-8", errors="ignore") as f:
     lines = f.readlines()
 
 print(f"Total lines: {len(lines)}")
@@ -8,8 +8,8 @@ for i, line in enumerate(lines):
         print(f"Line {i+1}: {line.rstrip()}")
 
 print("\n---")
-# Find where studentPoints or geminiApiKey appear
+# Find where core app state appears
 for i, line in enumerate(lines):
-    if 'studentPoints' in line or 'geminiApiKey' in line:
+    if 'studentPoints' in line or 'activeSession' in line:
         print(f"Line {i+1}: {line.rstrip()}")
         break

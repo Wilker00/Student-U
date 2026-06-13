@@ -15,20 +15,32 @@
             const target = document.getElementById('tab-' + tabName);
             if (target) {
                 target.classList.remove('hidden');
+                target.classList.remove('tab-enter');
+                void target.offsetWidth;
+                target.classList.add('tab-enter');
                 document.getElementById('main-scroll').scrollTop = 0;
                 setTimeout(() => {
                     target.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
                 }, 50);
             }
-            document.querySelectorAll('#main-nav button, #mobile-nav button').forEach(btn => {
-                btn.classList.remove('active-tab-mobile', 'text-ink-400');
-                btn.classList.add('text-ink-50');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                const isActive = btn.dataset.tab === tabName;
+                btn.classList.toggle('active-tab', isActive);
+                btn.classList.toggle('bg-white', isActive);
+                btn.classList.toggle('shadow-sm', isActive);
+                btn.classList.toggle('font-semibold', isActive);
+                btn.classList.toggle('text-ink-400', isActive);
+                btn.classList.toggle('text-ink-100', !isActive);
+                btn.classList.toggle('font-medium', !isActive);
             });
-            const navBtn = document.getElementById('nav-btn-' + tabName);
-            if (navBtn) {
-                navBtn.classList.add('active-tab-mobile', 'text-ink-400');
-                navBtn.classList.remove('text-ink-50');
-            }
+
+            document.querySelectorAll('#mobile-nav button').forEach(btn => {
+                const isActive = btn.dataset.tab === tabName || btn.id === 'nav-btn-' + tabName;
+                btn.classList.toggle('active-tab-mobile', isActive);
+                btn.classList.toggle('text-ink-400', isActive);
+                btn.classList.toggle('text-ink-50', !isActive);
+            });
         }
 
         function initRevealSections() {

@@ -5,3 +5,4 @@ backend/.env
 *.log
 dist/
 coverage/
+backend/data/*.json
