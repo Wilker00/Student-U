@@ -8,10 +8,42 @@
             macro: [{ question: "Expansionary fiscal policy involves:", options: ["Raising taxes and cutting spending", "Lowering interest rates", "Increasing government spending or cutting taxes", "Reducing money supply"], correct: 2, difficulty: "MEDIUM", explanation: "Expansionary fiscal policy stimulates economic activity by increasing government spending and/or reducing taxes.", concept_id: "m1" }]
         };
 
+        let quizQuestionStartedAt = Date.now();
+
+        function getCardForQuestion(question) {
+            if (!Array.isArray(activeCards)) return null;
+            return activeCards.find(card => card.id === question.concept_id || card.id === question.cardId) || activeCards[question.cardIndexTrigger] || null;
+        }
+
+        function applyDifficultyCalibration(questions) {
+            if (typeof calibrateDifficulty !== 'function' || typeof getPerformanceByDifficulty !== 'function') return questions;
+            const history = typeof getPerformanceHistory === 'function' ? getPerformanceHistory() : [];
+            const velocity = typeof calculatePerformanceVelocity === 'function' ? calculatePerformanceVelocity(history) : null;
+            const calibration = calibrateDifficulty(getPerformanceByDifficulty(), velocity);
+            const primary = calibration.primaryDifficulty || calibration.difficulty || 'MEDIUM';
+            const ordered = [...questions].sort((a, b) => {
+                const aScore = a.difficulty === primary ? 0 : 1;
+                const bScore = b.difficulty === primary ? 0 : 1;
+                return aScore - bScore;
+            });
+            return ordered;
+        }
+
+        function filterCoherentQuestions(questions) {
+            if (typeof validateQuestionCoherence !== 'function') return questions;
+            const filtered = questions.filter(question => {
+                const card = getCardForQuestion(question);
+                if (!card) return true;
+                return validateQuestionCoherence(card, question).isCoherent;
+            });
+            return filtered.length > 0 ? filtered : questions;
+        }
+
         function generateAdaptiveQuiz() {
             if (!checkUsageLimit('quiz')) return;
             const key = document.getElementById('course-selector').value;
-            currentQuizData = quizDecks[key] || quizDecks.neuro;
+            const baseDeck = activeCards && activeCards.length ? generateCustomRecallQuestions(activeCards) : (quizDecks[key] || quizDecks.neuro);
+            currentQuizData = applyDifficultyCalibration(filterCoherentQuestions(baseDeck));
             currentQuizIndex = 0;
             document.getElementById('quiz-area').classList.remove('hidden');
             document.getElementById('study-desk-setup').scrollIntoView({ behavior: 'smooth' });
@@ -27,6 +59,7 @@
                 return;
             }
             const q = currentQuizData[currentQuizIndex];
+            quizQuestionStartedAt = Date.now();
             document.getElementById('quiz-question-text').textContent = q.question;
             const opts = document.getElementById('quiz-options');
             opts.innerHTML = '';
@@ -50,7 +83,7 @@
         function submitQuizAnswer(selectedIdx) {
             const q = currentQuizData[currentQuizIndex];
             const isCorrect = selectedIdx === q.correct;
-            const duration = '0.0';
+            const duration = Math.max(1, Math.round((Date.now() - quizQuestionStartedAt) / 1000));
             if (isCorrect) { studentPoints += 10; updatePointsDisplay(); showNotification('Correct! +10 XP', q.explanation, 'success'); }
             else { showNotification('Incorrect', `Correct answer: ${q.options[q.correct]}. ${q.explanation}`, 'error'); }
             const fb = document.getElementById('quiz-feedback');
@@ -70,8 +103,22 @@
                 correct_answer: q.correct,
                 is_correct: isCorrect,
                 difficulty: q.difficulty || "MEDIUM",
-                time_taken_seconds: parseFloat(duration)
+                time_taken_seconds: duration
             });
+
+            if (typeof savePerformanceRecord === 'function') {
+                savePerformanceRecord({
+                    courseKey: document.getElementById('course-selector').value,
+                    correctAnswers: isCorrect ? 1 : 0,
+                    missedAnswers: isCorrect ? 0 : 1,
+                    quizResults: [{
+                        difficulty: q.difficulty || 'MEDIUM',
+                        isCorrect,
+                        conceptId: q.concept_id || q.cardId || 'general'
+                    }],
+                    duration
+                });
+            }
 
             document.getElementById('quiz-feedback').classList.remove('hidden');
         }

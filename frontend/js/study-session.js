@@ -70,6 +70,60 @@
         let currentBreakSeconds = 0;
         let currentRecallQuestion = null;
 
+        function orderCardsForLearning(cards) {
+            if (typeof buildDependencyGraph !== 'function') return cards;
+            const result = buildDependencyGraph(cards);
+            if (!result.sortedCards || result.sortedCards.length !== cards.length) return cards;
+            return result.sortedCards;
+        }
+
+        function validateRecallQuestionsForCards(questions, cards) {
+            if (!Array.isArray(questions)) return [];
+            if (typeof validateQuestionCoherence !== 'function') return questions;
+            return questions.filter(question => {
+                const card = cards[question.cardIndexTrigger] || cards.find(item => item.id === question.cardId);
+                if (!card) return false;
+                return validateQuestionCoherence(card, question).isCoherent;
+            });
+        }
+
+        function getReviewHistoryForCard(cardId) {
+            try {
+                return JSON.parse(localStorage.getItem(`studentu_review_history_${cardId}`) || '[]');
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function saveReviewHistoryForCard(card, performance) {
+            const history = getReviewHistoryForCard(card.id);
+            history.push({
+                correct: performance === 'learned',
+                performance,
+                difficulty: card.difficulty,
+                date: new Date().toISOString()
+            });
+            localStorage.setItem(`studentu_review_history_${card.id}`, JSON.stringify(history.slice(-12)));
+        }
+
+        function inspectCurrentComprehensionGap() {
+            if (typeof findComprehensionGaps !== 'function') return null;
+            const card = activeCards[currentCardIndex];
+            if (!card) return null;
+            const key = getActiveCardKey();
+            const highlightedHTML = savedCardHighlights[key];
+            if (!highlightedHTML) return null;
+            const gap = findComprehensionGaps(card.id, highlightedHTML, card.feynman);
+            if (gap && (gap.gapSeverity === 'critical' || gap.gapSeverity === 'high')) {
+                activeSession.comprehensionGaps = activeSession.comprehensionGaps || [];
+                if (!activeSession.comprehensionGaps.some(item => item.cardId === card.id)) {
+                    activeSession.comprehensionGaps.push(gap);
+                    showNotification('Review Tip', 'One part of this concept may need another pass.', 'info');
+                }
+            }
+            return gap;
+        }
+
         async function startStudySession() {
             if (!checkUsageLimit('session')) return;
 
@@ -109,10 +163,10 @@
 
             try {
                 if (isPreset) {
-                    activeSession.cardsList = JSON.parse(JSON.stringify(courseCardDecks[selectedCourseKey]));
-                    activeSession.questionsList = JSON.parse(JSON.stringify(courseRecallQuestions[selectedCourseKey] || []));
+                    activeSession.cardsList = orderCardsForLearning(JSON.parse(JSON.stringify(courseCardDecks[selectedCourseKey])));
+                    activeSession.questionsList = generateCustomRecallQuestions(activeSession.cardsList);
                 } else {
-                    // Use the backend Gemini endpoint to generate custom cards.
+                    // Use the study generation service to generate custom cards.
                     const systemInstruction = "You are StudentU, a helpful study coach. Break the given study materials into atomic concept cards using the class syllabus, professor signals, current chapter, weak topics, and uploaded materials as priority context. Return only a valid JSON array of objects, with no markdown code blocks. Each object must have keys: title (3-5 words max), difficulty (Beginner, Intermediate, or Advanced), feynman (simple explanation using the Feynman technique), analogy (real world analogy), mistake (common mistake), whyItMatters (one sentence connecting it to the bigger topic).";
                     const prompt = `Class context:\n${classContext || 'No class portfolio context available.'}\n\nBreak this material into atomic concept cards. Return JSON array: [{title, difficulty, feynman, analogy, mistake, whyItMatters}]. Material: ${materialText}`;
 
@@ -125,7 +179,7 @@
 
                     const cardsArray = JSON.parse(cleaned);
                     if (Array.isArray(cardsArray) && cardsArray.length > 0) {
-                        activeSession.cardsList = cardsArray.map((c, index) => ({
+                        activeSession.cardsList = orderCardsForLearning(cardsArray.map((c, index) => ({
                             id: `gemini_card_${Date.now()}_${index}`,
                             title: c.title || `Concept Block ${index + 1}`,
                             difficulty: c.difficulty || "Intermediate",
@@ -133,7 +187,7 @@
                             analogy: c.analogy || "Analogy here.",
                             mistake: c.mistake || "Mistake here.",
                             whyItMatters: c.whyItMatters || "Why it matters here."
-                        }));
+                        })));
 
                         try {
                             const questionPrompt = `Generate active recall checkpoint questions for these concept cards using the class context, syllabus priorities, professor comments, weak topics, and current chapter. Return a JSON array where each object has: cardIndexTrigger (number, between 0 and ${activeSession.cardsList.length - 1}), difficulty (EASY, MEDIUM, or HARD), question (string), options (array of 4 strings), correct (number, index of correct option 0-3), explanation (string).\n\nClass context:\n${classContext || 'No class portfolio context available.'}\n\nConcepts: ${JSON.stringify(activeSession.cardsList.map(c => ({ title: c.title, feynman: c.feynman })))}`;
@@ -145,8 +199,9 @@
                             qCleaned = qCleaned.trim();
 
                             const questionsArray = JSON.parse(qCleaned);
-                            if (Array.isArray(questionsArray)) {
-                                activeSession.questionsList = questionsArray;
+                            const coherentQuestions = validateRecallQuestionsForCards(questionsArray, activeSession.cardsList);
+                            if (coherentQuestions.length > 0) {
+                                activeSession.questionsList = coherentQuestions;
                             } else {
                                 activeSession.questionsList = generateCustomRecallQuestions(activeSession.cardsList);
                             }
@@ -158,11 +213,11 @@
                         throw new Error("Invalid array format from Gemini");
                     }
                 } else {
-                    activeSession.cardsList = generateCustomCardsFromText(materialText);
+                    activeSession.cardsList = orderCardsForLearning(generateCustomCardsFromText(materialText));
                     activeSession.questionsList = generateCustomRecallQuestions(activeSession.cardsList);
                 }
 
-                // Register concepts in the database
+                // Register concepts for saved progress.
                 for (const card of activeSession.cardsList) {
                     await StudentUSync.saveConcept({
                         id: card.id,
@@ -215,10 +270,10 @@
                 showNotification("Session Started", "Lesson Breakdown generated successfully!", "success");
             } catch (error) {
                 console.error("Error generating study session:", error);
-                showNotification("AI Failed", "Could not generate session using Gemini API. Using offline simulation.", "warning");
+                showNotification("Study Guide Ready", "StudentU built a study guide from your saved class materials.", "info");
 
                 // Fallback to local deconstruction
-                activeSession.cardsList = generateCustomCardsFromText(materialText);
+                activeSession.cardsList = orderCardsForLearning(generateCustomCardsFromText(materialText));
                 activeSession.questionsList = generateCustomRecallQuestions(activeSession.cardsList);
 
                 for (const card of activeSession.cardsList) {
@@ -478,6 +533,7 @@
         }
 
         function nextCard() {
+            inspectCurrentComprehensionGap();
             const triggerQuestion = activeQuestions.find(q => q.cardIndexTrigger === currentCardIndex);
 
             if (triggerQuestion && cardStates[currentCardIndex] === 'neutral') {
@@ -759,7 +815,7 @@
                     last_active: new Date().toISOString()
                 });
 
-                // Update concept in database
+                // Update concept progress.
                 StudentUSync.saveConcept({
                     id: activeCards[currentCardIndex].id,
                     course_id: activeSession ? activeSession.courseKey : 'neuro',
@@ -784,7 +840,7 @@
                 cardStates[currentCardIndex] = 'missed';
                 autoHighlightCardRed(currentCardIndex);
 
-                // Update concept in database
+                // Update concept progress.
                 StudentUSync.saveConcept({
                     id: activeCards[currentCardIndex].id,
                     course_id: activeSession ? activeSession.courseKey : 'neuro',
@@ -988,6 +1044,19 @@
             const totalCount = activeCards.length;
             const solidCount = cardStates.filter(s => s === 'learned').length;
             const missedCount = cardStates.filter(s => s === 'missed').length;
+            const durationSecs = Math.round((Date.now() - activeSession.startTime) / 1000);
+            const performanceHistory = typeof savePerformanceRecord === 'function'
+                ? savePerformanceRecord({
+                    courseKey: activeSession.courseKey,
+                    correctAnswers: solidCount,
+                    missedAnswers: missedCount,
+                    cardStates,
+                    duration: durationSecs
+                })
+                : [];
+            const velocity = typeof calculatePerformanceVelocity === 'function'
+                ? calculatePerformanceVelocity(performanceHistory)
+                : { trend: 'insufficient_data' };
 
             const coveredEl = document.getElementById('summary-covered-count');
             const solidEl = document.getElementById('summary-solid-count') || document.getElementById('summary-learned-count');
@@ -1011,6 +1080,11 @@
             } else {
                 motivation = "Great start! Don't worry about the mistakes&mdash;spaced reviews are designed to build memory half-life precisely here. Strong";
             }
+            if (velocity.trend === 'improving_fast' || velocity.trend === 'improving_slowly') {
+                motivation += " Your recent sessions are trending upward.";
+            } else if (velocity.trend === 'declining_fast' || velocity.trend === 'declining_slowly') {
+                motivation += " StudentU will lower the next round's difficulty and reinforce the basics.";
+            }
             const motivationEl = document.getElementById('summary-motivation-msg');
             if (motivationEl) motivationEl.innerText = motivation;
 
@@ -1032,23 +1106,25 @@
 
                 activeCards.forEach((card, idx) => {
                     const state = cardStates[idx];
-                    let intervalDays = 3;
-                    let recommendation = "Review in 3 days (Optimal spacing)";
+                    const reviewData = typeof calculateOptimalReviewDate === 'function'
+                        ? calculateOptimalReviewDate(card, state, getReviewHistoryForCard(card.id))
+                        : null;
+                    let intervalDays = reviewData ? reviewData.interval : 3;
+                    let recommendation = `Review in ${intervalDays} days`;
                     let badgeColor = "bg-amber-100 text-amber-700 border-amber-200";
 
                     if (state === 'learned') {
-                        intervalDays = 7;
-                        recommendation = "Review in 7 days (Memory half-life is high)";
+                        recommendation = `Review in ${intervalDays} days (memory is strengthening)`;
                         badgeColor = "bg-emerald-100 text-emerald-700 border-emerald-200";
                     } else if (state === 'missed') {
-                        intervalDays = 1;
-                        recommendation = "Review tomorrow (Reinforce immediately)";
+                        recommendation = intervalDays <= 1 ? "Review tomorrow (reinforce immediately)" : `Review in ${intervalDays} days`;
                         badgeColor = "bg-rose-100 text-rose-700 border-rose-200";
                     }
 
-                    const reviewDate = new Date();
-                    reviewDate.setDate(reviewDate.getDate() + intervalDays);
+                    const reviewDate = reviewData ? reviewData.reviewDate : new Date();
+                    if (!reviewData) reviewDate.setDate(reviewDate.getDate() + intervalDays);
                     const dateString = reviewDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    saveReviewHistoryForCard(card, state);
 
                     const item = document.createElement('div');
                     item.className = "flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-surface-200 last:border-0";
@@ -1065,8 +1141,16 @@
                 });
             }
 
+            const missedIds = activeCards
+                .map((card, idx) => cardStates[idx] === 'missed' ? card.id : null)
+                .filter(Boolean);
+            const weakClusters = typeof clusterWeakSpots === 'function' ? clusterWeakSpots(missedIds, activeCards) : [];
+            if (weakClusters.length > 0) {
+                const primaryCluster = weakClusters[0];
+                showNotification('Focused Practice Ready', `Next drill will target ${primaryCluster.focusArea}.`, 'info');
+            }
+
             // Sync session stats to DB
-            const durationSecs = Math.round((Date.now() - activeSession.startTime) / 1000);
             const passedCheckpoints = cardStates.filter(s => s === 'learned').length;
             const failedCheckpoints = cardStates.filter(s => s === 'missed').length;
 
@@ -1169,5 +1253,5 @@
         }
 
         function openVerificationModal() {
-            showNotification('Student Verification', 'The .edu verification modal is planned for the auth module. For now, continue in demo mode.', 'info');
+            showNotification('Student Verification', 'Student verification is coming soon. You can keep studying for now.', 'info');
         }

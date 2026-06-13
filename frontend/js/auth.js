@@ -1,4 +1,4 @@
-        function signInWithGoogle() { showNotification('Sign In', 'Google sign-in will connect through backend-managed auth.', 'info'); }
+        function signInWithGoogle() { showNotification('Sign In', 'Account sign-in is coming soon. You can keep studying for now.', 'info'); }
 
         function signOut() {
             currentUser = null;
@@ -9,12 +9,12 @@
 
         function enableStudentUDevMode() {
             localStorage.removeItem('studentu_dev_mode');
-            showNotification('Developer Mode', 'Developer settings moved to backend/.env.', 'info');
+            showNotification('Settings', 'There is nothing to change here right now.', 'info');
         }
 
         function disableStudentUDevMode() {
             localStorage.removeItem('studentu_dev_mode');
-            showNotification('Developer Mode', 'Developer settings stay off the frontend.', 'info');
+            showNotification('Settings', 'There is nothing to change here right now.', 'info');
         }
 
         async function callGeminiAPI(prompt, systemInstruction = '', jsonMode = false) {
@@ -24,12 +24,12 @@
                 body: JSON.stringify({ prompt, systemInstruction, jsonMode })
             });
             if (!res.ok) {
-                let message = `Backend Gemini error: ${res.status}`;
+                let message = 'Study guide generation is temporarily unavailable.';
                 try {
                     const errorBody = await res.json();
                     if (errorBody.error) message = errorBody.error;
                 } catch (error) {
-                    // Keep the status-based message when the backend returns non-JSON.
+                    // Keep the status-based message when the service returns non-JSON.
                 }
                 throw new Error(message);
             }

@@ -29,7 +29,7 @@
         function closeUpgradeModal() { document.getElementById('upgrade-modal').classList.add('hidden'); }
 
         function simulateStripeCheckout() {
-            showNotification('Processing...', 'Connecting to payment gateway.', 'info');
+            showNotification('Processing...', 'Opening secure checkout.', 'info');
             setTimeout(() => {
                 localStorage.setItem('studentu_tier', 'premium');
                 closeUpgradeModal();

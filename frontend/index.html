@@ -513,10 +513,10 @@
                         </div>
 
                         <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
-                            <h3 class="text-sm font-bold text-ink-400 mb-3">AI Backend</h3>
-                            <p class="text-xs text-ink-50 leading-relaxed">Live AI generation runs through the StudentU backend. When backend AI is not configured, StudentU automatically falls back to offline simulation.</p>
-                            <div class="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2">
-                                <p class="text-[10px] text-amber-700 font-semibold">No browser API keys. Backend-only AI with safe fallback.</p>
+                            <h3 class="text-sm font-bold text-ink-400 mb-3">Study Engine</h3>
+                            <p class="text-xs text-ink-50 leading-relaxed">StudentU uses your class portfolio, uploaded materials, and recent practice history to shape every study session.</p>
+                            <div class="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2">
+                                <p class="text-[10px] text-emerald-700 font-semibold">Your study guide stays available even when live generation is unavailable.</p>
                             </div>
                         </div>
                     </div>
@@ -938,8 +938,8 @@
             </div>
             <div class="space-y-3 mb-6">
                 <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Unlimited study sessions</span></div>
-                <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Live Gemini AI card generation</span></div>
-                <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Full Firestore sync across devices</span></div>
+                <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Unlimited AI study card generation</span></div>
+                <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Saved progress across devices</span></div>
                 <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Advanced forgetting curve analytics</span></div>
             </div>
             <button onclick="simulateStripeCheckout()" class="w-full py-3.5 btn-primary rounded-xl text-sm font-semibold">Pay $10.00 &amp; Upgrade</button>
@@ -949,6 +949,7 @@
 
     <!-- ===== GRAIN OVERLAY ===== -->
     <div class="grain-overlay"></div>
+    <script src="js/algorithms.js"></script>
     <script src="js/app.js"></script>
     <script src="js/notifications.js"></script>
     <script src="js/usage.js"></script>

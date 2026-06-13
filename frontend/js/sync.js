@@ -1,4 +1,4 @@
-        // ---- STUDENTSYNC: Firebase sync bridge (graceful offline fallback) ----
+        // ---- STUDENTSYNC: saved progress bridge ----
         const StudentUSync = {
             _db: null,
             _userId: null,
@@ -36,7 +36,7 @@
         };
 
 
-        // Compatibility aliases used by the current prototype flows.
+        // Compatibility aliases used by current study flows.
         StudentUSync.saveStudySession = StudentUSync.saveSession;
         StudentUSync.saveUser = async function saveUser(user) {
             if (!this._db || !this._userId) return;

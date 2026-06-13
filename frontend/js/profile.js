@@ -171,7 +171,7 @@ async function addClassMaterial() {
       body: JSON.stringify(material),
     });
   } catch (error) {
-    // Static prototype fallback: local portfolio state is still saved.
+    // Local portfolio state is still saved when the network is unavailable.
   }
 
   showNotification('Material Saved', `${material.type} added to ${activeClass.title}.`, 'success');
@@ -317,14 +317,14 @@ function startClassContextSession(courseId) {
   if (material) {
     material.value = buildClassContext(course.id);
   }
-  showNotification('Class Context Loaded', `${course.title} context is ready in Study Desk.`, 'success');
+  showNotification('Class Loaded', `${course.title} is ready in Study Desk.`, 'success');
 }
 
 function copyClassContextPacket() {
   const output = document.getElementById('class-context-output');
   if (!output) return;
   navigator.clipboard?.writeText(output.innerText);
-  showNotification('Context Copied', 'Class context packet copied.', 'success');
+  showNotification('Study Notes Copied', 'Class study notes copied.', 'success');
 }
 
 function updateCourseSelectorFromPortfolios() {
