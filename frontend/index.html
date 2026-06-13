@@ -1,0 +1,1022 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentU - Stop rereading. Start remembering.</title>
+    <meta name="description"
+        content="StudentU turns your class notes into clear explanations, practice quizzes, and a personalized study plan powered by AI.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        surface: {
+                            50: '#FFFFFF',
+                            100: '#F7F7F7',
+                            200: '#EBEBEB',
+                            300: '#DCDCDC',
+                            400: '#ABABAB',
+                        },
+                        ink: {
+                            50: '#888888',
+                            100: '#666666',
+                            200: '#444444',
+                            300: '#2A2A2A',
+                            400: '#1A1A1A',
+                            500: '#0D0D0D',
+                        },
+                        accent: {
+                            red: '#E53935',
+                            blue: '#1E88E5',
+                            yellow: '#FDD835',
+                            warm: '#C4704A',
+                            muted: '#8D6E63',
+                            pink: '#F03893',
+                            cyan: '#29C5F6',
+                            orange: '#FF8C3A',
+                            teal: '#1B8B77',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body class="h-full flex flex-col overflow-hidden">
+
+    <div class="grain-overlay"></div>
+
+    <header id="main-nav"
+        class="bg-surface-50/80 backdrop-blur-xl sticky top-0 z-50 px-4 sm:px-6 lg:px-10 py-3 flex items-center justify-between gap-4 border-b border-surface-300/60 transition-all duration-300">
+        <div class="flex items-center cursor-pointer group" onclick="switchTab('landing')">
+            <span
+                class="font-extrabold tracking-tighter text-ink-400 text-xl flex items-center gap-1 group-hover:text-accent-red transition-colors duration-300">
+                StudentU
+                <span class="w-1.5 h-1.5 rounded-full bg-accent-blue mt-1"></span>
+            </span>
+        </div>
+
+        <nav
+            class="hidden xl:flex items-center bg-surface-200/80 border border-surface-300 rounded-full px-1.5 py-1.5 space-x-1 shadow-sm">
+            <button onclick="switchTab('landing')"
+                class="nav-btn active-tab text-xs font-semibold px-4 py-1.5 rounded-full transition-all duration-300 bg-white shadow-sm text-ink-400"
+                data-tab="landing">Home</button>
+            <button onclick="switchTab('dashboard')"
+                class="nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
+                data-tab="dashboard">Dashboard</button>
+            <button onclick="switchTab('workspace')"
+                class="nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
+                data-tab="workspace">Study</button>
+            <button onclick="switchTab('profile')"
+                class="nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
+                data-tab="profile">Classes</button>
+            <button onclick="switchTab('moat-profile')"
+                class="nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
+                data-tab="moat-profile">Progress</button>
+            <button onclick="switchTab('planner')"
+                class="nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
+                data-tab="planner">Plan</button>
+        </nav>
+
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+            <button id="verify-button" onclick="openVerificationModal()"
+                class="text-xs btn-outline px-3 sm:px-4 py-2 rounded-lg font-medium">
+                Verify .edu
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto no-scrollbar relative bg-surface-100" id="main-scroll">
+
+        <section id="tab-landing" class="tab-pane active">
+
+            <div class="relative min-h-[85vh] flex items-center justify-center px-6 overflow-hidden scene-3d">
+                <div class="text-center max-w-3xl mx-auto relative z-10 space-y-7" id="hero-content">
+                    <div
+                        class="inline-flex items-center space-x-2 border border-surface-300 px-4 py-1.5 rounded-full text-xs text-ink-50 bg-surface-50/80 backdrop-blur-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-ink-400"></span>
+                        <span>Google Cloud & Gemini XPRIZE Project</span>
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] text-ink-500 hero-shadow-text break-words"
+                        id="hero-title">
+                        Stop rereading.<br><span class="text-ink-100">Start remembering.</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-ink-100 max-w-lg mx-auto font-normal leading-[1.5]">
+                        Upload your notes and StudentU turns them into explanations, quizzes, and a study plan designed
+                        for how you learn.
+                    </p>
+                    <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <button onclick="handleHeroAction('upload')"
+                            class="w-full sm:w-auto px-8 py-3.5 btn-primary rounded-xl text-sm font-medium flex items-center justify-center space-x-2">
+                            <img src="assets/icons/upload.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
+                            <span>Upload Notes</span>
+                        </button>
+                        <button onclick="handleHeroAction('demo')"
+                            class="w-full sm:w-auto px-8 py-3.5 btn-outline rounded-xl text-sm font-medium flex items-center justify-center space-x-2">
+                            <img src="assets/icons/start.svg" alt="" class="asset-icon w-4 h-4">
+                            <span>Try Demo</span>
+                        </button>
+                    </div>
+                    <p class="text-xs text-surface-400">Free for verified college students with a .edu email.</p>
+                </div>
+            </div>
+
+            <div class="border-y border-surface-300/60 py-3 overflow-hidden bg-surface-200/40" style="mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);">
+                <div class="flex whitespace-nowrap marquee-track">
+                    <span
+                        class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Understand</span>
+                    <span class="text-surface-300 mx-4">&bull;</span>
+                    <span class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Practice</span>
+                    <span class="text-surface-300 mx-4">&bull;</span>
+                    <span class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Remember</span>
+                    <span class="text-surface-300 mx-4">&bull;</span>
+                    <span class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Repeat</span>
+                    <span class="text-surface-300 mx-4">&bull;</span>
+                    <span
+                        class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Understand</span>
+                    <span class="text-surface-300 mx-4">&bull;</span>
+                    <span class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Practice</span>
+                    <span class="text-surface-300 mx-4">&bull;</span>
+                    <span class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Remember</span>
+                    <span class="text-surface-300 mx-4">&bull;</span>
+                    <span class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Repeat</span>
+                    <span class="text-surface-300 mx-4">&bull;</span>
+                </div>
+            </div>
+
+            <div class="max-w-5xl mx-auto px-6 py-32">
+                <div class="text-center mb-14 reveal">
+                    <span class="text-[10px] uppercase tracking-[0.25em] text-surface-400 font-mono">How It Works</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-ink-400 mt-3 tracking-tight">Three steps to study
+                        smarter.</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="steps-grid">
+                    <div
+                        class="bg-surface-50 border border-surface-300/70 rounded-2xl p-7 space-y-4 reveal reveal-d1 cursor-default shadow-sm hover:shadow-md hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300">
+                        <div class="w-12 h-12 bg-accent-red rounded-xl flex items-center justify-center shadow-md">
+                            <img src="assets/icons/reading.svg" alt="" class="asset-icon w-7 h-7">
+                        </div>
+                        <h3 class="text-ink-400 font-bold text-lg">1. Understand</h3>
+                        <p class="text-sm text-ink-50 leading-relaxed">
+                            Paste notes, slides, or textbook pages. StudentU explains concepts in simple language
+                            without assuming prior knowledge.
+                        </p>
+                    </div>
+                    <div
+                        class="bg-surface-50 border border-surface-300/70 rounded-2xl p-7 space-y-4 reveal reveal-d2 cursor-default shadow-sm hover:shadow-md hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300">
+                        <div class="w-12 h-12 bg-accent-blue rounded-xl flex items-center justify-center shadow-md">
+                            <img src="assets/icons/todo_list.svg" alt="" class="asset-icon w-7 h-7">
+                        </div>
+                        <h3 class="text-ink-400 font-bold text-lg">2. Practice</h3>
+                        <p class="text-sm text-ink-50 leading-relaxed">
+                            Generate quizzes from your class materials. Not generic questions, but ones built from what
+                            you actually need to learn.
+                        </p>
+                    </div>
+                    <div
+                        class="bg-surface-50 border border-surface-300/70 rounded-2xl p-7 space-y-4 reveal reveal-d3 cursor-default shadow-sm hover:shadow-md hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300">
+                        <div class="w-12 h-12 bg-accent-yellow rounded-xl flex items-center justify-center shadow-md">
+                            <img src="assets/icons/light_at_the_end_of_tunnel.svg" alt="" class="asset-icon w-7 h-7">
+                        </div>
+                        <h3 class="text-ink-400 font-bold text-lg">3. Remember</h3>
+                        <p class="text-sm text-ink-50 leading-relaxed">
+                            StudentU tracks concepts you struggle with and automatically brings them back before you
+                            forget them.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-ink-400 text-surface-100 relative overflow-hidden">
+                <div class="grain-overlay" style="opacity: 0.15; mix-blend-mode: overlay;"></div>
+                <div class="max-w-5xl mx-auto px-6 py-32 grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10">
+                    <div class="reveal space-y-6">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <div class="w-2 h-2 rounded-full bg-surface-400/50"></div>
+                            <span class="text-[10px] uppercase tracking-[0.2em] text-surface-400/70 font-mono">Regular
+                                AI Chatbots</span>
+                        </div>
+                        <div class="space-y-5">
+                            <div>
+                                <h3 class="text-surface-200 font-semibold text-sm">Forgets everything each session</h3>
+                                <p class="text-sm text-surface-400/70 leading-relaxed mt-1">It doesn't remember what you
+                                    got wrong yesterday or what exam you have tomorrow.</p>
+                            </div>
+                            <div>
+                                <h3 class="text-surface-200 font-semibold text-sm">Dumps walls of text</h3>
+                                <p class="text-sm text-surface-400/70 leading-relaxed mt-1">Generic summaries that feel
+                                    overwhelming and don't help you retain anything long-term.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="reveal reveal-d2 space-y-6 bg-surface-50/[0.05] border border-surface-100/[0.08] rounded-2xl p-8">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <div class="w-2 h-2 rounded-full bg-accent-warm"></div>
+                            <span
+                                class="text-[10px] uppercase tracking-[0.2em] text-accent-soft font-mono">StudentU</span>
+                        </div>
+                        <div class="space-y-5">
+                            <div>
+                                <h3 class="text-surface-100 font-semibold text-sm">Remembers how you learn</h3>
+                                <p class="text-sm text-surface-400/80 leading-relaxed mt-1">Tracks your accuracy and
+                                    patterns to build a personal learning profile that improves over time.</p>
+                            </div>
+                            <div>
+                                <h3 class="text-surface-100 font-semibold text-sm">Spots your weak points early</h3>
+                                <p class="text-sm text-surface-400/80 leading-relaxed mt-1">Identifies slipping concepts
+                                    and updates your study plan so you review before exam day.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <section id="tab-dashboard" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+            <!-- Greeting & Stats Block -->
+            <div class="mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6 reveal">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight" id="dashboard-welcome-msg">Good morning, Alex</h1>
+                    <p class="text-sm text-ink-50 mt-1">Welcome back to StudentU. Here is your AI-optimized spacing study plan today.</p>
+                </div>
+                <!-- Mini Stats Widgets (Inspired by Trenning and School mockups) -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
+                        <div class="w-8 h-8 rounded-xl bg-accent-yellow/10 flex items-center justify-center">
+                            <img src="assets/icons/ratings.svg" alt="" class="asset-icon w-5 h-5">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-ink-50 block leading-none font-medium">Points</span>
+                            <span class="text-sm font-bold text-ink-400" id="dash-stat-points">100</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
+                        <div class="w-8 h-8 rounded-xl bg-accent-pink/10 flex items-center justify-center">
+                            <img src="assets/icons/vip.svg" alt="" class="asset-icon w-5 h-5">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-ink-50 block leading-none font-medium">Badges</span>
+                            <span class="text-sm font-bold text-ink-400" id="dash-stat-badges">32</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
+                        <div class="w-8 h-8 rounded-xl bg-accent-blue/10 flex items-center justify-center">
+                            <img src="assets/icons/diploma_1.svg" alt="" class="asset-icon w-5 h-5">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-ink-50 block leading-none font-medium">Certificates</span>
+                            <span class="text-sm font-bold text-ink-400" id="dash-stat-certs">12</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
+                        <div class="w-8 h-8 rounded-xl bg-accent-red/10 flex items-center justify-center">
+                            <img src="assets/icons/alarm_clock.svg" alt="" class="asset-icon w-5 h-5">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-ink-50 block leading-none font-medium">Review Queue</span>
+                            <span class="text-sm font-bold text-ink-400">3 Topics</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
+                        <div class="w-8 h-8 rounded-xl bg-accent-teal/10 flex items-center justify-center">
+                            <img src="assets/icons/bullish.svg" alt="" class="asset-icon w-5 h-5">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-ink-50 block leading-none font-medium">Study Streak</span>
+                            <span class="text-sm font-bold text-ink-400">3 Days</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Body: AI Coach Sessions + Memory Retention Cards -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 reveal reveal-d1">
+                <!-- Left: AI Coach Weekly Plan -->
+                <div class="lg:col-span-2 bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-base font-bold text-ink-400">AI Coach Study Sessions</h2>
+                        <div class="flex gap-2" id="day-tabs">
+                            <button onclick="switchDayTab(this,'today')" class="active-day-tab px-3 py-1 rounded-lg text-xs font-semibold border border-surface-300 transition-all">
+                                <span>Today</span>
+                            </button>
+                            <button onclick="switchDayTab(this,'tomorrow')" class="px-3 py-1 rounded-lg text-xs font-semibold border border-surface-300 transition-all">
+                                <span>Tomorrow</span>
+                            </button>
+                            <button onclick="switchDayTab(this,'week')" class="px-3 py-1 rounded-lg text-xs font-semibold border border-surface-300 transition-all">
+                                <span>Week</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="schedule-list" class="space-y-3">
+                        <div class="flex items-center gap-3 py-3 border-b border-surface-200">
+                            <div class="w-10 h-10 rounded-xl bg-accent-blue/10 flex items-center justify-center flex-shrink-0">
+                                <img src="assets/icons/light_at_the_end_of_tunnel.svg" alt="" class="asset-icon w-5 h-5">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-sm font-semibold text-ink-300 truncate">Neural Networks â€” AI Explainer Pass</div>
+                                <div class="text-[11px] text-ink-50">9:00 AM Â· 45 min Â· Feynman Method</div>
+                            </div>
+                            <button onclick="startSpecificPlannedSession('neuro')" class="flex-shrink-0 px-3 py-1.5 btn-primary rounded-lg text-xs font-medium">Start</button>
+                        </div>
+                        <div class="flex items-center gap-3 py-3 border-b border-surface-200">
+                            <div class="w-10 h-10 rounded-xl bg-accent-teal/10 flex items-center justify-center flex-shrink-0">
+                                <img src="assets/icons/exam.svg" alt="" class="asset-icon w-5 h-5">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-sm font-semibold text-ink-300 truncate">Calculus III â€” AI Practice Drill</div>
+                                <div class="text-[11px] text-ink-50">2:00 PM Â· 30 min Â· Active Recall</div>
+                            </div>
+                            <button onclick="startSpecificPlannedSession('calc')" class="flex-shrink-0 px-3 py-1.5 btn-primary rounded-lg text-xs font-medium">Start</button>
+                        </div>
+                        <div class="flex items-center gap-3 py-3">
+                            <div class="w-10 h-10 rounded-xl bg-accent-yellow/10 flex items-center justify-center flex-shrink-0">
+                                <img src="assets/icons/ratings.svg" alt="" class="asset-icon w-5 h-5">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-sm font-semibold text-ink-300 truncate">Macroeconomics â€” Spaced Review</div>
+                                <div class="text-[11px] text-ink-50">6:30 PM Â· 20 min Â· Spaced Repetition</div>
+                            </div>
+                            <button onclick="startSpecificPlannedSession('macro')" class="flex-shrink-0 px-3 py-1.5 btn-primary rounded-lg text-xs font-medium">Start</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Memory Retention Cards -->
+                <div class="space-y-4">
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-8 h-8 rounded-xl bg-accent-blue/10 flex items-center justify-center">
+                                <img src="assets/icons/exam.svg" alt="" class="asset-icon w-4 h-4">
+                            </div>
+                            <span class="text-sm font-semibold text-ink-400">Exam Readiness</span>
+                        </div>
+                        <div class="text-3xl font-extrabold text-ink-400 mb-1" id="stat-speed">74%</div>
+                        <div class="text-[11px] text-ink-50 mb-3">Memory retention across all subjects</div>
+                        <div class="progress-track">
+                            <div class="progress-fill bg-accent-blue" style="width: 74%"></div>
+                        </div>
+                    </div>
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-8 h-8 rounded-xl bg-accent-teal/10 flex items-center justify-center">
+                                <img src="assets/icons/graduate.svg" alt="" class="asset-icon w-4 h-4">
+                            </div>
+                            <span class="text-sm font-semibold text-ink-400">AI Recommended Review Queue</span>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between text-xs py-2 border-b border-surface-200">
+                                <span class="font-medium text-ink-300">Backpropagation</span>
+                                <span class="text-rose-600 font-semibold">High Risk</span>
+                            </div>
+                            <div class="flex items-center justify-between text-xs py-2 border-b border-surface-200">
+                                <span class="font-medium text-ink-300">Gradient Descent</span>
+                                <span class="text-amber-700 font-semibold">Medium Risk</span>
+                            </div>
+                            <div class="flex items-center justify-between text-xs py-2">
+                                <span class="font-medium text-ink-300">Chain Rule</span>
+                                <span class="text-emerald-700 font-semibold">Low Risk</span>
+                            </div>
+                        </div>
+                        <button onclick="drillWeakSpots()" class="mt-4 w-full py-2 btn-primary rounded-xl text-xs font-medium">Drill Weak Spots</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Classes Progress Row -->
+            <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm reveal reveal-d2">
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-base font-bold text-ink-400">My Classes</h2>
+                    <button onclick="switchTab('profile')" class="text-xs text-accent-blue font-medium hover:underline">View All</button>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="space-y-2">
+                        <div class="text-sm font-semibold text-ink-300">Neural Networks</div>
+                        <div class="text-[11px] text-ink-50">78% retention Â· 12 cards</div>
+                        <div class="progress-track"><div class="progress-fill bg-accent-blue" style="width:78%"></div></div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="text-sm font-semibold text-ink-300">Calculus III</div>
+                        <div class="text-[11px] text-ink-50">65% retention Â· 8 cards</div>
+                        <div class="progress-track"><div class="progress-fill bg-accent-teal" style="width:65%"></div></div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="text-sm font-semibold text-ink-300">History of Art</div>
+                        <div class="text-[11px] text-ink-50">82% retention Â· 15 cards</div>
+                        <div class="progress-track"><div class="progress-fill bg-accent-warm" style="width:82%"></div></div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="text-sm font-semibold text-ink-300">Macroeconomics</div>
+                        <div class="text-[11px] text-ink-50">71% retention Â· 10 cards</div>
+                        <div class="progress-track"><div class="progress-fill bg-accent-yellow" style="width:71%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== WORKSPACE / STUDY DESK TAB ===== -->
+        <section id="tab-workspace" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+
+            <!-- Setup Pane -->
+            <div id="study-desk-setup">
+                <div class="mb-8 reveal">
+                    <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">Study Desk</h1>
+                    <p class="text-sm text-ink-50 mt-1">Paste your notes or pick a topic to generate your personalized study guide.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 reveal reveal-d1">
+                    <!-- Left: Input Area -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <label class="text-sm font-semibold text-ink-400">Select Subject</label>
+                            </div>
+                            <select id="course-selector" onchange="handleCourseChange()" class="w-full bg-surface-100 border border-surface-300 rounded-xl px-4 py-3 text-sm text-ink-300 mb-4 focus:outline-none focus:ring-2 focus:ring-ink-200">
+                                <option value="neuro">Neural Networks &amp; Backpropagation</option>
+                                <option value="calc">Calculus III â€” Multivariable</option>
+                                <option value="hist">History of Art â€” Renaissance</option>
+                                <option value="macro">Macroeconomics â€” Fiscal Policy</option>
+                            </select>
+                            <label class="text-sm font-semibold text-ink-400 block mb-2">Paste Your Notes</label>
+                            <textarea id="study-material" rows="10" placeholder="Paste your class notes, textbook excerpt, or lecture transcript here..." class="w-full bg-surface-100 border border-surface-300 rounded-xl px-4 py-3 text-sm text-ink-300 placeholder:text-ink-50/70 resize-none focus:outline-none focus:ring-2 focus:ring-ink-200 no-scrollbar"></textarea>
+                            <div class="flex items-center gap-3 mt-4 flex-wrap">
+                                <button onclick="startStudySession()" class="px-6 py-3 btn-primary rounded-xl text-sm font-medium flex items-center gap-2">
+                                    <img src="assets/icons/start.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
+                                    Generate Study Guide
+                                </button>
+                                <button onclick="generateAdaptiveQuiz()" class="px-6 py-3 btn-outline rounded-xl text-sm font-medium flex items-center gap-2">
+                                    <img src="assets/icons/exam.svg" alt="" class="asset-icon w-4 h-4">
+                                    Quick Quiz
+                                </button>
+                                <label class="px-4 py-3 btn-outline rounded-xl text-sm font-medium flex items-center gap-2 cursor-pointer">
+                                    <img src="assets/icons/upload.svg" alt="" class="asset-icon w-4 h-4">
+                                    Upload File
+                                    <input type="file" accept=".txt,.pdf,.docx" class="hidden" onchange="handleFileUpload(event)">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Adaptive Quiz Area -->
+                        <div id="quiz-area" class="hidden bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-base font-bold text-ink-400">Adaptive Quiz</h3>
+                                <button onclick="closeQuiz()" class="text-xs text-ink-50 hover:text-ink-300">Close</button>
+                            </div>
+                            <div id="quiz-question-block" class="mb-4">
+                                <p class="text-sm font-semibold text-ink-300 mb-3" id="quiz-question-text">Question loads here...</p>
+                                <div id="quiz-options" class="space-y-2"></div>
+                            </div>
+                            <div id="quiz-feedback" class="hidden mt-4 p-4 rounded-xl">
+                                <p class="text-sm font-semibold" id="quiz-feedback-title"></p>
+                                <p class="text-xs text-ink-50 mt-1" id="quiz-feedback-explanation"></p>
+                                <button onclick="advanceQuiz()" class="mt-3 px-4 py-2 btn-primary rounded-lg text-xs font-medium">Next Question â†’</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Sidebar info -->
+                    <div class="space-y-4">
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                            <h3 class="text-sm font-bold text-ink-400 mb-3">Session Stats</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-ink-50">Highlights Saved</span>
+                                    <span class="font-semibold text-ink-300" id="sidebar-highlights">0</span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-ink-50">Cards Learned</span>
+                                    <span class="font-semibold text-ink-300" id="sidebar-cards-learned">0</span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-ink-50">Cards Missed</span>
+                                    <span class="font-semibold text-ink-300" id="sidebar-cards-missed">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                            <h3 class="text-sm font-bold text-ink-400 mb-3">Gemini AI Settings</h3>
+                            <label class="text-xs text-ink-50 block mb-1">API Key (optional)</label>
+                            <input type="password" id="gemini-key-input" placeholder="Paste Gemini API key..." class="w-full bg-surface-100 border border-surface-300 rounded-lg px-3 py-2 text-xs text-ink-300 placeholder:text-ink-50/70 focus:outline-none mb-2">
+                            <button onclick="saveGeminiKey()" class="w-full py-2 btn-outline rounded-lg text-xs font-medium">Save Key</button>
+                            <p class="text-[10px] text-ink-50 mt-2">Key stored locally. Enables live AI card generation.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Study Session (hidden by default) -->
+            <div id="study-desk-active" class="hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <div class="text-xs font-mono text-ink-50 uppercase tracking-widest mb-1" id="active-session-subject-label">Neural Networks</div>
+                        <h2 class="text-2xl font-extrabold text-ink-400" id="active-session-title">Interactive Study Session</h2>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <!-- Pomodoro Timer -->
+                        <div class="flex items-center gap-2 bg-surface-50 border border-surface-300/60 rounded-xl px-4 py-2.5 shadow-sm">
+                            <div class="w-2 h-2 rounded-full bg-accent-red animate-pulse" id="timer-dot"></div>
+                            <span class="font-mono text-sm font-bold text-ink-400" id="session-timer-display">25:00</span>
+                            <button id="session-play-pause-btn" onclick="toggleSessionTimer()" class="text-xs text-ink-100 hover:text-ink-400">
+                                <span>â¸ï¸</span> <span id="play-pause-text">Pause</span>
+                            </button>
+                        </div>
+                        <button onclick="takeBreak()" class="px-4 py-2.5 btn-outline rounded-xl text-xs font-medium flex items-center gap-1.5">
+                            <img src="assets/icons/coffee.svg" alt="" class="asset-icon w-3.5 h-3.5">
+                            Take Break
+                        </button>
+                        <button onclick="returnToSetupPane()" class="text-xs text-ink-50 hover:text-ink-300 underline">Exit Session</button>
+                    </div>
+                </div>
+
+                <!-- Card Slider Area -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2">
+                        <div id="card-container" class="bg-surface-50 border-2 border-surface-300/60 rounded-2xl p-6 shadow-sm min-h-[300px] relative">
+                            <!-- Card Navigation -->
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs text-ink-50">Card</span>
+                                    <span class="text-xs font-bold text-ink-400" id="card-counter">1 / 6</span>
+                                </div>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-200 text-ink-100 uppercase tracking-wider" id="card-difficulty-badge">Beginner</span>
+                            </div>
+                            <h3 class="text-xl font-extrabold text-ink-400 mb-3" id="card-title">Loading...</h3>
+                            <div class="mb-4">
+                                <div class="text-xs font-mono uppercase tracking-widest text-ink-50 mb-1">Feynman Explanation</div>
+                                <p class="text-sm text-ink-200 leading-relaxed select-text" id="card-feynman" onmouseup="handleTextSelection(event)"></p>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs font-mono uppercase tracking-widest text-ink-50 mb-1">Real-World Analogy</div>
+                                <p class="text-sm text-ink-100 leading-relaxed" id="card-analogy"></p>
+                            </div>
+                            <div class="p-3 bg-rose-50 border border-rose-100 rounded-xl mb-4">
+                                <div class="text-xs font-semibold text-rose-700 mb-1">Common Mistake</div>
+                                <p class="text-xs text-rose-600" id="card-mistake"></p>
+                            </div>
+                            <div class="p-3 bg-teal-50 border border-teal-100 rounded-xl">
+                                <div class="text-xs font-semibold text-accent-teal mb-1">Why This Matters</div>
+                                <p class="text-xs text-ink-100" id="card-why"></p>
+                            </div>
+                            <!-- Navigation Buttons -->
+                            <div class="flex items-center justify-between mt-6 pt-4 border-t border-surface-200">
+                                <button onclick="prevCard()" class="px-4 py-2 btn-outline rounded-xl text-xs font-medium">â† Prev</button>
+                                <div class="flex gap-2">
+                                    <button onclick="markCard('learned')" class="px-4 py-2 bg-emerald-500 text-white rounded-xl text-xs font-semibold hover:bg-emerald-600 transition-colors">Got It âœ“</button>
+                                    <button onclick="markCard('missed')" class="px-4 py-2 bg-rose-400 text-white rounded-xl text-xs font-semibold hover:bg-rose-500 transition-colors">Missed âœ—</button>
+                                </div>
+                                <button onclick="nextCard()" class="px-4 py-2 btn-primary rounded-xl text-xs font-medium">Next â†’</button>
+                            </div>
+                        </div>
+
+                        <!-- Highlight Floating Toolbar -->
+                        <div id="highlight-toolbar" class="hidden fixed z-50 bg-white border border-surface-300 rounded-xl shadow-xl px-3 py-2 flex gap-2 items-center" style="transform: translateX(-50%);">
+                            <button onclick="applyHighlight('yellow')" class="w-5 h-5 rounded-full bg-yellow-400 hover:scale-110 transition-transform" title="Key Term"></button>
+                            <button onclick="applyHighlight('green')" class="w-5 h-5 rounded-full bg-emerald-400 hover:scale-110 transition-transform" title="Understood"></button>
+                            <button onclick="applyHighlight('red')" class="w-5 h-5 rounded-full bg-rose-400 hover:scale-110 transition-transform" title="Got Wrong"></button>
+                            <button onclick="applyHighlight('blue')" class="w-5 h-5 rounded-full bg-sky-400 hover:scale-110 transition-transform" title="Flag for Review"></button>
+                            <div class="w-px h-4 bg-surface-300 mx-1"></div>
+                            <button onclick="hideHighlightToolbar()" class="text-xs text-ink-50 hover:text-ink-300">Ã—</button>
+                        </div>
+                    </div>
+
+                    <!-- Right Sidebar: Progress + Highlights -->
+                    <div class="space-y-4">
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                            <h3 class="text-sm font-bold text-ink-400 mb-3">Session Progress</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-ink-50">Learned</span>
+                                    <span class="font-bold text-emerald-600" id="progress-learned">0</span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-ink-50">Missed</span>
+                                    <span class="font-bold text-rose-600" id="progress-missed">0</span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-ink-50">Highlights</span>
+                                    <span class="font-bold text-sky-600" id="progress-highlights">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recall Checkpoint Overlay (shows inside sidebar at trigger) -->
+                        <div id="recall-checkpoint-overlay" class="hidden bg-ink-400 text-surface-100 rounded-2xl p-5 shadow-xl border border-white/20">
+                            <div class="text-xs font-mono text-surface-400 uppercase tracking-widest mb-2">Recall Checkpoint</div>
+                            <p class="text-sm font-semibold text-surface-100 mb-4" id="recall-question-text"></p>
+                            <div id="recall-options" class="space-y-2 mb-4"></div>
+                            <div id="recall-feedback" class="hidden text-xs font-medium mt-2" ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Smart Break Overlay -->
+            <div id="smart-break-overlay" class="hidden fixed inset-0 z-[9998] bg-ink-500/60 backdrop-blur-sm flex items-center justify-center p-4">
+                <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-8 max-w-md w-full shadow-2xl text-center">
+                    <div class="text-4xl mb-3">â˜•</div>
+                    <h3 class="text-xl font-extrabold text-ink-400 mb-1">Smart Break Time</h3>
+                    <p class="text-sm text-ink-50 mb-4">Rest your mind. You've earned it.</p>
+                    <div class="font-mono text-3xl font-bold text-ink-400 mb-4" id="break-timer-display">5:00</div>
+                    <div class="text-xs text-ink-50 mb-2 font-semibold">What you've covered:</div>
+                    <div id="break-learned-list" class="text-left space-y-1 mb-6 max-h-36 overflow-y-auto"></div>
+                    <button onclick="skipBreak()" class="px-6 py-3 btn-primary rounded-xl text-sm font-medium w-full">Skip Break &amp; Resume Study â†’</button>
+                </div>
+            </div>
+
+            <!-- Session Summary Screen -->
+            <div id="session-summary-screen" class="hidden py-6">
+                <div class="max-w-2xl mx-auto">
+                    <div class="text-center mb-8">
+                        <div class="text-4xl mb-2">ðŸŽ“</div>
+                        <h2 class="text-2xl font-extrabold text-ink-400">Session Complete!</h2>
+                        <p class="text-sm text-ink-50 mt-1" id="summary-motivation-msg">Great work today!</p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 mb-6">
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-4 text-center shadow-sm">
+                            <div class="text-2xl font-extrabold text-emerald-600" id="summary-learned-count">0</div>
+                            <div class="text-xs text-ink-50 mt-1">Concepts Learned</div>
+                        </div>
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-4 text-center shadow-sm">
+                            <div class="text-2xl font-extrabold text-rose-600" id="summary-missed-count">0</div>
+                            <div class="text-xs text-ink-50 mt-1">Concepts Missed</div>
+                        </div>
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-4 text-center shadow-sm">
+                            <div class="text-2xl font-extrabold text-accent-blue" id="summary-points-earned">+0</div>
+                            <div class="text-xs text-ink-50 mt-1">XP Earned</div>
+                        </div>
+                    </div>
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 mb-4 shadow-sm">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-sm font-semibold text-ink-400">Exam Readiness</span>
+                            <span class="text-xs text-ink-50">Before â†’ After</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-xl font-extrabold text-ink-200" id="readiness-before-percent">74%</span>
+                            <div class="flex-1 progress-track"><div class="progress-fill bg-accent-blue" id="readiness-after-bar" style="width:74%"></div></div>
+                            <span class="text-xl font-extrabold text-emerald-600" id="readiness-after-percent">74%</span>
+                        </div>
+                    </div>
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm mb-6">
+                        <h3 class="text-sm font-bold text-ink-400 mb-3">Forgetting Curve Forecast</h3>
+                        <div id="forgetting-curve-list" class="space-y-1"></div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="drillWeakSpots()" class="flex-1 py-3 btn-primary rounded-xl text-sm font-medium">Drill Weak Spots</button>
+                        <button onclick="returnToSetupPane()" class="flex-1 py-3 btn-outline rounded-xl text-sm font-medium">New Session</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PROFILE / CLASSES TAB ===== -->
+        <section id="tab-profile" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+            <div class="mb-8 reveal">
+                <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">My Classes</h1>
+                <p class="text-sm text-ink-50 mt-1">Manage your courses, upload materials, and track your learning portfolio.</p>
+            </div>
+
+            <!-- Classes Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8 reveal reveal-d1">
+                <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-accent-blue/10 flex items-center justify-center">
+                            <img src="assets/icons/light_at_the_end_of_tunnel.svg" alt="" class="asset-icon w-5 h-5">
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-ink-400">Neural Networks &amp; Backpropagation</h3>
+                            <div class="text-[11px] text-ink-50">CS 489 Â· Dr. Chen Â· 12 cards</div>
+                        </div>
+                    </div>
+                    <div class="progress-track mb-2"><div class="progress-fill bg-accent-blue" style="width:78%"></div></div>
+                    <div class="flex justify-between text-[11px] text-ink-50 mb-4">
+                        <span>78% retention</span><span>3 sessions</span>
+                    </div>
+                    <button onclick="switchTab('workspace'); document.getElementById('course-selector').value='neuro'; handleCourseChange();" class="w-full py-2 btn-primary rounded-xl text-xs font-medium">Start Session</button>
+                </div>
+                <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-accent-teal/10 flex items-center justify-center">
+                            <img src="assets/icons/exam.svg" alt="" class="asset-icon w-5 h-5">
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-ink-400">Calculus III â€” Multivariable</h3>
+                            <div class="text-[11px] text-ink-50">MATH 321 Â· Prof. Rodriguez Â· 8 cards</div>
+                        </div>
+                    </div>
+                    <div class="progress-track mb-2"><div class="progress-fill bg-accent-teal" style="width:65%"></div></div>
+                    <div class="flex justify-between text-[11px] text-ink-50 mb-4">
+                        <span>65% retention</span><span>2 sessions</span>
+                    </div>
+                    <button onclick="switchTab('workspace'); document.getElementById('course-selector').value='calc'; handleCourseChange();" class="w-full py-2 btn-primary rounded-xl text-xs font-medium">Start Session</button>
+                </div>
+                <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-accent-warm/10 flex items-center justify-center">
+                            <img src="assets/icons/diploma_1.svg" alt="" class="asset-icon w-5 h-5">
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-ink-400">History of Art â€” Renaissance</h3>
+                            <div class="text-[11px] text-ink-50">ART 210 Â· Dr. Moreau Â· 15 cards</div>
+                        </div>
+                    </div>
+                    <div class="progress-track mb-2"><div class="progress-fill bg-accent-warm" style="width:82%"></div></div>
+                    <div class="flex justify-between text-[11px] text-ink-50 mb-4">
+                        <span>82% retention</span><span>4 sessions</span>
+                    </div>
+                    <button onclick="switchTab('workspace'); document.getElementById('course-selector').value='hist'; handleCourseChange();" class="w-full py-2 btn-primary rounded-xl text-xs font-medium">Start Session</button>
+                </div>
+                <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-accent-yellow/10 flex items-center justify-center">
+                            <img src="assets/icons/ratings.svg" alt="" class="asset-icon w-5 h-5">
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-ink-400">Macroeconomics â€” Fiscal Policy</h3>
+                            <div class="text-[11px] text-ink-50">ECON 202 Â· Prof. Kim Â· 10 cards</div>
+                        </div>
+                    </div>
+                    <div class="progress-track mb-2"><div class="progress-fill bg-accent-yellow" style="width:71%"></div></div>
+                    <div class="flex justify-between text-[11px] text-ink-50 mb-4">
+                        <span>71% retention</span><span>2 sessions</span>
+                    </div>
+                    <button onclick="switchTab('workspace'); document.getElementById('course-selector').value='macro'; handleCourseChange();" class="w-full py-2 btn-primary rounded-xl text-xs font-medium">Start Session</button>
+                </div>
+            </div>
+
+            <!-- Developer Config Panel -->
+            <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm reveal reveal-d2">
+                <h2 class="text-base font-bold text-ink-400 mb-4">Developer Config Panel</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-xs font-semibold text-ink-300 block mb-1">Firebase Configuration JSON</label>
+                        <textarea id="firebase-config-input" rows="6" placeholder='{"apiKey":"...","authDomain":"...","projectId":"..."}' class="w-full bg-surface-100 border border-surface-300 rounded-xl px-3 py-2 text-xs text-ink-300 placeholder:text-ink-50/70 resize-none focus:outline-none font-mono"></textarea>
+                        <button onclick="saveFirebaseConfig()" class="mt-2 px-4 py-2 btn-outline rounded-lg text-xs font-medium">Save Firebase Config</button>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-ink-300 block mb-1">Gemini API Key</label>
+                        <input type="password" id="gemini-api-key-panel" placeholder="AIzaSy..." class="w-full bg-surface-100 border border-surface-300 rounded-xl px-3 py-2 text-xs text-ink-300 placeholder:text-ink-50/70 focus:outline-none mb-2">
+                        <button onclick="saveGeminiKeyFromPanel()" class="px-4 py-2 btn-outline rounded-lg text-xs font-medium">Save Gemini Key</button>
+                        <div class="mt-3 p-3 bg-amber-50 border border-amber-100 rounded-xl">
+                            <p class="text-[11px] text-amber-700">When keys are provided, the app syncs data to Firestore and uses live AI generation. Without keys, it runs in offline simulation mode.</p>
+                        </div>
+                        <!-- Auth section -->
+                        <div class="mt-3">
+                            <div id="auth-signed-out" class="">
+                                <button onclick="signInWithGoogle()" class="w-full py-2.5 btn-primary rounded-xl text-xs font-medium flex items-center justify-center gap-2">
+                                    <img src="assets/icons/vip.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
+                                    Sign in with Google
+                                </button>
+                            </div>
+                            <div id="auth-signed-in" class="hidden">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <div class="text-xs font-semibold text-ink-400" id="auth-display-name">User</div>
+                                        <div class="text-[11px] text-ink-50" id="auth-email"></div>
+                                    </div>
+                                    <button onclick="signOut()" class="text-xs text-ink-50 hover:text-ink-300 underline">Sign Out</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PROGRESS TAB ===== -->
+        <section id="tab-moat-profile" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+            <div class="mb-8 reveal">
+                <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">My Progress</h1>
+                <p class="text-sm text-ink-50 mt-1">Track your learning milestones, badges, and memory retention trends.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 reveal reveal-d1">
+                <div class="lg:col-span-2 space-y-5">
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                        <h2 class="text-base font-bold text-ink-400 mb-4">Weekly Activity</h2>
+                        <div class="grid grid-cols-7 gap-2">
+                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Mon</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue rounded-lg" style="height:60%"></div></div></div>
+                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Tue</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue rounded-lg" style="height:80%"></div></div></div>
+                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Wed</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue rounded-lg" style="height:45%"></div></div></div>
+                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Thu</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue rounded-lg" style="height:90%"></div></div></div>
+                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Fri</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue rounded-lg" style="height:70%"></div></div></div>
+                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Sat</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue/40 rounded-lg" style="height:20%"></div></div></div>
+                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Sun</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue/40 rounded-lg" style="height:10%"></div></div></div>
+                        </div>
+                    </div>
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                        <h2 class="text-base font-bold text-ink-400 mb-4">Memory Retention by Subject</h2>
+                        <div class="space-y-4">
+                            <div><div class="flex justify-between text-xs mb-1"><span class="font-medium text-ink-300">Neural Networks</span><span class="text-ink-50">78%</span></div><div class="progress-track"><div class="progress-fill bg-accent-blue" style="width:78%"></div></div></div>
+                            <div><div class="flex justify-between text-xs mb-1"><span class="font-medium text-ink-300">Calculus III</span><span class="text-ink-50">65%</span></div><div class="progress-track"><div class="progress-fill bg-accent-teal" style="width:65%"></div></div></div>
+                            <div><div class="flex justify-between text-xs mb-1"><span class="font-medium text-ink-300">History of Art</span><span class="text-ink-50">82%</span></div><div class="progress-track"><div class="progress-fill bg-accent-warm" style="width:82%"></div></div></div>
+                            <div><div class="flex justify-between text-xs mb-1"><span class="font-medium text-ink-300">Macroeconomics</span><span class="text-ink-50">71%</span></div><div class="progress-track"><div class="progress-fill bg-accent-yellow" style="width:71%"></div></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                        <h3 class="text-sm font-bold text-ink-400 mb-4">Badges Earned</h3>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="text-center"><div class="w-12 h-12 rounded-xl bg-accent-yellow/20 flex items-center justify-center mx-auto mb-1 text-xl">â­</div><div class="text-[10px] text-ink-50">First Session</div></div>
+                            <div class="text-center"><div class="w-12 h-12 rounded-xl bg-accent-blue/20 flex items-center justify-center mx-auto mb-1 text-xl">ðŸ”¥</div><div class="text-[10px] text-ink-50">3-Day Streak</div></div>
+                            <div class="text-center"><div class="w-12 h-12 rounded-xl bg-accent-teal/20 flex items-center justify-center mx-auto mb-1 text-xl">ðŸŽ¯</div><div class="text-[10px] text-ink-50">Perfect Recall</div></div>
+                            <div class="text-center opacity-40"><div class="w-12 h-12 rounded-xl bg-surface-200 flex items-center justify-center mx-auto mb-1 text-xl">ðŸ†</div><div class="text-[10px] text-ink-50">7-Day Streak</div></div>
+                            <div class="text-center opacity-40"><div class="w-12 h-12 rounded-xl bg-surface-200 flex items-center justify-center mx-auto mb-1 text-xl">ðŸ“š</div><div class="text-[10px] text-ink-50">100 Cards</div></div>
+                            <div class="text-center opacity-40"><div class="w-12 h-12 rounded-xl bg-surface-200 flex items-center justify-center mx-auto mb-1 text-xl">ðŸ’Ž</div><div class="text-[10px] text-ink-50">Top Learner</div></div>
+                        </div>
+                    </div>
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                        <h3 class="text-sm font-bold text-ink-400 mb-3">Account</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs"><span class="text-ink-50">Plan</span><span class="font-semibold text-ink-300" id="user-tier-display">Free</span></div>
+                            <div class="flex justify-between text-xs"><span class="text-ink-50">University</span><span class="font-semibold text-ink-300" id="user-university-display">â€”</span></div>
+                            <div class="flex justify-between text-xs"><span class="text-ink-50">Sessions This Week</span><span class="font-semibold text-ink-300" id="user-sessions-display">0</span></div>
+                        </div>
+                        <button onclick="openUpgradeModal()" class="mt-4 w-full py-2 btn-primary rounded-xl text-xs font-medium">Upgrade to Premium</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PLANNER TAB ===== -->
+        <section id="tab-planner" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+            <div class="mb-8 reveal">
+                <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">Study Planner</h1>
+                <p class="text-sm text-ink-50 mt-1">Your AI-optimized weekly study schedule based on your exam dates and retention scores.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 reveal reveal-d1">
+                <div class="lg:col-span-2 bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                    <h2 class="text-base font-bold text-ink-400 mb-4">This Week's Plan</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4 p-4 bg-surface-100 rounded-xl">
+                            <div class="w-12 h-12 rounded-xl bg-accent-blue/10 flex flex-col items-center justify-center text-center flex-shrink-0"><span class="text-xs font-bold text-accent-blue">MON</span><span class="text-[10px] text-ink-50">9AM</span></div>
+                            <div class="flex-1"><div class="text-sm font-semibold text-ink-300">Neural Networks â€” Feynman Pass</div><div class="text-xs text-ink-50 mt-0.5">45 min Â· Focus on Backprop weak spots</div></div>
+                            <button onclick="startSpecificPlannedSession('neuro')" class="px-3 py-1.5 btn-primary rounded-lg text-xs font-medium flex-shrink-0">Start</button>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 bg-surface-100 rounded-xl">
+                            <div class="w-12 h-12 rounded-xl bg-accent-teal/10 flex flex-col items-center justify-center text-center flex-shrink-0"><span class="text-xs font-bold text-accent-teal">TUE</span><span class="text-[10px] text-ink-50">2PM</span></div>
+                            <div class="flex-1"><div class="text-sm font-semibold text-ink-300">Calculus III â€” Active Recall</div><div class="text-xs text-ink-50 mt-0.5">30 min Â· Spaced repetition priority</div></div>
+                            <button onclick="startSpecificPlannedSession('calc')" class="px-3 py-1.5 btn-primary rounded-lg text-xs font-medium flex-shrink-0">Start</button>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 bg-surface-100 rounded-xl">
+                            <div class="w-12 h-12 rounded-xl bg-accent-warm/10 flex flex-col items-center justify-center text-center flex-shrink-0"><span class="text-xs font-bold text-accent-warm">WED</span><span class="text-[10px] text-ink-50">4PM</span></div>
+                            <div class="flex-1"><div class="text-sm font-semibold text-ink-300">History of Art â€” Quick Drill</div><div class="text-xs text-ink-50 mt-0.5">20 min Â· High retention maintenance</div></div>
+                            <button onclick="startSpecificPlannedSession('hist')" class="px-3 py-1.5 btn-primary rounded-lg text-xs font-medium flex-shrink-0">Start</button>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 bg-surface-100 rounded-xl">
+                            <div class="w-12 h-12 rounded-xl bg-accent-yellow/10 flex flex-col items-center justify-center text-center flex-shrink-0"><span class="text-xs font-bold text-ink-100">THU</span><span class="text-[10px] text-ink-50">7PM</span></div>
+                            <div class="flex-1"><div class="text-sm font-semibold text-ink-300">Macroeconomics â€” Concept Review</div><div class="text-xs text-ink-50 mt-0.5">25 min Â· Focus on fiscal policy</div></div>
+                            <button onclick="startSpecificPlannedSession('macro')" class="px-3 py-1.5 btn-primary rounded-lg text-xs font-medium flex-shrink-0">Start</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                        <h3 class="text-sm font-bold text-ink-400 mb-3">Upcoming Exams</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-rose-50 border border-rose-100 rounded-xl"><span class="text-xs font-semibold text-rose-700">Neural Networks Final</span><span class="text-[11px] text-rose-600 font-mono">Jun 20</span></div>
+                            <div class="flex items-center justify-between p-3 bg-amber-50 border border-amber-100 rounded-xl"><span class="text-xs font-semibold text-amber-700">Calculus III Midterm</span><span class="text-[11px] text-amber-700 font-mono">Jun 28</span></div>
+                            <div class="flex items-center justify-between p-3 bg-surface-100 border border-surface-200 rounded-xl"><span class="text-xs font-semibold text-ink-300">History of Art Quiz</span><span class="text-[11px] text-ink-50 font-mono">Jul 5</span></div>
+                        </div>
+                    </div>
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                        <h3 class="text-sm font-bold text-ink-400 mb-3">Weekly Goal</h3>
+                        <div class="text-2xl font-extrabold text-ink-400 mb-1">3 / 5</div>
+                        <div class="text-xs text-ink-50 mb-3">Sessions completed this week</div>
+                        <div class="progress-track"><div class="progress-fill bg-accent-teal" style="width:60%"></div></div>
+                        <button onclick="rescheduleReminders()" class="mt-4 w-full py-2 btn-outline rounded-xl text-xs font-medium">Adjust Schedule</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-24 border-t border-surface-300 bg-surface-200 py-16 px-6 relative overflow-hidden pb-28 xl:pb-16">
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 relative z-10">
+                <div class="md:col-span-2 space-y-4">
+                    <div class="flex flex-col">
+                        <span class="font-extrabold tracking-tighter text-ink-400 text-2xl flex items-center gap-1">
+                            <img src="assets/icons/graduation_cap.svg" alt="" class="asset-icon w-7 h-7 mr-1">
+                            StudentU
+                            <span class="w-2 h-2 rounded-full bg-accent-yellow mt-1"></span>
+                        </span>
+                        <span class="text-[10px] text-ink-100 block uppercase tracking-[0.2em] font-mono mt-1">Stop rereading. Start remembering.</span>
+                    </div>
+                    <p class="text-xs text-ink-100 leading-relaxed max-w-xs">
+                        An AI-powered study coach built for college students. Turn static notes into explanations,
+                        quizzes, and a study plan that helps you retain what matters.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-ink-300 text-sm mb-4">Product</h4>
+                    <ul class="space-y-2 text-xs text-ink-100">
+                        <li><button onclick="switchTab('workspace')" class="hover:text-accent-blue transition-colors">Study Desk</button></li>
+                        <li><button onclick="switchTab('dashboard')" class="hover:text-accent-blue transition-colors">Dashboard</button></li>
+                        <li><button onclick="switchTab('planner')" class="hover:text-accent-blue transition-colors">Study Plan</button></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-ink-300 text-sm mb-4">StudentU</h4>
+                    <ul class="space-y-2 text-xs text-ink-100">
+                        <li><button onclick="switchTab('profile')" class="hover:text-accent-red transition-colors">Classes</button></li>
+                        <li><button onclick="switchTab('moat-profile')" class="hover:text-accent-red transition-colors">Learning Profile</button></li>
+                        <li><button onclick="openUpgradeModal()" class="hover:text-accent-red transition-colors">Upgrade</button></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="max-w-6xl mx-auto mt-14 pt-8 border-t border-surface-300 flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] text-ink-50 font-mono uppercase tracking-widest relative z-10">
+                <span>&copy; 2026 StudentU</span>
+                <div class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+                    <span>Google Cloud & Gemini XPRIZE Project</span>
+                    <span>Built for verified students</span>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- ===== MOBILE BOTTOM NAV ===== -->
+    <nav id="mobile-nav" class="xl:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-surface-300/60 z-50 flex items-center px-2 py-2">
+        <button id="nav-btn-home" onclick="switchTab('landing')" class="active-tab-mobile flex flex-col items-center py-1 px-2 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <img src="assets/icons/home.svg" alt="" class="asset-icon w-5 h-5">
+            <span class="text-[9px] font-medium">Home</span>
+        </button>
+        <button id="nav-btn-dashboard" onclick="switchTab('dashboard')" class="flex flex-col items-center py-1 px-2 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <img src="assets/icons/ratings.svg" alt="" class="asset-icon w-5 h-5">
+            <span class="text-[9px] font-medium">Dashboard</span>
+        </button>
+        <button id="nav-btn-workspace" onclick="switchTab('workspace')" class="flex flex-col items-center py-1 px-2 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <img src="assets/icons/start.svg" alt="" class="asset-icon w-5 h-5">
+            <span class="text-[9px] font-medium">Study</span>
+        </button>
+        <button id="nav-btn-profile" onclick="switchTab('profile')" class="flex flex-col items-center py-1 px-2 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <img src="assets/icons/graduate.svg" alt="" class="asset-icon w-5 h-5">
+            <span class="text-[9px] font-medium">Classes</span>
+        </button>
+        <button id="nav-btn-moat-profile" onclick="switchTab('moat-profile')" class="flex flex-col items-center py-1 px-2 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <img src="assets/icons/bullish.svg" alt="" class="asset-icon w-5 h-5">
+            <span class="text-[9px] font-medium">Progress</span>
+        </button>
+        <button id="nav-btn-planner" onclick="switchTab('planner')" class="flex flex-col items-center py-1 px-2 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <img src="assets/icons/alarm_clock.svg" alt="" class="asset-icon w-5 h-5">
+            <span class="text-[9px] font-medium">Planner</span>
+        </button>
+    </nav>
+
+    <!-- ===== NOTIFICATION TOAST ===== -->
+    <div id="alert-box" class="hidden fixed bottom-6 right-6 z-[9998] max-w-xs bg-white border border-surface-300 rounded-2xl shadow-xl px-5 py-4 flex items-start gap-3">
+        <div id="alert-icon" class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-sm"></div>
+        <div class="flex-1">
+            <div class="text-xs font-bold text-ink-400" id="alert-title"></div>
+            <div class="text-[11px] text-ink-50 mt-0.5" id="alert-body"></div>
+        </div>
+        <button onclick="document.getElementById('alert-box').classList.add('hidden')" class="text-ink-50 hover:text-ink-300 text-xs flex-shrink-0">Ã—</button>
+    </div>
+
+    <!-- ===== UPGRADE MODAL ===== -->
+    <div id="upgrade-modal" class="hidden fixed inset-0 z-[9998] bg-ink-500/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+            <div class="text-center mb-6">
+                <div class="text-4xl mb-2">ðŸ’Ž</div>
+                <h3 class="text-xl font-extrabold text-ink-400">Upgrade to Premium</h3>
+                <p class="text-sm text-ink-50 mt-2">Unlock unlimited sessions, AI card generation, and advanced analytics.</p>
+            </div>
+            <div class="space-y-3 mb-6">
+                <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">âœ“</span><span class="text-ink-300">Unlimited study sessions</span></div>
+                <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">âœ“</span><span class="text-ink-300">Live Gemini AI card generation</span></div>
+                <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">âœ“</span><span class="text-ink-300">Full Firestore sync across devices</span></div>
+                <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">âœ“</span><span class="text-ink-300">Advanced forgetting curve analytics</span></div>
+            </div>
+            <button onclick="simulateStripeCheckout()" class="w-full py-3.5 btn-primary rounded-xl text-sm font-semibold">Pay $10.00 &amp; Upgrade</button>
+            <button onclick="closeUpgradeModal()" class="w-full py-2 text-xs text-ink-50 hover:text-ink-300 mt-3">Maybe Later</button>
+        </div>
+    </div>
+
+    <!-- ===== GRAIN OVERLAY ===== -->
+    <div class="grain-overlay"></div>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
+
+
+
+
+
