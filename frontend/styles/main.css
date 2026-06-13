@@ -133,6 +133,88 @@
             text-shadow: 0 2px 40px rgba(15, 14, 12, 0.06);
         }
 
+        .studentu-brand-lockup {
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .studentu-vector-logo {
+            display: block;
+            width: 1.8rem;
+            height: 1.8rem;
+            object-fit: contain;
+            transition: transform 0.25s ease, filter 0.25s ease;
+        }
+
+        .studentu-brand-lockup:hover .studentu-vector-logo {
+            transform: translateY(-1px) scale(1.03);
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.08));
+        }
+
+        .studentu-wordmark {
+            line-height: 1;
+        }
+
+        .studentu-footer-lockup {
+            display: inline-flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 0;
+        }
+
+        .studentu-footer-vector-logo {
+            display: block;
+            width: 1.75rem;
+            height: 1.75rem;
+            margin-right: 0.25rem;
+            object-fit: contain;
+        }
+
+        .hero-logo-strip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            max-width: 100%;
+            border: 1px solid #DCDCDC;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(12px);
+            padding: 0.45rem 0.7rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .hero-brand-logo {
+            display: block;
+            width: auto;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .hero-logo-divider {
+            width: 1px;
+            height: 1rem;
+            background: #DCDCDC;
+        }
+
+        .hero-brand-logo-cloud {
+            height: 1.15rem;
+        }
+
+        .hero-brand-logo-gemini {
+            height: 1.25rem;
+        }
+
+        .hero-brand-logo-xprize {
+            height: 1.55rem;
+        }
+
         .btn-primary {
             background-color: #1A1A1A;
             color: #F7F7F7;
@@ -238,10 +320,41 @@
             #main-nav {
                 padding-left: 1rem;
                 padding-right: 1rem;
+                align-items: center;
             }
 
             #hero-title {
                 font-size: clamp(2.6rem, 13vw, 4.5rem);
+            }
+
+            .studentu-vector-logo {
+                width: 1.55rem;
+                height: 1.55rem;
+            }
+
+            .studentu-wordmark {
+                font-size: 1rem;
+            }
+
+            .studentu-footer-lockup {
+                align-items: center;
+            }
+
+            .hero-logo-strip {
+                border-radius: 1rem;
+                padding: 0.55rem 0.75rem;
+            }
+
+            .hero-brand-logo-cloud {
+                height: 1rem;
+            }
+
+            .hero-brand-logo-gemini {
+                height: 1.1rem;
+            }
+
+            .hero-brand-logo-xprize {
+                height: 1.35rem;
             }
 
             .tab-pane:not(#tab-landing) {

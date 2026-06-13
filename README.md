@@ -11,12 +11,14 @@ StudentU is an AI study coach prototype for turning class notes into explanation
 
 ## Run Locally
 
-Open `frontend/index.html` directly in a browser for the current static prototype.
+Open `frontend/index.html` directly in a browser for the static prototype. Offline/demo flows work without backend services.
 
-The backend is scaffolded but not wired to production services yet:
+Live AI generation is handled by the backend only. Put secrets in `backend/.env`, using `backend/.env.example` as the template:
 
 ```bash
 cd backend
 npm install
 npm start
 ```
+
+The frontend calls `/api/gemini/generate`; it does not store Gemini or Firebase secrets in browser storage.

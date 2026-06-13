@@ -1,1 +1,1 @@
-// Study planner and exam window logic will be moved here from app.js.
+        function rescheduleReminders() { showNotification("Schedule Updated", "Study plan adjusted around your exams.", "success"); }

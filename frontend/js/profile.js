@@ -1,1 +1,1 @@
-// Class, syllabus, and profile settings logic will be moved here from app.js.
+        // Profile-specific editing helpers will move here as class and syllabus persistence grows.

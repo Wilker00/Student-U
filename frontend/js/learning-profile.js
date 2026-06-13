@@ -1,1 +1,1 @@
-// Learning profile and retention stats logic will be moved here from app.js.
+        function drillWeakSpots() { switchTab('workspace'); setTimeout(() => { generateAdaptiveQuiz(); showNotification("Focused Practice", "Targeting your weakest topics.", "info"); }, 300); }
