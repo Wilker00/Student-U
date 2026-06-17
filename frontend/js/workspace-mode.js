@@ -20,7 +20,7 @@
       showBanner: true,
       bannerClass: 'global-mode-banner--demo',
       pillClass: 'workspace-mode-pill--demo',
-      cta: { label: 'Set up my class', action: 'switchTab', tab: 'profile' },
+      cta: { label: 'Set up my class', action: 'enterSetupPath' },
     },
     setup: {
       id: 'setup',

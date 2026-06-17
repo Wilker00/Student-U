@@ -32,8 +32,8 @@
 <body class="h-full flex flex-col overflow-hidden">
 
     <header id="main-nav"
-        class="bg-surface-50/80 backdrop-blur-xl sticky top-0 z-50 px-4 sm:px-6 lg:px-10 py-3 flex items-center justify-between gap-4 border-b border-surface-300/60 transition-all duration-300">
-        <div class="studentu-brand-lockup cursor-pointer group" data-action="routeHome">
+        class="app-header bg-surface-50/80 backdrop-blur-xl sticky top-0 z-50 px-4 sm:px-6 lg:px-10 py-3 flex items-center justify-between gap-3 sm:gap-4 border-b border-surface-300/60 transition-all duration-300 shrink-0">
+        <div class="studentu-brand-lockup cursor-pointer group shrink-0 min-w-0" data-action="routeHome">
             <svg class="studentu-vector-logo" viewBox="0 0 299 310" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <linearGradient id="logo-color-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -55,29 +55,47 @@
             <span
                 class="studentu-wordmark font-extrabold tracking-tighter text-ink-400 text-xl flex items-center gap-1 group-hover:text-accent-red transition-colors duration-300">
                 StudentU
-                <span class="w-1.5 h-1.5 rounded-full bg-accent-blue mt-1"></span>
+                <span class="logo-dot w-1.5 h-1.5 rounded-full bg-accent-blue mt-1"></span>
             </span>
         </div>
 
         <nav
-            class="hidden xl:flex items-center bg-surface-200/80 border border-surface-300 rounded-full px-1.5 py-1.5 space-x-1 shadow-sm">
+            class="app-nav-rail hidden xl:flex items-center bg-surface-200/80 border border-surface-300 rounded-full px-1.5 py-1.5 gap-1 shadow-sm shrink-0"
+            aria-label="Main navigation">
             <button data-action="switchTab" data-tab-target="workspace"
-                class="nav-btn text-xs font-medium px-4 py-1.5 rounded-full transition-all duration-300 text-ink-100 hover:text-ink-400"
-                data-tab="workspace">Study Desk</button>
+                class="app-nav-item nav-btn text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-300 text-ink-100 hover:text-ink-400"
+                data-tab="workspace">
+                <span class="app-nav-item__icon app-nav-item__icon--desk" aria-hidden="true">
+                    <svg viewBox="0 0 20 20" fill="none"><path d="M4 6.5 10 3l6 3.5v8L10 18l-6-3.5v-8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 10.5 16 7M10 10.5v7.5M10 10.5 4 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                <span class="app-nav-item__label">Study Desk</span>
+            </button>
             <button data-action="switchTab" data-tab-target="profile"
-                class="nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
-                data-tab="profile">My Classes</button>
+                class="app-nav-item nav-btn text-xs font-medium px-3 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
+                data-tab="profile">
+                <span class="app-nav-item__icon app-nav-item__icon--classes" aria-hidden="true">
+                    <svg viewBox="0 0 20 20" fill="none"><path d="M3 7.5 10 4l7 3.5-7 3.5-7-3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 9v4.5c0 .8 1.8 1.5 4 1.5s4-.7 4-1.5V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                <span class="app-nav-item__label">My Classes</span>
+            </button>
             <button data-action="switchTab" data-tab-target="dashboard" data-subtab-target="planner"
-                class="nav-btn tab-locked text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
+                class="app-nav-item nav-btn tab-locked text-xs font-medium px-3 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
                 data-tab="dashboard"
-                title="Complete your first session to unlock Progress &amp; Planner">Progress / Planner</button>
+                title="Complete your first session to unlock Progress &amp; Planner">
+                <span class="app-nav-item__icon app-nav-item__icon--planner" aria-hidden="true">
+                    <svg viewBox="0 0 20 20" fill="none"><path d="M4 15V9M8 15V5M12 15v-4M16 15V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 16.5h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                <span class="app-nav-item__label">Progress</span>
+            </button>
         </nav>
 
-        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
             <span id="workspace-mode-pill" class="workspace-mode-pill hidden" role="status" aria-live="polite"></span>
             <button data-action="openAI" id="header-uai-btn"
                 class="hidden xl:flex text-xs btn-uai px-4 py-2 font-bold items-center gap-1.5 rounded-full relative overflow-hidden">
-                <img src="assets/icons/comments.svg" alt="" class="asset-icon w-3.5 h-3.5 invert-soft relative z-10">
+                <span class="app-nav-item__icon app-nav-item__icon--ai" aria-hidden="true">
+                    <svg viewBox="0 0 20 20" fill="none"><path d="M10 3.5a4 4 0 0 1 3.8 5.3l3.2 3.2a1.2 1.2 0 0 1-1.7 1.7l-3.2-3.2A4 4 0 1 1 10 3.5Z" stroke="currentColor" stroke-width="1.5"/></svg>
+                </span>
                 <span class="relative z-10">Study AI</span>
             </button>
             <button id="auth-action-button" data-action="signIn"
@@ -92,6 +110,7 @@
     </header>
 
     <div id="global-mode-banner" class="global-mode-banner hidden shrink-0" role="status" aria-live="polite"></div>
+    <div id="flow-compass" class="flow-compass-shell hidden shrink-0" role="navigation" aria-label="Your current path"></div>
 
     <main class="flex-1 overflow-y-auto scrollbar-subtle relative bg-surface-100" id="main-scroll">
 
@@ -105,7 +124,7 @@
                             <span class="hero-logo-divider" aria-hidden="true"></span>
                             <img src="assets/logos/google-gemini.svg" alt="Gemini" class="hero-brand-logo hero-brand-logo-gemini">
                             <span class="hero-logo-divider" aria-hidden="true"></span>
-                            <span class="hero-brand-logo hero-brand-logo-xprize text-[10px] font-bold tracking-[0.2em] text-ink-100 uppercase">XPRIZE</span>
+                            <img src="assets/logos/xprize-logo.png" alt="XPRIZE" class="hero-brand-logo hero-brand-logo-xprize">
                         </div>
                         <h1 class="su-display hero-shadow-text" id="hero-title">
                             Stop rereading.<br><span class="text-ink-100">Start remembering.</span>
@@ -115,18 +134,21 @@
                         </p>
                         <div class="landing-hero__actions">
                             <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">
-                                <button type="button" data-action="heroAction" data-hero-type="demo"
+                                <button type="button" data-action="enterExplorePath" data-demo-course="neuro" data-testid="enter-explore-path"
                                     class="w-full sm:w-auto px-8 py-3.5 btn-primary rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
                                     <img src="assets/icons/start.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
-                                    <span>Try Demo</span>
+                                    <span>Explore demo</span>
                                 </button>
-                                <button type="button" data-action="heroAction" data-hero-type="upload"
+                                <button type="button" data-action="enterSetupPath" data-testid="enter-setup-path"
                                     class="w-full sm:w-auto px-8 py-3.5 btn-outline rounded-xl text-sm font-medium flex items-center justify-center gap-2">
                                     <img src="assets/icons/upload.svg" alt="" class="asset-icon w-4 h-4">
-                                    <span>Upload Notes</span>
+                                    <span>Set up my class</span>
                                 </button>
                             </div>
-                            <button type="button" data-action="openAI" data-prompt="Explain the main ideas from my class notes in plain English, with one recall question."
+                            <p class="text-xs text-ink-50 max-w-lg">
+                                <strong class="text-ink-100">Two paths:</strong> explore with sample notes in ~2 minutes, or set up your real class in five steps.
+                            </p>
+                            <button type="button" data-action="enterExplorePath" data-demo-course="neuro" data-open-ai="true"
                                 class="landing-hero__ai-link text-sm font-medium text-accent-blue hover:underline">
                                 Or ask Study AI first →
                             </button>
@@ -741,6 +763,7 @@
                 </div>
 
                 <div id="flow-next-action" class="mb-6 reveal hidden"></div>
+                <div id="happy-path-strip" class="mb-6 reveal hidden" role="region" aria-label="Setup progress"></div>
                 <div id="study-desk-checklist" class="mb-6 reveal hidden"></div>
 
                 <div id="study-flow-home" class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6 reveal reveal-d1 su-bento">
@@ -933,28 +956,39 @@
                         <div>
                             <h2 class="text-lg font-extrabold text-ink-400 mt-1">Example visual cues</h2>
                         </div>
-                        <span class="text-xs text-ink-50">These are matched automatically to study cards.</span>
+                        <span class="text-xs text-ink-50">Matched automatically by subject and concept type.</span>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                         <div class="rounded-xl border border-surface-300 bg-white overflow-hidden">
-                            <img src="assets/learning-visuals/neural-concept-map.svg" alt="Connection map example" class="w-full h-36 object-cover">
+                            <img src="assets/learning-visuals/neural-concept-map.svg" alt="Connection map example" class="w-full h-36 object-contain bg-surface-50 p-2">
                             <div class="p-3">
-                                <h3 class="text-xs font-bold text-ink-300">Connection Map</h3>
-                                <p class="text-[11px] text-ink-50 mt-1">Best for neural networks, gradients, systems, and cause-effect chains.</p>
+                                <span class="text-[9px] font-bold uppercase tracking-wider text-accent-blue">STEM · Neuro</span>
+                                <h3 class="text-xs font-bold text-ink-300 mt-1">Connection Map</h3>
+                                <p class="text-[11px] text-ink-50 mt-1">Neural networks, gradients, and linked systems.</p>
                             </div>
                         </div>
                         <div class="rounded-xl border border-surface-300 bg-white overflow-hidden">
-                            <img src="assets/learning-visuals/history-timeline.svg" alt="Timeline example" class="w-full h-36 object-cover">
+                            <img src="assets/learning-visuals/history-timeline.svg" alt="Timeline example" class="w-full h-36 object-contain bg-surface-50 p-2">
                             <div class="p-3">
-                                <h3 class="text-xs font-bold text-ink-300">Memory Timeline</h3>
-                                <p class="text-[11px] text-ink-50 mt-1">Best for history, sequences, chapters, and development over time.</p>
+                                <span class="text-[9px] font-bold uppercase tracking-wider text-accent-red">Humanities</span>
+                                <h3 class="text-xs font-bold text-ink-300 mt-1">Memory Timeline</h3>
+                                <p class="text-[11px] text-ink-50 mt-1">History sequences, chapters, and turning points.</p>
                             </div>
                         </div>
                         <div class="rounded-xl border border-surface-300 bg-white overflow-hidden">
-                            <img src="assets/learning-visuals/comparison-traps.svg" alt="Comparison example" class="w-full h-36 object-cover">
+                            <img src="assets/learning-visuals/economic-ripples.svg" alt="Economic ripple example" class="w-full h-36 object-contain bg-surface-50 p-2">
                             <div class="p-3">
-                                <h3 class="text-xs font-bold text-ink-300">Correct vs Trap</h3>
-                                <p class="text-[11px] text-ink-50 mt-1">Best for common mistakes, confusing terms, and exam traps.</p>
+                                <span class="text-[9px] font-bold uppercase tracking-wider text-accent-yellow">Economics</span>
+                                <h3 class="text-xs font-bold text-ink-300 mt-1">Economic Ripple</h3>
+                                <p class="text-[11px] text-ink-50 mt-1">Multipliers, fiscal policy, and spread effects.</p>
+                            </div>
+                        </div>
+                        <div class="rounded-xl border border-surface-300 bg-white overflow-hidden">
+                            <img src="assets/learning-visuals/process-funnel.svg" alt="Process funnel example" class="w-full h-36 object-contain bg-surface-50 p-2">
+                            <div class="p-3">
+                                <span class="text-[9px] font-bold uppercase tracking-wider text-accent-blue">STEM · Calc</span>
+                                <h3 class="text-xs font-bold text-ink-300 mt-1">Step Focus</h3>
+                                <p class="text-[11px] text-ink-50 mt-1">Algorithms, derivatives, and multi-step problems.</p>
                             </div>
                         </div>
                     </div>
@@ -1164,18 +1198,23 @@
             <div class="study-ai">
                 <div id="study-ai-mode-banner" class="study-ai-mode-banner hidden mb-5 reveal" role="status"></div>
                 <header class="study-ai__header reveal">
-                    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-                        <div>
-                            <span class="su-eyebrow">Study Coach</span>
+                    <div class="study-ai__header-top">
+                        <div class="study-ai__header-copy">
+                            <div class="study-ai__header-badge-row">
+                                <span class="study-ai__header-badge" aria-hidden="true">
+                                    <img src="assets/icons/assistant.svg" alt="" class="asset-icon w-4 h-4">
+                                </span>
+                                <span class="su-eyebrow">Study Coach</span>
+                            </div>
                             <h1 class="su-display mt-1">Study AI</h1>
                             <p id="study-ai-subtitle" class="su-lead text-sm mt-1">Pick a task, get a structured explanation grounded in your class.</p>
                         </div>
-                        <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
-                            <label class="flex-1 lg:flex-initial min-w-[12rem]">
-                                <span class="sr-only">Class</span>
-                                <select id="ai-class-selector" class="w-full bg-surface-100 border border-surface-300 rounded-xl px-3 py-2.5 text-xs text-ink-300 focus:outline-none"></select>
+                        <div class="study-ai__controls">
+                            <label class="study-ai__class-picker">
+                                <span class="study-ai__class-picker-label">Class</span>
+                                <select id="ai-class-selector" class="study-ai__class-select"></select>
                             </label>
-                            <button type="button" id="ai-thread-toggle" data-action="chatToggleThread" class="btn-outline rounded-xl px-4 py-2.5 text-xs font-semibold whitespace-nowrap">Show thread</button>
+                            <button type="button" id="ai-thread-toggle" data-action="chatToggleThread" class="study-ai__thread-btn btn-outline rounded-xl px-4 py-2.5 text-xs font-semibold whitespace-nowrap">Show thread</button>
                         </div>
                     </div>
                 </header>
@@ -1186,27 +1225,31 @@
                             <span class="su-card-label study-ai__group-label">Choose a task</span>
                             <nav id="ai-task-rail" class="study-ai__tasks" aria-label="Study tasks">
                                 <button type="button" data-action="chatTask" data-task="explain" class="study-ai__task">
-                                    <img src="assets/icons/reading.svg" alt="" class="asset-icon w-4 h-4">
+                                    <span class="study-ai__task-icon"><img src="assets/icons/reading.svg" alt="" class="asset-icon w-4 h-4"></span>
                                     <span class="study-ai__task-text"><strong>Explain</strong><small>Understand a topic</small></span>
                                 </button>
                                 <button type="button" data-action="chatTask" data-task="quiz" class="study-ai__task">
-                                    <img src="assets/icons/answers.svg" alt="" class="asset-icon w-4 h-4">
+                                    <span class="study-ai__task-icon"><img src="assets/icons/answers.svg" alt="" class="asset-icon w-4 h-4"></span>
                                     <span class="study-ai__task-text"><strong>Quiz</strong><small>Test my recall</small></span>
                                 </button>
                                 <button type="button" data-action="chatTask" data-task="plan" class="study-ai__task">
-                                    <img src="assets/icons/calendar.svg" alt="" class="asset-icon w-4 h-4">
+                                    <span class="study-ai__task-icon"><img src="assets/icons/calendar.svg" alt="" class="asset-icon w-4 h-4"></span>
                                     <span class="study-ai__task-text"><strong>Plan</strong><small>Organize my week</small></span>
                                 </button>
                                 <button type="button" data-action="chatTask" data-task="review" class="study-ai__task">
-                                    <img src="assets/icons/bookmark.svg" alt="" class="asset-icon w-4 h-4">
+                                    <span class="study-ai__task-icon"><img src="assets/icons/bookmark.svg" alt="" class="asset-icon w-4 h-4"></span>
                                     <span class="study-ai__task-text"><strong>Review</strong><small>Prioritize weak spots</small></span>
                                 </button>
                                 <button type="button" data-action="chatTask" data-task="summarize" class="study-ai__task">
-                                    <img src="assets/icons/data_sheet.svg" alt="" class="asset-icon w-4 h-4">
+                                    <span class="study-ai__task-icon"><img src="assets/icons/data_sheet.svg" alt="" class="asset-icon w-4 h-4"></span>
                                     <span class="study-ai__task-text"><strong>Summarize</strong><small>Condense my notes</small></span>
                                 </button>
                             </nav>
                             <div id="ai-task-rail-mobile" class="study-ai__task-mobile" aria-hidden="true"></div>
+                        </div>
+                        <div class="study-ai__group study-ai__prompts-group">
+                            <span class="su-card-label study-ai__group-label">Suggested prompts</span>
+                            <div id="ai-dynamic-chips" class="study-ai__prompt-list" aria-label="Suggested prompts"></div>
                         </div>
                         <div id="ai-grounding-panel" class="study-ai__group study-ai__grounding-slot"></div>
                     </aside>
@@ -1214,27 +1257,25 @@
                     <main class="study-ai__stage">
                         <div class="study-ai__stage-header">
                             <div>
-                                <span id="study-ai-answer-label" class="su-card-label">Your answer</span>
-                                <h2 id="study-ai-answer-title" class="study-ai__stage-title">Pick a task or ask a question</h2>
+                                <span id="study-ai-answer-label" class="su-card-label">Study session</span>
+                                <h2 id="study-ai-answer-title" class="study-ai__stage-title">Your answers live here</h2>
                             </div>
-                            <button type="button" data-action="loadPacketAndWorkspace" class="btn-primary rounded-xl px-4 py-2 text-xs font-semibold shrink-0">Continue on Study Desk</button>
+                            <button type="button" id="study-ai-desk-btn" data-action="loadPacketAndWorkspace" class="btn-primary rounded-xl px-4 py-2 text-xs font-semibold shrink-0 hidden">Continue on Study Desk</button>
                         </div>
                         <div id="studentu-chat-messages" class="study-ai__hero"></div>
                         <div id="ai-thread-history" class="study-ai__thread hidden" aria-label="Conversation thread"></div>
+                        <div class="study-ai__composer">
+                            <div id="study-ai-composer-field" class="study-ai__composer-field">
+                                <label class="sr-only" for="studentu-chat-input">Message for Study AI</label>
+                                <textarea id="studentu-chat-input" rows="1" placeholder="Ask about this class, card, or next review..." class="study-ai__input"></textarea>
+                                <button type="button" id="studentu-chat-send" data-action="chatSend" class="study-ai__send-btn btn-uai" aria-label="Send to Study AI">
+                                    <img src="assets/icons/start.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
+                                </button>
+                            </div>
+                            <p class="study-ai__composer-hint"><kbd>Enter</kbd> to send · <kbd>Shift+Enter</kbd> for a new line</p>
+                        </div>
                     </main>
                 </div>
-
-                <footer class="study-ai__composer reveal reveal-d2">
-                    <div id="ai-dynamic-chips" class="study-ai__chips"></div>
-                    <div id="study-ai-composer-field" class="study-ai__composer-field">
-                        <textarea id="studentu-chat-input" rows="2" placeholder="Ask about this class, card, or next review..." class="study-ai__input" aria-label="Message for Study AI"></textarea>
-                        <button type="button" id="studentu-chat-send" data-action="chatSend" class="btn-uai study-ai__uai-submit rounded-full overflow-hidden relative" aria-label="Send to Study AI">
-                            <img src="assets/icons/comments.svg" alt="" class="asset-icon w-3.5 h-3.5 invert-soft relative z-10">
-                            <span class="study-ai__uai-label relative z-10">Study AI</span>
-                        </button>
-                    </div>
-                    <p class="study-ai__composer-hint">Enter to send · Shift+Enter for a new line</p>
-                </footer>
             </div>
         </section>
 
@@ -1273,10 +1314,21 @@
                             </select>
                             <input id="class-material-title" type="text" placeholder="Title or topic" class="w-full bg-surface-100 border border-surface-300 rounded-xl px-3 py-2.5 text-xs text-ink-300 placeholder:text-ink-50/70 focus:outline-none">
                             <textarea id="class-material-notes" rows="4" placeholder="Paste notes, professor comments, chapter hints, or key reminders..." class="w-full bg-surface-100 border border-surface-300 rounded-xl px-3 py-2.5 text-xs text-ink-300 placeholder:text-ink-50/70 resize-none focus:outline-none"></textarea>
-                            <label class="btn-outline rounded-xl px-3 py-2.5 text-xs font-medium flex items-center justify-center gap-2 cursor-pointer">
+                            <div class="class-upload-mobile sm:hidden space-y-2">
+                                <label class="class-upload-photo-btn rounded-xl px-4 py-3.5 text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer">
+                                    <img src="assets/icons/upload.svg" alt="" class="asset-icon w-4 h-4">
+                                    Take or choose photos
+                                    <input id="class-material-photo-mobile" type="file" accept="image/*" capture="environment" multiple class="hidden" onchange="handleClassMaterialFileSelected(event)">
+                                </label>
+                                <label class="class-upload-file-btn btn-outline rounded-xl px-4 py-3 text-xs font-medium flex items-center justify-center gap-2 cursor-pointer">
+                                    Attach PDF or document
+                                    <input type="file" accept=".txt,.pdf,.doc,.docx,.ppt,.pptx" class="hidden" onchange="handleClassMaterialFileSelected(event)">
+                                </label>
+                            </div>
+                            <label class="hidden sm:flex btn-outline rounded-xl px-3 py-2.5 text-xs font-medium items-center justify-center gap-2 cursor-pointer">
                                 <img src="assets/icons/upload.svg" alt="" class="asset-icon w-4 h-4">
                                 Attach File or Photo
-                                <input id="class-material-file" type="file" accept=".txt,.pdf,.doc,.docx,.ppt,.pptx,image/*" multiple class="hidden" onchange="handleClassMaterialFileSelected()">
+                                <input id="class-material-file" type="file" accept=".txt,.pdf,.doc,.docx,.ppt,.pptx,image/*" multiple class="hidden" onchange="handleClassMaterialFileSelected(event)">
                             </label>
                             <p id="class-material-file-name" class="text-[10px] text-ink-50 hidden"></p>
                             <p class="text-[10px] text-ink-50">Tip: select multiple lecture photos at once — StudentU will read and combine them.</p>
@@ -1503,26 +1555,36 @@
     </main>
 
     <!-- ===== MOBILE BOTTOM NAV ===== -->
-    <nav id="mobile-nav" class="xl:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-surface-300/60 z-50 flex justify-around items-center px-2 py-2 shadow-lg">
-        <button id="nav-btn-landing" data-action="switchTab" data-tab-target="landing" data-tab="landing" class="flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
-            <img src="assets/icons/home.svg" alt="" class="asset-icon w-5 h-5">
-            <span class="text-[9px] font-medium">Home</span>
+    <nav id="mobile-nav" class="app-mobile-nav xl:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-surface-300/60 z-50 flex justify-around items-center px-2 py-2 shadow-lg" aria-label="Mobile navigation">
+        <button id="nav-btn-landing" data-action="switchTab" data-tab-target="landing" data-tab="landing" class="app-mobile-nav__item flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <span class="app-mobile-nav__icon app-mobile-nav__icon--home" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M4 8.5 10 4l6 4.5V16a1 1 0 0 1-1 1h-3.5v-4H8.5v4H5a1 1 0 0 1-1-1V8.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="app-mobile-nav__label text-[9px] font-medium">Home</span>
         </button>
-        <button id="nav-btn-workspace" data-action="switchTab" data-tab-target="workspace" data-tab="workspace" class="flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
-            <img src="assets/icons/start.svg" alt="" class="asset-icon w-5 h-5">
-            <span class="text-[9px] font-medium">Study</span>
+        <button id="nav-btn-workspace" data-action="switchTab" data-tab-target="workspace" data-tab="workspace" class="app-mobile-nav__item flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <span class="app-mobile-nav__icon app-mobile-nav__icon--desk" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M4 6.5 10 3l6 3.5v8L10 18l-6-3.5v-8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 10.5 16 7M10 10.5v7.5M10 10.5 4 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+            <span class="app-mobile-nav__label text-[9px] font-medium">Study</span>
         </button>
-        <button id="nav-btn-profile" data-action="switchTab" data-tab-target="profile" data-tab="profile" class="flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
-            <img src="assets/icons/graduation_cap.svg" alt="" class="asset-icon w-5 h-5">
-            <span class="text-[9px] font-medium">Classes</span>
+        <button id="nav-btn-profile" data-action="switchTab" data-tab-target="profile" data-tab="profile" class="app-mobile-nav__item flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <span class="app-mobile-nav__icon app-mobile-nav__icon--classes" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M3 7.5 10 4l7 3.5-7 3.5-7-3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 9v4.5c0 .8 1.8 1.5 4 1.5s4-.7 4-1.5V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+            <span class="app-mobile-nav__label text-[9px] font-medium">Classes</span>
         </button>
-        <button id="nav-btn-dashboard" data-action="switchTab" data-tab-target="dashboard" data-subtab-target="planner" data-tab="dashboard" class="tab-locked flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400" title="Complete your first session to unlock">
-            <img src="assets/icons/ratings.svg" alt="" class="asset-icon w-5 h-5">
-            <span class="text-[9px] font-medium">Plan</span>
+        <button id="nav-btn-dashboard" data-action="switchTab" data-tab-target="dashboard" data-subtab-target="planner" data-tab="dashboard" class="app-mobile-nav__item tab-locked flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400" title="Complete your first session to unlock">
+            <span class="app-mobile-nav__icon app-mobile-nav__icon--planner" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M4 15V9M8 15V5M12 15v-4M16 15V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 16.5h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+            <span class="app-mobile-nav__label text-[9px] font-medium">Plan</span>
         </button>
-        <button id="nav-btn-ai" data-action="openAI" class="flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
-            <img src="assets/icons/comments.svg" alt="" class="asset-icon w-5 h-5">
-            <span class="text-[9px] font-medium">AI</span>
+        <button id="nav-btn-ai" data-action="openAI" data-tab="ai" class="app-mobile-nav__item flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <span class="app-mobile-nav__icon app-mobile-nav__icon--ai" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M10 3.5a4 4 0 0 1 3.8 5.3l3.2 3.2a1.2 1.2 0 0 1-1.7 1.7l-3.2-3.2A4 4 0 1 1 10 3.5Z" stroke="currentColor" stroke-width="1.5"/></svg>
+            </span>
+            <span class="app-mobile-nav__label text-[9px] font-medium">AI</span>
         </button>
     </nav>
 
@@ -1585,6 +1647,8 @@
     <div class="grain-overlay"></div>
     <script src="js/store-bridge.js"></script>
     <script src="js/workspace-mode.js"></script>
+    <script src="js/user-flow.core.js"></script>
+    <script src="js/happy-path-bridge.js"></script>
     <script src="js/algorithms.js"></script>
     <script src="js/silent-algorithms-bridge.js"></script>
     <script src="js/image-prep.js"></script>
@@ -1599,6 +1663,7 @@
     <script src="js/cloud-sync.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/api/analytics.js"></script>
+    <script src="js/concept-visuals.js"></script>
     <script src="js/chat.js"></script>
     <script src="js/gamification.js"></script>
     <script src="js/dashboard.js"></script>
@@ -1614,6 +1679,8 @@
     <script src="js/profile.js"></script>
     <script src="js/profile/init.js"></script>
     <script src="js/setup-progress.js"></script>
+    <script src="js/happy-path.js"></script>
+    <script src="js/user-flow.js"></script>
     <script src="js/dashboard-live.js"></script>
     <script src="js/study-session.js"></script>
     <script src="js/session/generation.js"></script>

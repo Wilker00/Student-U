@@ -1,66 +1,82 @@
 [
   {
     "id": "neural-concept-map",
+    "visualId": "map",
     "type": "map",
     "subjects": ["neuro", "calc"],
-    "keywords": ["network", "gradient", "backprop", "chain", "system", "node"],
+    "keywords": ["network", "gradient", "backprop", "chain", "system", "node", "neural", "layer"],
     "path": "assets/learning-visuals/neural-concept-map.svg",
-    "title": "Connection Map"
+    "title": "Connection Map",
+    "caption": "See how the key ideas link together instead of memorizing isolated facts."
   },
   {
     "id": "history-timeline",
+    "visualId": "timeline",
     "type": "timeline",
     "subjects": ["hist"],
-    "keywords": ["history", "renaissance", "perspective", "chapter", "origin"],
+    "keywords": ["history", "renaissance", "perspective", "chapter", "origin", "era", "period", "sequence"],
     "path": "assets/learning-visuals/history-timeline.svg",
-    "title": "Memory Timeline"
+    "title": "Memory Timeline",
+    "caption": "Place each step in order so the sequence sticks in memory."
   },
   {
     "id": "process-funnel",
+    "visualId": "funnel",
     "type": "funnel",
     "subjects": ["neuro", "calc", "macro"],
-    "keywords": ["algorithm", "process", "step", "pass", "derivative"],
+    "keywords": ["algorithm", "process", "step", "pass", "derivative", "calculus", "partial"],
     "path": "assets/learning-visuals/process-funnel.svg",
-    "title": "Step Focus"
+    "title": "Step Focus",
+    "caption": "Break the concept into ordered steps and focus on the moving part."
   },
   {
     "id": "radial-metrics",
+    "visualId": "radial",
     "type": "radial",
     "subjects": ["macro", "calc"],
-    "keywords": ["percent", "metric", "risk", "retention", "fiscal"],
+    "keywords": ["percent", "metric", "risk", "retention", "fiscal", "ratio", "rate"],
     "path": "assets/learning-visuals/radial-metrics.svg",
-    "title": "Retention Metrics"
+    "title": "Retention Metrics",
+    "caption": "Compare the moving parts — rates, ratios, and what each one controls."
   },
   {
     "id": "comparison-traps",
+    "visualId": "compare",
     "type": "compare",
     "subjects": ["neuro", "calc", "hist", "macro"],
-    "keywords": ["mistake", "confusing", "difference", "versus", "trap"],
+    "keywords": ["mistake", "confusing", "difference", "versus", "trap", "wrong", "instead"],
     "path": "assets/learning-visuals/comparison-traps.svg",
-    "title": "Correct vs Trap"
+    "title": "Correct vs Trap",
+    "caption": "Contrast the right mental model with the mistake students usually make."
   },
   {
     "id": "economic-ripples",
-    "type": "radial",
+    "visualId": "ripple",
+    "type": "ripple",
     "subjects": ["macro"],
-    "keywords": ["multiplier", "fiscal", "spending", "inflation", "demand"],
+    "keywords": ["multiplier", "fiscal", "spending", "inflation", "demand", "econom", "gdp"],
     "path": "assets/learning-visuals/economic-ripples.svg",
-    "title": "Economic Ripple"
+    "title": "Economic Ripple",
+    "caption": "Watch how a change at the center spreads through the wider system."
   },
   {
     "id": "animated-recall-loop",
+    "visualId": "recall",
     "type": "animation",
     "subjects": ["neuro", "calc", "hist", "macro"],
-    "keywords": ["recall", "memory", "review", "practice", "quiz"],
+    "keywords": ["recall", "memory", "review", "practice", "quiz", "test"],
     "path": "assets/learning-visuals/animated-recall-loop.svg",
-    "title": "Recall Loop"
+    "title": "Recall Loop",
+    "caption": "Study moves in a loop: preview, test yourself, fix gaps, then review on schedule."
   },
   {
     "id": "animated-flow-map",
+    "visualId": "flow",
     "type": "animation",
     "subjects": ["neuro", "calc", "macro"],
-    "keywords": ["flow", "process", "system", "cause", "effect"],
+    "keywords": ["flow", "process", "system", "cause", "effect", "input", "output"],
     "path": "assets/learning-visuals/animated-flow-map.svg",
-    "title": "Flow Map"
+    "title": "Cause to Effect",
+    "caption": "Follow how one input ripples through steps to produce the final result."
   }
 ]

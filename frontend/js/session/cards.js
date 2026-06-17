@@ -91,6 +91,11 @@
                 }
             }
 
+            window.StudentUConceptVisuals?.mountCardVisual?.(
+                card,
+                typeof activeSession !== 'undefined' ? activeSession?.courseKey : ''
+            );
+
             const cardContainer = document.getElementById('active-study-card') || document.getElementById('card-container');
             if (cardContainer) {
                 cardContainer.className = "bg-white border rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden transition-all duration-300 hover:shadow-2xl ";

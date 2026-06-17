@@ -1,5 +1,12 @@
 const StudentUChat = {
-  messages: JSON.parse(localStorage.getItem('studentu_chat_messages') || '[]'),
+  messages: (() => {
+    try {
+      const parsed = JSON.parse(localStorage.getItem('studentu_chat_messages') || '[]');
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (_error) {
+      return [];
+    }
+  })(),
   activeTask: localStorage.getItem('studentu_active_task') || null,
   threadMode: false,
   visualAssets: [
@@ -10,6 +17,7 @@ const StudentUChat = {
     { id: 'radial', path: 'assets/learning-visuals/radial-metrics.svg', title: 'Retention Metrics' },
     { id: 'ripple', path: 'assets/learning-visuals/economic-ripples.svg', title: 'Economic Ripple' },
     { id: 'compare', path: 'assets/learning-visuals/comparison-traps.svg', title: 'Correct vs Trap' },
+    { id: 'funnel', path: 'assets/learning-visuals/process-funnel.svg', title: 'Step Focus' },
   ],
 
   taskPrompts: {
@@ -30,6 +38,7 @@ const StudentUChat = {
   },
 
   init() {
+    this.purgeStaleErrors();
     this.syncMobileTaskRail();
     this.renderTaskRailActive();
     this.renderMessages();
@@ -64,7 +73,11 @@ const StudentUChat = {
 
   updateThreadToggleLabel() {
     const btn = document.getElementById('ai-thread-toggle');
-    if (btn) btn.textContent = this.threadMode ? 'Hide thread' : 'Show thread';
+    if (btn) {
+      btn.textContent = this.threadMode ? 'Hide thread' : 'Show thread';
+      btn.classList.toggle('is-active', this.threadMode);
+      btn.setAttribute('aria-pressed', this.threadMode ? 'true' : 'false');
+    }
     const thread = document.getElementById('ai-thread-history');
     if (thread) thread.classList.toggle('hidden', !this.threadMode);
   },
@@ -78,6 +91,76 @@ const StudentUChat = {
 
   saveLocal() {
     localStorage.setItem('studentu_chat_messages', JSON.stringify(this.messages.slice(-30)));
+  },
+
+  purgeStaleErrors() {
+    const filtered = this.messages.filter(message => !message?.structured?.isError);
+    if (filtered.length === this.messages.length) return;
+    this.messages = filtered;
+    this.saveLocal();
+  },
+
+  buildLocalDemoReply({ message, taskType = 'freeform', classContext = '', extraContext = '' }) {
+    const context = [classContext, extraContext]
+      .map(item => String(item || '').trim())
+      .filter(Boolean)
+      .join('\n')
+      .slice(0, 500);
+    const topicMatch = String(message || context || 'your class material')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 90);
+    const safeTask = taskType === 'freeform' ? 'explain' : taskType;
+    const titleByTask = {
+      plan: 'Demo study plan',
+      quiz: 'Demo practice prompt',
+      review: 'Demo review focus',
+      summarize: 'Demo summary',
+      explain: 'Demo study explanation',
+    };
+    const suggestedActionByTask = {
+      quiz: 'start_quiz',
+      plan: 'open_planner',
+      review: 'mark_weak',
+      summarize: 'open_workspace',
+    };
+    const course = this.getActiveCourse?.() || null;
+    const subject = course?.id || '';
+    const demoPayload = {
+      title: titleByTask[safeTask] || titleByTask.explain,
+      summary: `Offline demo: Study AI is using a local coach response for "${topicMatch}". Focus on the main idea, one worked example, and one recall question before moving on.`,
+      breakdown: [
+        'Name the concept in one plain sentence.',
+        'Connect it to a concrete class example or uploaded note.',
+        'Test yourself without looking, then patch the weakest part.',
+      ],
+      taskType: safeTask,
+      subject,
+    };
+
+    return {
+      title: demoPayload.title,
+      summary: demoPayload.summary,
+      breakdown: demoPayload.breakdown,
+      example: context
+        ? `Using your class context: ${context.slice(0, 220)}${context.length > 220 ? '…' : ''}`
+        : 'Example: turn a note heading into a question, answer it from memory, then compare against the source.',
+      memoryHook: 'One idea, one example, one recall check.',
+      recallQuestion: `How would you explain ${topicMatch || 'this topic'} in your own words?`,
+      visualId: window.StudentUConceptVisuals?.resolveVisualId?.(demoPayload) || (safeTask === 'plan' ? 'timeline' : 'flow'),
+      suggestedAction: suggestedActionByTask[safeTask] || 'none',
+      weakTopicLabel: safeTask === 'review' ? topicMatch : '',
+      planItems: safeTask === 'plan'
+        ? [
+          { day: 'Today', topic: 'Preview notes and mark weak spots', minutes: 20 },
+          { day: 'Tomorrow', topic: 'Practice active recall questions', minutes: 25 },
+          { day: 'Fri', topic: 'Review misses and summarize corrections', minutes: 20 },
+        ]
+        : [],
+      reviewItems: safeTask === 'review'
+        ? [{ title: topicMatch || 'Current topic', reason: 'Demo mode review target from the current request.', daysUntil: 0 }]
+        : [],
+    };
   },
 
   setActiveTask(taskType) {
@@ -211,23 +294,32 @@ const StudentUChat = {
 
     if (!course) {
       panel.innerHTML = `
-        <span class="su-card-label">Grounding</span>
-        <h3 class="su-card-title mt-1">No class yet</h3>
-        <p class="su-card-body text-xs mt-2">Study AI needs at least one class packet to give specific answers.</p>
-        <button type="button" data-action="switchTab" data-tab-target="profile" class="btn-primary rounded-lg px-3 py-1.5 text-[11px] font-semibold mt-3">Add a class</button>`;
+        <span class="su-card-label study-ai__group-label">Grounding</span>
+        <div class="study-ai__grounding study-ai__grounding--empty">
+          <div class="study-ai__grounding-empty-icon" aria-hidden="true">
+            <img src="assets/icons/plus.svg" alt="" class="asset-icon w-4 h-4">
+          </div>
+          <h3 class="su-card-title mt-1">No class yet</h3>
+          <p class="su-card-body text-xs mt-2">Study AI needs at least one class packet to give specific answers.</p>
+          <button type="button" data-action="switchTab" data-tab-target="profile" class="btn-primary rounded-lg px-3 py-1.5 text-[11px] font-semibold mt-3">Add a class</button>
+        </div>`;
       return;
     }
 
     const readiness = this.getContextReadiness(course);
     const toneClass = readiness.score >= 4 ? 'is-strong' : readiness.score >= 2 ? '' : 'is-thin';
+    const progressPct = (readiness.score / 5) * 100;
 
     panel.innerHTML = `
+      <span class="su-card-label study-ai__group-label">Grounded in</span>
       <div class="study-ai__grounding ${toneClass}">
         <div class="study-ai__grounding-head">
-          <span class="su-card-label">Grounded in</span>
-          <span class="study-ai__grounding-score">${readiness.score}/5 · ${readiness.label}</span>
+          <div class="study-ai__grounding-ring" style="--grounding-progress: ${progressPct}%">
+            <span>${readiness.score}/5</span>
+          </div>
+          <span class="study-ai__grounding-score">${readiness.label} context</span>
         </div>
-        <h3 class="su-card-title mt-1">${this.escape(course.title)}</h3>
+        <h3 class="su-card-title mt-2">${this.escape(course.title)}</h3>
         <p class="su-card-body text-xs mt-1">${readiness.ready
     ? 'Your class packet is ready for specific explanations and quizzes.'
     : `Add: ${this.escape(readiness.hints.slice(0, 3).join(', '))}`}</p>
@@ -235,7 +327,7 @@ const StudentUChat = {
           ${readiness.flags.map(item => `
             <div class="study-ai__source-item ${item.ok ? 'is-ok' : ''}">
               <span>${item.label}</span>
-              <span>${item.ok ? '✓' : '—'}</span>
+              <span class="study-ai__source-check">${item.ok ? '✓' : '—'}</span>
             </div>`).join('')}
         </div>
         <div class="study-ai__grounding-actions">
@@ -265,13 +357,14 @@ const StudentUChat = {
       );
     }
     row.innerHTML = chips.map(chip => `
-      <button type="button" data-action="chatPrompt" data-prompt="${this.escapeAttr(chip.prompt)}" class="uai-chip">${this.escape(chip.label)}</button>
+      <button type="button" data-action="chatPrompt" data-prompt="${this.escapeAttr(chip.prompt)}" class="study-ai__prompt">${this.escape(chip.label)}</button>
     `).join('');
   },
 
   getLatestAssistantIndex() {
     for (let i = this.messages.length - 1; i >= 0; i--) {
-      if (this.messages[i]?.role === 'assistant') return i;
+      const message = this.messages[i];
+      if (message?.role === 'assistant' && !message?.structured?.isError) return i;
     }
     return -1;
   },
@@ -279,14 +372,17 @@ const StudentUChat = {
   updateStageHeader(structured) {
     const label = document.getElementById('study-ai-answer-label');
     const title = document.getElementById('study-ai-answer-title');
+    const deskBtn = document.getElementById('study-ai-desk-btn');
     if (!label || !title) return;
     if (!structured) {
-      label.textContent = 'Your answer';
-      title.textContent = 'Pick a task or ask a question';
+      label.textContent = 'Study session';
+      title.textContent = 'Your answers live here';
+      deskBtn?.classList.add('hidden');
       return;
     }
-    label.textContent = structured.isError ? 'Something went wrong' : 'Your explanation';
+    label.textContent = structured.isError ? 'Something went wrong' : structured.isLoading ? 'Generating…' : 'Your explanation';
     title.textContent = structured.title || 'Study explanation';
+    deskBtn?.classList.toggle('hidden', structured.isLoading || structured.isError);
   },
 
   renderMessages() {
@@ -304,11 +400,12 @@ const StudentUChat = {
       this.updateStageHeader(null);
       hero.innerHTML = `
         <div class="study-ai__empty">
+          <div class="study-ai__empty-glow" aria-hidden="true"></div>
           <div class="study-ai__empty-icon">
             <img src="assets/icons/assistant.svg" alt="" class="asset-icon w-5 h-5">
           </div>
-          <p class="text-base font-semibold text-ink-400 tracking-tight">Choose a task on the left</p>
-          <p class="text-sm text-ink-50 mt-2 max-w-sm leading-relaxed">Or type a question below. Answers appear here as structured study content with recall prompts and next steps.</p>
+          <p class="study-ai__empty-title">Ready to study</p>
+          <p class="study-ai__empty-copy">Pick a task on the left, try a suggested prompt, or ask anything in the box below.</p>
         </div>`;
       return;
     }
@@ -351,7 +448,7 @@ const StudentUChat = {
   renderLoadingSkeleton() {
     const hero = document.getElementById('studentu-chat-messages');
     if (!hero) return;
-    this.updateStageHeader({ title: 'Thinking…' });
+    this.updateStageHeader({ title: 'Thinking…', isLoading: true });
     hero.innerHTML = `
       <article class="study-ai-answer uai-skeleton">
         <div class="study-ai-answer__head">
@@ -375,13 +472,34 @@ const StudentUChat = {
   },
 
   getVisual(id) {
-    return this.visualAssets.find(item => item.id === id) || this.visualAssets[0];
+    return window.StudentUConceptVisuals?.resolveVisual?.({ visualId: id })
+      || this.visualAssets.find(item => item.id === id)
+      || this.visualAssets[0];
+  },
+
+  renderStudyVisual(structured, taskType) {
+    const enriched = {
+      ...structured,
+      subject: structured.subject || this.getActiveCourse()?.id || '',
+    };
+    if (window.StudentUConceptVisuals?.renderStudyVisualBlock) {
+      return window.StudentUConceptVisuals.renderStudyVisualBlock(
+        enriched,
+        taskType || this.activeTask || 'freeform',
+      );
+    }
+    const visual = this.getVisual(structured.visualId);
+    return `
+      <div class="study-ai-answer__visual study-ai-answer__visual--hero">
+        <img src="${this.escapeAttr(visual.path)}" alt="${this.escapeAttr(visual.title)} visual">
+      </div>`;
   },
 
   renderStructuredAnswer(structured, messageIndex) {
     const visual = this.getVisual(structured.visualId);
     const breakdown = structured.breakdown?.length ? structured.breakdown : [structured.summary].filter(Boolean);
     const errorClass = structured.isError ? ' is-error' : '';
+    const taskType = this.activeTask || 'freeform';
 
     const planBlock = structured.planItems?.length ? `
       <div class="study-ai-answer__extra rich-answer-block">
@@ -405,6 +523,10 @@ const StudentUChat = {
 
     return `
       <article class="study-ai-answer${errorClass}" data-message-index="${messageIndex}">
+        ${!structured.isError ? `
+        <div class="study-ai-answer__visual study-ai-answer__visual--hero">
+          ${this.renderStudyVisual(structured, taskType)}
+        </div>` : ''}
         <div class="study-ai-answer__head">
           <span class="rich-answer-kicker">Study AI · ${this.escape(visual.title)}</span>
           <h3 class="study-ai-answer__title">${this.escape(structured.title)}</h3>
@@ -429,10 +551,6 @@ const StudentUChat = {
             <p>${this.escape(structured.memoryHook || 'Anchor the idea to one image and one question.')}</p>
           </div>
         </div>
-        ${!structured.isError ? `
-        <div class="study-ai-answer__visual">
-          <img src="${this.escapeAttr(visual.path)}" alt="${this.escapeAttr(visual.title)} visual">
-        </div>` : ''}
         ${planBlock}
         ${reviewBlock}
         <div class="study-ai-answer__actions">
@@ -454,7 +572,7 @@ const StudentUChat = {
       example: sentences[5] || 'Connect this idea to one example from your notes.',
       memoryHook: 'Anchor the idea to one image, one example, and one recall question.',
       recallQuestion: 'Can you explain this without looking at your notes?',
-      visualId: 'recall',
+      visualId: window.StudentUConceptVisuals?.resolveVisualId?.({ title: previousUser, taskType: 'freeform' }) || 'flow',
       suggestedAction: 'none',
       weakTopicLabel: '',
       planItems: [],
@@ -481,13 +599,12 @@ const StudentUChat = {
   setBusy(isBusy) {
     const button = document.getElementById('studentu-chat-send');
     const input = document.getElementById('studentu-chat-input');
-    const label = button?.querySelector('.study-ai__uai-label');
     if (button) {
       button.disabled = isBusy;
       button.classList.toggle('animating-border', isBusy);
       button.setAttribute('aria-busy', isBusy ? 'true' : 'false');
+      button.setAttribute('aria-label', isBusy ? 'Sending…' : 'Send to Study AI');
     }
-    if (label) label.textContent = isBusy ? 'Sending…' : 'Study AI';
     if (input) input.disabled = isBusy;
     this.setComposerBusy(isBusy);
   },
@@ -573,6 +690,24 @@ const StudentUChat = {
 
     const extraContext = await this.buildExtraContext(taskType);
     const studyPreferences = window.StudentUStudySettings?.getStudyPreferencesPayload?.() || null;
+    const classContext = this.getClassContext();
+    const pushDemoReply = (mode = 'offline') => {
+      const structured = this.buildLocalDemoReply({
+        message: text,
+        taskType,
+        classContext,
+        extraContext,
+      });
+      if (mode === 'offline') {
+        structured.summary = structured.summary.replace('Offline demo:', 'Offline demo (backend unavailable):');
+      }
+      this.messages.push({
+        role: 'assistant',
+        content: structured.summary,
+        structured,
+      });
+      this.handleSuggestedAction(structured);
+    };
 
     try {
       const response = await studentUFetch('/api/chat', {
@@ -581,41 +716,40 @@ const StudentUChat = {
         body: JSON.stringify({
           message: text,
           messages: this.messages.slice(-12),
-          classContext: this.getClassContext(),
+          classContext,
           taskType,
           extraContext,
           studyPreferences,
         }),
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Study AI is unavailable.');
+
+      let data = {};
+      try {
+        data = await response.json();
+      } catch (_parseError) {
+        pushDemoReply('offline');
+        return;
+      }
+
+      if (!response.ok && !data.structured) {
+        pushDemoReply('offline');
+        return;
+      }
 
       const structured = data.structured || null;
+      if (!structured) {
+        pushDemoReply('offline');
+        return;
+      }
+
       this.messages.push({
         role: 'assistant',
-        content: structured?.summary || data.reply || '',
+        content: structured.summary || data.reply || '',
         structured,
       });
       this.handleSuggestedAction(structured);
-    } catch (error) {
-      this.messages.push({
-        role: 'assistant',
-        content: error.message || 'Study AI is unavailable.',
-        structured: {
-          title: 'Could not reach Study AI',
-          summary: error.message || 'Check that the backend is running and GEMINI_API_KEY is set.',
-          breakdown: ['Start the backend with npm start in the backend folder.', 'Add GEMINI_API_KEY to backend/.env.', 'Try again with a shorter question.'],
-          example: '',
-          memoryHook: '',
-          recallQuestion: '',
-          visualId: 'recall',
-          suggestedAction: 'none',
-          weakTopicLabel: '',
-          planItems: [],
-          reviewItems: [],
-          isError: true,
-        },
-      });
+    } catch (_error) {
+      pushDemoReply('offline');
     } finally {
       this.setBusy(false);
       this.saveLocal();

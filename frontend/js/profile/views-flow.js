@@ -537,8 +537,16 @@ function focusClassMaterial(type = 'Lecture Notes') {
   fileEl?.click();
 }
 
-function handleClassMaterialFileSelected() {
+function handleClassMaterialFileSelected(event) {
+  const sourceEl = event?.target || document.getElementById('class-material-file');
   const fileEl = document.getElementById('class-material-file');
+  if (sourceEl && fileEl && sourceEl !== fileEl && sourceEl.files?.length) {
+    const dt = new DataTransfer();
+    Array.from(fileEl.files || []).forEach((file) => dt.items.add(file));
+    Array.from(sourceEl.files).forEach((file) => dt.items.add(file));
+    fileEl.files = dt.files;
+    sourceEl.value = '';
+  }
   const label = document.getElementById('class-material-file-name');
   const typeEl = document.getElementById('class-material-type');
   const files = fileEl?.files ? Array.from(fileEl.files) : [];

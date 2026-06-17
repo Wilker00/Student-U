@@ -38,7 +38,12 @@
         }
 
         function hasAppAccess() {
-            return Boolean(currentUser) || Boolean(window.StudentUStore?.isGuestMode?.() ?? sessionStorage.getItem('studentu_guest_mode') === 'true');
+            const flowPath = localStorage.getItem('studentu_flow_path') || '';
+            return Boolean(currentUser)
+                || Boolean(window.StudentUStore?.isGuestMode?.() ?? sessionStorage.getItem('studentu_guest_mode') === 'true')
+                || localStorage.getItem('studentu_explore_active') === 'true'
+                || localStorage.getItem('studentu_real_user') === 'true'
+                || flowPath === 'explore' || flowPath === 'setup' || flowPath === 'study';
         }
 
         function enterGuestStudyMode() {
@@ -148,6 +153,7 @@
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 const isActive = btn.dataset.tab === tabName;
                 btn.classList.toggle('active-tab', isActive);
+                btn.classList.toggle('app-nav-item--active', isActive);
                 btn.classList.toggle('bg-white', isActive);
                 btn.classList.toggle('shadow-sm', isActive);
                 btn.classList.toggle('font-semibold', isActive);
@@ -159,6 +165,7 @@
             document.querySelectorAll('#mobile-nav button').forEach(btn => {
                 const isActive = btn.dataset.tab === tabName || btn.id === 'nav-btn-' + tabName;
                 btn.classList.toggle('active-tab-mobile', isActive);
+                btn.classList.toggle('app-mobile-nav__item--active', isActive);
                 btn.classList.toggle('text-ink-400', isActive);
                 btn.classList.toggle('text-ink-50', !isActive);
             });
@@ -175,6 +182,7 @@
             window.updateGlobalModeBanner?.();
             window.refreshDashboard?.();
             syncStudyAiModeBanner();
+            window.refreshFlowCompass?.();
             if (['onboarding', 'course-detail', 'practice', 'review-queue', 'session-history', 'reminders', 'settings', 'help', 'billing', 'profile', 'moat-profile', 'account'].includes(tabName)) {
                 window.StudentUClassPortfolio?.refreshPanels?.();
             }
@@ -214,6 +222,11 @@
             // FIX: Logged-out landing flow - students should see the public landing page until they act.
             if (!hasAppAccess()) {
                 switchTab('landing');
+                return;
+            }
+            if (sessionStorage.getItem('studentu_flow_restored') === 'true') {
+                sessionStorage.removeItem('studentu_flow_restored');
+                triggerUAIAnimation();
                 return;
             }
             switchTab('workspace');
@@ -372,11 +385,13 @@
 
         function openContextualAI(prompt) {
             if (!hasAppAccess()) {
-                enterGuestStudyMode();
+                window.enterExplorePath?.('neuro');
+                showNotification('Sample class loaded', 'Study AI uses demo notes until you set up your real class.', 'info');
             }
             switchTab('ai');
             const contextualPrompt = prompt || window.getCurrentStudyAIPrompt?.() || 'Help me decide what to study next from my selected class and current notes.';
             setTimeout(() => window.StudentUChat?.usePrompt?.(contextualPrompt), 120);
+            window.refreshFlowCompass?.();
         }
 
         function switchDashboardSubTab(subTabName) {
@@ -410,6 +425,9 @@
             }
             if (subTabName === 'planner') {
                 window.renderFirstStudyPlan?.();
+                if (getCompletedSessionCount() > 0) {
+                    window.StudentUHappyPath?.markPlannerViewed?.();
+                }
             }
             if (subTabName === 'overview' || subTabName === 'progress') {
                 window.refreshDashboard?.();
@@ -852,23 +870,19 @@
                     <div class="onboarding-modal su-panel w-full max-w-lg p-8 sm:p-9">
                         <span class="su-eyebrow">Welcome</span>
                         <h2 class="su-display text-2xl mt-1">Set up your first study space</h2>
-                        <p class="su-lead text-sm mt-2">StudentU works best after one class and one source are connected.</p>
+                        <p class="su-lead text-sm mt-2">Pick one path to start — you can switch anytime.</p>
                         <div class="onboarding-modal__steps mt-6">
                             <div class="onboarding-modal__step">
-                                <span class="onboarding-modal__step-num">1</span>
-                                <span class="onboarding-modal__step-text">Add your class</span>
+                                <span class="onboarding-modal__step-num">A</span>
+                                <span class="onboarding-modal__step-text"><strong>Explore sample</strong> — 2-minute demo with Neural Networks notes</span>
                             </div>
                             <div class="onboarding-modal__step">
-                                <span class="onboarding-modal__step-num">2</span>
-                                <span class="onboarding-modal__step-text">Upload your notes</span>
-                            </div>
-                            <div class="onboarding-modal__step">
-                                <span class="onboarding-modal__step-num">3</span>
-                                <span class="onboarding-modal__step-text">Ask Study AI, then continue on Study Desk</span>
+                                <span class="onboarding-modal__step-num">B</span>
+                                <span class="onboarding-modal__step-text"><strong>Set up my class</strong> — syllabus, notes, first guide, planner</span>
                             </div>
                         </div>
-                        <button type="button" data-action="completeNewUserOnboarding" class="w-full btn-primary rounded-xl py-3 text-sm font-semibold">Get Started</button>
-                        <button type="button" data-action="heroAction" data-hero-type="demo" class="w-full btn-outline rounded-xl py-3 text-sm font-medium mt-2">Try Demo First</button>
+                        <button type="button" data-action="enterSetupPath" class="w-full btn-primary rounded-xl py-3 text-sm font-semibold">Set Up My Class</button>
+                        <button type="button" data-action="enterExplorePath" data-demo-course="neuro" class="w-full btn-outline rounded-xl py-3 text-sm font-medium mt-2">Explore Sample First</button>
                     </div>
                 `;
                 document.body.appendChild(overlay);
@@ -877,9 +891,12 @@
         }
 
         function completeNewUserOnboarding() {
-            localStorage.setItem('studentu_onboarding_complete', 'true');
-            document.getElementById('new-user-onboarding-overlay')?.classList.add('hidden');
-            switchTab('workspace');
+            window.StudentUHappyPath?.startHappyPath?.({ fromOnboarding: true })
+              ?? (() => {
+                localStorage.setItem('studentu_onboarding_complete', 'true');
+                document.getElementById('new-user-onboarding-overlay')?.classList.add('hidden');
+                switchTab('profile');
+              })();
             updateStudyFlowHome();
         }
 
@@ -959,6 +976,7 @@
             window.loadGamificationState?.();
             window.updateUserTierDisplay?.();
             window.refreshDashboard?.();
+            window.restoreFlowSession?.();
             routeToStudyHome();
             setTimeout(showNewUserOnboarding, 300);
             triggerUAIAnimation();

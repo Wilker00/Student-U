@@ -479,6 +479,15 @@
             window.StudentUCloudSync?.schedulePush?.();
             window.updateLockedTabs?.();
             window.updateSetupProgressUI?.();
+            window.StudentUHappyPath?.onSessionComplete?.();
+            if (window.getWorkspaceMode?.() === 'demo') {
+              showNotification(
+                'Explore path complete',
+                'Nice — set up your real class when you are ready to save syllabus and notes.',
+                'success',
+              );
+            }
+            window.refreshFlowCompass?.();
 
             const summaryScreen = document.getElementById('session-summary-screen');
             if (summaryScreen) summaryScreen.classList.remove('hidden');

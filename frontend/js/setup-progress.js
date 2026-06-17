@@ -8,11 +8,14 @@
   }
 
   function hasAppAccess() {
+    const flowPath = localStorage.getItem('studentu_flow_path') || '';
     return typeof window.hasAppAccess === 'function'
       ? window.hasAppAccess()
       : Boolean(
         localStorage.getItem('studentu_real_user') === 'true'
+        || localStorage.getItem('studentu_explore_active') === 'true'
         || sessionStorage.getItem('studentu_guest_mode') === 'true'
+        || flowPath === 'explore' || flowPath === 'setup' || flowPath === 'study'
       );
   }
 
@@ -195,6 +198,32 @@
     const el = document.getElementById('flow-next-action');
     if (!el) return;
 
+    const compass = document.getElementById('flow-compass');
+    if (compass && !compass.classList.contains('hidden')) {
+      el.classList.add('hidden');
+      el.innerHTML = '';
+      return;
+    }
+
+    const happyCore = window.StudentUHappyPathCore;
+    const happyProgress = window.StudentUHappyPath?.getProgress?.();
+    if (happyCore && happyProgress?.current && !happyProgress.isComplete) {
+      const current = happyProgress.current;
+      el.innerHTML = `
+        <div class="flow-next-action">
+          <div class="flow-next-action__copy">
+            <span class="su-eyebrow">Your next step · ${happyProgress.doneCount} of ${happyProgress.total}</span>
+            <h2 class="flow-next-action__title">${current.label}</h2>
+            <p class="flow-next-action__body">${current.hint}</p>
+          </div>
+          <div class="flow-next-action__actions">
+            <button type="button" data-action="happyPathContinue" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold">${current.button}</button>
+          </div>
+        </div>`;
+      el.classList.remove('hidden');
+      return;
+    }
+
     const course = getActiveCourse();
     let snapshot = null;
     try {
@@ -286,6 +315,13 @@
   function renderStudyDeskChecklist(course) {
     const el = document.getElementById('study-desk-checklist');
     if (!el) return;
+    const happyActive = window.StudentUHappyPath?.getProgress?.()?.current
+      && !window.StudentUHappyPath.getProgress().isComplete;
+    if (happyActive) {
+      el.innerHTML = '';
+      el.classList.add('hidden');
+      return;
+    }
     const html = renderPersistentSetupChecklist(course);
     el.innerHTML = html;
     el.classList.toggle('hidden', !html);
@@ -297,6 +333,8 @@
     renderFlowNextAction();
     updateGlobalModeBanner();
     window.syncStudyAiModeBanner?.();
+    window.refreshHappyPathUI?.();
+    window.refreshFlowCompass?.();
     updateDashboardLiveStats();
   }
 
@@ -397,6 +435,7 @@
   window.renderPersistentSetupChecklist = renderPersistentSetupChecklist;
   window.updateSetupProgressUI = updateSetupProgressUI;
   window.updateGlobalModeBanner = updateGlobalModeBanner;
+  window.renderFlowNextAction = renderFlowNextAction;
   window.updateDashboardLiveStats = updateDashboardLiveStats;
   window.initLandingMockLoop = initLandingMockLoop;
 })();

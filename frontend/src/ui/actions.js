@@ -31,6 +31,12 @@ const actionHandlers = {
   closeVerificationModal: () => call('closeVerificationModal'),
   submitVerification: () => call('submitAcademicVerification'),
   heroAction: ({ type }) => call('handleHeroAction', type),
+  enterExplorePath: ({ demoCourse, openAi }) => {
+    window.StudentUFlow?.enterExplorePath?.(demoCourse || 'neuro', { openAI: openAi === true || openAi === 'true' });
+  },
+  enterSetupPath: () => window.StudentUFlow?.enterSetupPath?.(),
+  dismissDemoHandoff: () => window.StudentUFlow?.dismissDemoHandoffModal?.(),
+  flowCompassContinue: () => window.StudentUFlow?.runFlowCompassAction?.(),
   loadUseCaseDemo: ({ demoCourse }) => call('handleUseCaseDemo', demoCourse),
   startStudySession: () => call('startStudySession'),
   generateAdaptiveQuiz: () => call('generateAdaptiveQuiz'),
@@ -105,6 +111,10 @@ const actionHandlers = {
     call('startClassContextSession', courseId);
   },
   completeNewUserOnboarding: () => call('completeNewUserOnboarding'),
+  happyPathContinue: () => {
+    const progress = window.StudentUHappyPath?.getProgress?.();
+    window.StudentUHappyPath?.runHappyPathAction?.(progress?.current);
+  },
   submitRecallAnswer: ({ recallIndex }) => call('submitRecallAnswer', Number(recallIndex)),
   submitQuizAnswer: ({ quizIndex }) => call('submitQuizAnswer', Number(quizIndex)),
   chatSend: () => callMethod('StudentUChat', 'send', 'freeform'),
@@ -125,6 +135,7 @@ function readDataset(element) {
     prompt: element.dataset.prompt,
     type: element.dataset.heroType,
     demoCourse: element.dataset.demoCourse,
+    openAi: element.dataset.openAi,
     course: element.dataset.course,
     courseId: element.dataset.courseId,
     materialId: element.dataset.materialId,

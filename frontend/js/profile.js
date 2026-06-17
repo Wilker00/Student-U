@@ -231,7 +231,12 @@ function selectClassPortfolio(courseId) {
 }
 
 function createClassPortfolio() {
+  const wasDemo = window.getWorkspaceMode?.() === 'demo'
+    || sessionStorage.getItem('studentu_guest_mode') === 'true'
+    || localStorage.getItem('studentu_explore_active') === 'true';
+  window.StudentUFlow?.setFlowPath?.('setup');
   window.StudentUStore?.setGuestMode?.(false) ?? sessionStorage.removeItem('studentu_guest_mode');
+  localStorage.removeItem('studentu_explore_active');
   classPortfolios = classPortfolios.filter(course => !course.demoSeed);
   const count = classPortfolios.length + 1;
   const id = `class_${Date.now()}`;
@@ -253,7 +258,12 @@ function createClassPortfolio() {
   activeClassPortfolioId = id;
   saveClassPortfolios();
   renderClassPortfolios();
-  showNotification('Class Added', 'New class portfolio created.', 'success');
+  if (wasDemo) {
+    window.StudentUFlow?.showDemoHandoffModal?.();
+  } else {
+    showNotification('Class Added', 'New class portfolio created.', 'success');
+  }
+  window.StudentUHappyPath?.onClassCreated?.(wasDemo);
   window.refreshWorkspaceModeUI?.();
 }
 
@@ -518,6 +528,8 @@ async function addClassMaterial() {
   if (savedCount > 0) {
     const label = savedCount > 1 ? `${savedCount} photos saved` : `${uploadItems[0] ? 'Photo' : 'Material'} saved`;
     showNotification('Material Saved', `${label} to ${activeClass.title}.`, 'success');
+    const savedType = typeEl?.value || (files.some(f => String(f.type || '').startsWith('image/')) ? 'Photo Notes' : 'Lecture Notes');
+    window.StudentUHappyPath?.onMaterialSaved?.(savedType);
   }
 
   if (needsReviewMaterial) {

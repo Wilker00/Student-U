@@ -61,12 +61,15 @@
         }
 
         function handleUseCaseDemo(courseKey) {
+            window.StudentUFlow?.setFlowPath?.('explore');
             window.enterGuestStudyMode?.();
             switchTab('workspace');
             loadDemoWorkspace(courseKey);
+            window.expandStudyGuidePanel?.();
             const labels = { neuro: 'Neural Networks', calc: 'Calculus III', hist: 'History of Art', macro: 'Macroeconomics' };
-            showNotification('Sample class loaded', `${labels[courseKey] || 'Demo'} notes are ready — look for the Demo badge in the header.`, 'info');
+            showNotification('Sample class loaded', `${labels[courseKey] || 'Demo'} notes are ready on the Study Desk.`, 'info');
             window.updateSetupProgressUI?.();
+            window.refreshFlowCompass?.();
         }
 
         function handleFileUpload(event) {
@@ -314,32 +317,21 @@
         window.handleUseCaseDemo = handleUseCaseDemo;
 
         function handleHeroAction(actionType) {
-            window.enterGuestStudyMode?.();
             if (actionType === 'demo') {
-                loadDemoWorkspace('neuro');
-                switchTab('workspace');
-                setTimeout(() => {
-                    window.expandStudyGuidePanel?.();
-                    document.querySelector('button[data-action="startStudySession"]')?.focus();
-                    window.updateStudyFlowHome?.();
-                }, 120);
-                showNotification('Demo class ready', 'Neural Networks notes are loaded. Generate a study guide, then take the quiz.', 'success');
-            } else if (actionType === 'upload') {
-                if (localStorage.getItem('studentu_real_user') !== 'true' && typeof createClassPortfolio === 'function') {
-                    createClassPortfolio();
-                }
-                switchTab('profile');
-                if (typeof switchClassesSubView === 'function') switchClassesSubView('materials');
-                setTimeout(() => {
-                    if (typeof focusClassMaterial === 'function') focusClassMaterial('Lecture Notes');
-                }, 120);
-                showNotification('Upload your notes', 'PDFs, DOCX, and photos upload here — paste-only files can go on Study Desk.', 'info');
-            } else {
-                switchTab('workspace');
-                window.expandStudyGuidePanel?.();
-                document.getElementById('study-material')?.focus();
-                showNotification('Ready to go', 'Paste your class notes to get started.', 'info');
+                window.enterExplorePath?.('neuro');
+                return;
             }
+            if (actionType === 'setup' || actionType === 'upload') {
+                document.getElementById('new-user-onboarding-overlay')?.classList.add('hidden');
+                localStorage.setItem('studentu_onboarding_complete', 'true');
+                window.enterSetupPath?.();
+                return;
+            }
+            window.enterGuestStudyMode?.();
+            switchTab('workspace');
+            window.expandStudyGuidePanel?.();
+            document.getElementById('study-material')?.focus();
+            showNotification('Ready to go', 'Paste your class notes to get started.', 'info');
             window.updateSetupProgressUI?.();
             window.refreshWorkspaceModeUI?.();
         }
