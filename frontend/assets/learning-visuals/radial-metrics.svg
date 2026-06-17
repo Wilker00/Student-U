@@ -1,0 +1,25 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="34" fill="#FAFAF8"/>
+  <g font-family="Inter, Arial, sans-serif" font-weight="900" fill="#1A1A1A">
+    <text x="70" y="82" font-size="34">Recall metrics</text>
+    <text x="70" y="115" font-size="15" font-weight="500" fill="#666">turn abstract progress into a shape</text>
+  </g>
+  <g transform="translate(110 170)">
+    <circle cx="110" cy="110" r="86" fill="none" stroke="#DCDCDC" stroke-width="42"/>
+    <circle cx="110" cy="110" r="86" fill="none" stroke="#1E88E5" stroke-width="42" stroke-dasharray="360 540" transform="rotate(-90 110 110)"/>
+    <text x="78" y="120" font-family="Inter, Arial" font-size="34" font-weight="900" fill="#1A1A1A">67%</text>
+    <text x="62" y="238" font-family="Inter, Arial" font-size="17" font-weight="800" fill="#2A2A2A">core idea</text>
+  </g>
+  <g transform="translate(370 170)">
+    <circle cx="110" cy="110" r="86" fill="none" stroke="#DCDCDC" stroke-width="42"/>
+    <circle cx="110" cy="110" r="86" fill="none" stroke="#E53935" stroke-width="42" stroke-dasharray="235 540" transform="rotate(-90 110 110)"/>
+    <text x="80" y="120" font-family="Inter, Arial" font-size="34" font-weight="900" fill="#1A1A1A">44%</text>
+    <text x="82" y="238" font-family="Inter, Arial" font-size="17" font-weight="800" fill="#2A2A2A">risk</text>
+  </g>
+  <g transform="translate(630 170)">
+    <circle cx="110" cy="110" r="86" fill="none" stroke="#DCDCDC" stroke-width="42"/>
+    <circle cx="110" cy="110" r="86" fill="none" stroke="#1B8B77" stroke-width="42" stroke-dasharray="448 540" transform="rotate(-90 110 110)"/>
+    <text x="78" y="120" font-family="Inter, Arial" font-size="34" font-weight="900" fill="#1A1A1A">83%</text>
+    <text x="78" y="238" font-family="Inter, Arial" font-size="17" font-weight="800" fill="#2A2A2A">recall</text>
+  </g>
+</svg>

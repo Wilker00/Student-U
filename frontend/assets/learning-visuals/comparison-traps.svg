@@ -1,0 +1,15 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="34" fill="#F7F7F7"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="70" y="88" font-size="36" font-weight="900" fill="#1A1A1A">Correct model vs common trap</text>
+    <rect x="78" y="150" width="370" height="270" rx="28" fill="#FFFFFF" stroke="#DCDCDC"/>
+    <rect x="512" y="150" width="370" height="270" rx="28" fill="#FFFFFF" stroke="#DCDCDC"/>
+    <circle cx="126" cy="202" r="19" fill="#1B8B77"/><text x="158" y="209" font-size="22" font-weight="900" fill="#1A1A1A">Correct model</text>
+    <circle cx="560" cy="202" r="19" fill="#E53935"/><text x="592" y="209" font-size="22" font-weight="900" fill="#1A1A1A">Common trap</text>
+    <g font-size="17" fill="#444">
+      <text x="126" y="270">1. Identify the core mechanism</text><text x="126" y="318">2. Connect cause to effect</text><text x="126" y="366">3. Test the idea from memory</text>
+      <text x="560" y="270">1. Memorize isolated words</text><text x="560" y="318">2. Ignore constraints</text><text x="560" y="366">3. Skip recall practice</text>
+    </g>
+  </g>
+  <path d="M452 278H508" stroke="#1A1A1A" stroke-width="3" stroke-linecap="round"/><path d="M508 278L492 266M508 278L492 290" stroke="#1A1A1A" stroke-width="3" stroke-linecap="round"/>
+</svg>

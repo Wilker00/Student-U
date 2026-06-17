@@ -1,0 +1,16 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="34" fill="#FAFAF8"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="78" y="86" font-size="36" font-weight="900" fill="#1A1A1A">Ripple effect</text>
+    <text x="80" y="116" font-size="15" fill="#666">follow the first action through the system</text>
+  </g>
+  <g transform="translate(188 160)">
+    <circle cx="110" cy="110" r="102" fill="#1E88E5" opacity=".12"/><circle cx="110" cy="110" r="75" fill="#1E88E5" opacity=".22"/><circle cx="110" cy="110" r="43" fill="#1E88E5"/><text x="76" y="118" font-family="Inter, Arial" font-size="28" font-weight="900" fill="white">$1</text><text x="54" y="248" font-family="Inter, Arial" font-size="16" font-weight="800" fill="#1A1A1A">initial spend</text>
+  </g>
+  <path d="M400 270C468 224 530 223 602 270" stroke="#E53935" stroke-width="4" stroke-linecap="round"/>
+  <path d="M610 270L590 258M610 270L590 282" stroke="#E53935" stroke-width="4" stroke-linecap="round"/>
+  <g transform="translate(604 160)">
+    <circle cx="110" cy="110" r="102" fill="#1B8B77" opacity=".12"/><circle cx="110" cy="110" r="75" fill="#1B8B77" opacity=".22"/><circle cx="110" cy="110" r="43" fill="#1B8B77"/><text x="72" y="118" font-family="Inter, Arial" font-size="28" font-weight="900" fill="white">xN</text><text x="54" y="248" font-family="Inter, Arial" font-size="16" font-weight="800" fill="#1A1A1A">total demand</text>
+  </g>
+  <g font-family="Inter, Arial" font-size="15" fill="#444"><text x="418" y="318">saves</text><text x="482" y="202">spends</text><text x="530" y="342">imports</text></g>
+</svg>

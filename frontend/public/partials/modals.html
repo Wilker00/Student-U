@@ -1,0 +1,60 @@
+<!-- Verification + upgrade modals (loaded into #modals-slot) -->
+<div id="verification-modal" class="hidden fixed inset-0 z-[9998] bg-ink-500/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-2xl">
+        <div class="flex items-start justify-between gap-4 mb-5">
+            <div>
+                <h2 class="text-base font-bold text-ink-400">Verify Your Student Email</h2>
+                <p class="text-xs text-ink-50 mt-1">Use your college email to unlock the student plan.</p>
+            </div>
+            <button data-action="closeVerificationModal" class="text-ink-50 hover:text-ink-300 text-sm" aria-label="Close verification modal">&times;</button>
+        </div>
+        <div class="space-y-4">
+            <label class="block">
+                <span class="text-[10px] uppercase tracking-widest text-ink-50 font-mono">Email Address</span>
+                <input id="modal-email" type="email" placeholder="you@university.edu" class="mt-1.5 w-full bg-surface-100 border border-surface-300 focus:border-ink-200 rounded-xl px-3 py-2.5 text-sm text-ink-300 focus:outline-none">
+            </label>
+            <label class="block">
+                <span class="text-[10px] uppercase tracking-widest text-ink-50 font-mono">University</span>
+                <input id="modal-school" type="text" placeholder="Your school name" class="mt-1.5 w-full bg-surface-100 border border-surface-300 focus:border-ink-200 rounded-xl px-3 py-2.5 text-sm text-ink-300 focus:outline-none">
+            </label>
+            <button data-action="submitVerification" class="w-full btn-primary rounded-xl py-3 text-sm font-semibold">Verify .edu Email</button>
+        </div>
+    </div>
+</div>
+
+<div id="upgrade-modal" class="hidden fixed inset-0 z-[9998] bg-ink-500/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+        <div class="text-center mb-6">
+            <div class="text-4xl mb-2">Premium</div>
+            <h3 class="text-xl font-extrabold text-ink-400">Upgrade to Premium</h3>
+            <p class="text-sm text-ink-50 mt-2">Unlock unlimited sessions, AI card generation, and advanced analytics.</p>
+        </div>
+        <div class="space-y-3 mb-6">
+            <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Unlimited study sessions</span></div>
+            <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Unlimited AI study card generation</span></div>
+            <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Saved progress across devices</span></div>
+            <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Advanced forgetting curve analytics</span></div>
+        </div>
+        <button data-action="startStripeCheckout" class="w-full py-3.5 btn-primary rounded-xl text-sm font-semibold">Pay $10.00 &amp; Upgrade</button>
+        <p class="upgrade-modal-note text-[11px] text-ink-50 text-center mt-2">Demo mode - no real charge will be made.</p>
+        <button data-action="closeUpgradeModal" class="w-full py-2 text-xs text-ink-50 hover:text-ink-300 mt-3">Maybe Later</button>
+    </div>
+</div>
+
+<div id="photo-review-modal" class="hidden fixed inset-0 z-[9998] bg-ink-500/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div class="flex items-start justify-between gap-4 mb-4">
+            <div>
+                <h2 class="text-base font-bold text-ink-400">Review Lecture Text</h2>
+                <p class="text-xs text-ink-50 mt-1">StudentU read your photo — fix anything that looks wrong before studying.</p>
+            </div>
+            <button data-action="closePhotoReviewModal" class="text-ink-50 hover:text-ink-300 text-sm" aria-label="Close photo review modal">&times;</button>
+        </div>
+        <p id="photo-review-title" class="text-xs font-semibold text-ink-300 mb-2"></p>
+        <textarea id="photo-review-text" rows="12" class="w-full bg-surface-100 border border-surface-300 rounded-xl px-3 py-2.5 text-xs text-ink-300 resize-y focus:outline-none" placeholder="Extracted lecture text will appear here..."></textarea>
+        <div class="flex flex-col sm:flex-row gap-2 mt-4">
+            <button data-action="savePhotoReview" class="flex-1 btn-primary rounded-xl py-2.5 text-xs font-semibold">Looks Good — Save Text</button>
+            <button data-action="closePhotoReviewModal" class="flex-1 btn-outline rounded-xl py-2.5 text-xs font-semibold">Cancel</button>
+        </div>
+    </div>
+</div>

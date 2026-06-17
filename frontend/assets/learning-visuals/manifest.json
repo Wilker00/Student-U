@@ -1,0 +1,66 @@
+[
+  {
+    "id": "neural-concept-map",
+    "type": "map",
+    "subjects": ["neuro", "calc"],
+    "keywords": ["network", "gradient", "backprop", "chain", "system", "node"],
+    "path": "assets/learning-visuals/neural-concept-map.svg",
+    "title": "Connection Map"
+  },
+  {
+    "id": "history-timeline",
+    "type": "timeline",
+    "subjects": ["hist"],
+    "keywords": ["history", "renaissance", "perspective", "chapter", "origin"],
+    "path": "assets/learning-visuals/history-timeline.svg",
+    "title": "Memory Timeline"
+  },
+  {
+    "id": "process-funnel",
+    "type": "funnel",
+    "subjects": ["neuro", "calc", "macro"],
+    "keywords": ["algorithm", "process", "step", "pass", "derivative"],
+    "path": "assets/learning-visuals/process-funnel.svg",
+    "title": "Step Focus"
+  },
+  {
+    "id": "radial-metrics",
+    "type": "radial",
+    "subjects": ["macro", "calc"],
+    "keywords": ["percent", "metric", "risk", "retention", "fiscal"],
+    "path": "assets/learning-visuals/radial-metrics.svg",
+    "title": "Retention Metrics"
+  },
+  {
+    "id": "comparison-traps",
+    "type": "compare",
+    "subjects": ["neuro", "calc", "hist", "macro"],
+    "keywords": ["mistake", "confusing", "difference", "versus", "trap"],
+    "path": "assets/learning-visuals/comparison-traps.svg",
+    "title": "Correct vs Trap"
+  },
+  {
+    "id": "economic-ripples",
+    "type": "radial",
+    "subjects": ["macro"],
+    "keywords": ["multiplier", "fiscal", "spending", "inflation", "demand"],
+    "path": "assets/learning-visuals/economic-ripples.svg",
+    "title": "Economic Ripple"
+  },
+  {
+    "id": "animated-recall-loop",
+    "type": "animation",
+    "subjects": ["neuro", "calc", "hist", "macro"],
+    "keywords": ["recall", "memory", "review", "practice", "quiz"],
+    "path": "assets/learning-visuals/animated-recall-loop.svg",
+    "title": "Recall Loop"
+  },
+  {
+    "id": "animated-flow-map",
+    "type": "animation",
+    "subjects": ["neuro", "calc", "macro"],
+    "keywords": ["flow", "process", "system", "cause", "effect"],
+    "path": "assets/learning-visuals/animated-flow-map.svg",
+    "title": "Flow Map"
+  }
+]

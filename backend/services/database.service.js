@@ -40,7 +40,11 @@ const seed = {
     },
   ],
   materials: {},
+  chat: {},
+  progress: {},
+  sessions: {},
   signups: [],
+  users: {},
 };
 
 function ensureDb() {
