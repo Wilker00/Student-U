@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="h-full">
 
 <head>
@@ -7,426 +7,740 @@
     <title>StudentU - Stop rereading. Start remembering.</title>
     <meta name="description"
         content="StudentU turns your class notes into clear explanations, practice quizzes, and a personalized study plan powered by AI.">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        surface: {
-                            50: '#FFFFFF',
-                            100: '#F7F7F7',
-                            200: '#EBEBEB',
-                            300: '#DCDCDC',
-                            400: '#ABABAB',
-                        },
-                        ink: {
-                            50: '#888888',
-                            100: '#666666',
-                            200: '#444444',
-                            300: '#2A2A2A',
-                            400: '#1A1A1A',
-                            500: '#0D0D0D',
-                        },
-                        accent: {
-                            red: '#E53935',
-                            blue: '#1E88E5',
-                            yellow: '#FDD835',
-                            warm: '#C4704A',
-                            muted: '#8D6E63',
-                            pink: '#F03893',
-                            cyan: '#29C5F6',
-                            orange: '#FF8C3A',
-                            teal: '#1B8B77',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <meta property="og:title" content="StudentU — Stop rereading. Start remembering.">
+    <meta property="og:description"
+        content="Upload class notes and get explanations, quizzes, and a spaced-review study plan built for how you learn.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/logos/student-u-logo.svg">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="StudentU — Stop rereading. Start remembering.">
+    <meta name="twitter:description"
+        content="AI study coach that remembers your class context, weak topics, and exam dates.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles/main.css">
+    <!-- Standalone HTML: Tailwind CDN + component styles (works without Vite). Vite also processes styles/main.css via src/main.js. -->
+    <link rel="stylesheet" href="styles/components.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="styles/tailwind-config.js"></script>
+    <script>tailwind.config = window.studentUTailwindConfig;</script>
+    <script type="module" src="src/main.js"></script>
 </head>
 
 <body class="h-full flex flex-col overflow-hidden">
 
-    <div class="grain-overlay"></div>
-
     <header id="main-nav"
-        class="bg-surface-50/80 backdrop-blur-xl sticky top-0 z-50 px-4 sm:px-6 lg:px-10 py-3 flex items-center justify-between gap-4 border-b border-surface-300/60 transition-all duration-300">
-        <div class="studentu-brand-lockup cursor-pointer group" onclick="switchTab('landing')">
-            <img src="assets/logos/student-u-logo.svg" alt="StudentU logo" class="studentu-vector-logo">
+        class="app-header bg-surface-50/80 backdrop-blur-xl sticky top-0 z-50 px-4 sm:px-6 lg:px-10 py-3 flex items-center justify-between gap-3 sm:gap-4 border-b border-surface-300/60 transition-all duration-300 shrink-0">
+        <div class="studentu-brand-lockup cursor-pointer group shrink-0 min-w-0" data-action="routeHome">
+            <svg class="studentu-vector-logo" viewBox="0 0 299 310" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="logo-color-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#1E88E5">
+                            <animate attributeName="stop-color" values="#1E88E5;#E53935;#FDD835;#1E88E5" dur="3s" repeatCount="1" fill="freeze" />
+                        </stop>
+                        <stop offset="50%" stop-color="#E53935">
+                            <animate attributeName="stop-color" values="#E53935;#FDD835;#1E88E5;#E53935" dur="3s" repeatCount="1" fill="freeze" />
+                        </stop>
+                        <stop offset="100%" stop-color="#FDD835">
+                            <animate attributeName="stop-color" values="#FDD835;#1E88E5;#E53935;#FDD835" dur="3s" repeatCount="1" fill="freeze" />
+                        </stop>
+                    </linearGradient>
+                </defs>
+                <rect x="5" y="5" width="288.08" height="299.79" rx="23" stroke="url(#logo-color-grad)" stroke-width="10"/>
+                <path d="M106.478 241.35C107.335 238.855 108.7 236.596 108.961 233.902C111.344 235.441 109.147 239.897 107.72 241.35C104.616 257.983 97.4048 273.498 97.7895 291C126.338 291 154.887 291 183.436 291C192.994 261.967 203.16 232.562 213.227 204.112C213.636 233.046 192.982 260.44 199.573 291C214.058 291 228.531 291 243.017 291C240.956 264.077 233.409 234.908 233 207.923C232.578 180.95 206.859 156.373 178.471 156.944C176.597 164.764 181.984 178.095 174.748 181.769C174.487 173.093 178.31 165.484 178.471 156.944C171.073 157.316 166.282 150.8 159.852 148.255C191.852 154.511 232.702 124.274 226.856 91.1822C220.997 58.1027 204.24 31.5522 172.538 21.3739C140.836 11.1956 106.131 35.1767 97.5165 66.0592C88.9022 96.9417 107.335 134.8 139.992 143.29C138.267 167.929 111.17 164.603 94.1651 175.662C77.1723 186.734 74.4539 208.804 67.7263 227.423C60.9863 246.029 52.1361 269.551 54.3455 291C67.1677 291 80.0023 291 92.8245 291C93.6437 273.411 100.93 257.561 106.478 241.35ZM193.366 41.5071C201.944 42.4628 204.414 51.6606 209.403 57.7427C214.406 63.8125 214.865 78.9434 204.538 77.5035C194.211 76.0637 192.485 68.9637 187.259 62.5091C182.046 56.0546 182.89 40.3403 193.366 41.5071ZM151.164 55.1609C173.295 58.9343 180.457 96.3707 156.129 96.1224C131.8 95.8742 126.823 51.0151 151.164 55.1609Z" fill="url(#logo-color-grad)"/>
+                <path d="M178.471 156.944C206.859 156.373 232.578 180.95 233 207.923C233.409 234.908 240.956 264.077 243.017 291C228.531 291 214.058 291 199.573 291C192.982 260.44 213.636 233.046 213.227 204.112C203.16 232.562 192.994 261.967 183.436 291C154.887 291 126.338 291 97.7895 291C97.4048 273.498 104.616 257.983 107.72 241.35C109.147 239.897 111.344 235.441 108.961 233.902C108.7 236.596 107.335 238.855 106.478 241.35C100.93 257.561 93.6437 273.411 92.8245 291C80.0023 291 67.1677 291 54.3455 291C52.1361 269.551 60.9863 246.029 67.7263 227.423C74.4539 208.804 77.1723 186.734 94.1651 175.662C111.17 164.603 138.267 167.929 139.992 143.29C107.335 134.8 88.9022 96.9417 97.5165 66.0592C106.131 35.1767 140.836 11.1956 172.538 21.3739C204.24 31.5522 220.997 58.1027 226.856 91.1822C232.702 124.274 191.852 154.511 159.852 148.255C166.282 150.8 171.073 157.316 178.471 156.944ZM178.471 156.944C176.597 164.764 181.984 178.095 174.748 181.769C174.487 173.093 178.31 165.484 178.471 156.944ZM193.366 41.5071C201.944 42.4628 204.414 51.6606 209.403 57.7427C214.406 63.8125 214.865 78.9434 204.538 77.5035C194.211 76.0637 192.485 68.9637 187.259 62.5091C182.046 56.0546 182.89 40.3403 193.366 41.5071ZM151.164 55.1609C173.295 58.9343 180.457 96.3707 156.129 96.1224C131.8 95.8742 126.823 51.0151 151.164 55.1609Z" stroke="#0D0D0D" stroke-opacity="0.18"/>
+            </svg>
             <span
                 class="studentu-wordmark font-extrabold tracking-tighter text-ink-400 text-xl flex items-center gap-1 group-hover:text-accent-red transition-colors duration-300">
                 StudentU
-                <span class="w-1.5 h-1.5 rounded-full bg-accent-blue mt-1"></span>
+                <span class="logo-dot w-1.5 h-1.5 rounded-full bg-accent-blue mt-1"></span>
             </span>
         </div>
 
         <nav
-            class="hidden xl:flex items-center bg-surface-200/80 border border-surface-300 rounded-full px-1.5 py-1.5 space-x-1 shadow-sm">
-            <button onclick="switchTab('landing')"
-                class="nav-btn active-tab text-xs font-semibold px-4 py-1.5 rounded-full transition-all duration-300 bg-white shadow-sm text-ink-400"
-                data-tab="landing">Home</button>
-            <button onclick="switchTab('dashboard')"
-                class="nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
-                data-tab="dashboard">Dashboard</button>
-            <button onclick="switchTab('workspace')"
-                class="nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
-                data-tab="workspace">Study</button>
-            <button onclick="switchTab('profile')"
-                class="nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
-                data-tab="profile">Classes</button>
-            <button onclick="switchTab('moat-profile')"
-                class="nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
-                data-tab="moat-profile">Progress</button>
-            <button onclick="switchTab('planner')"
-                class="nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
-                data-tab="planner">Plan</button>
+            class="app-nav-rail hidden xl:flex items-center bg-surface-200/80 border border-surface-300 rounded-full px-1.5 py-1.5 gap-1 shadow-sm shrink-0"
+            aria-label="Main navigation">
+            <button data-action="switchTab" data-tab-target="workspace"
+                class="app-nav-item nav-btn text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-300 text-ink-100 hover:text-ink-400"
+                data-tab="workspace">
+                <span class="app-nav-item__icon app-nav-item__icon--desk" aria-hidden="true">
+                    <svg viewBox="0 0 20 20" fill="none"><path d="M4 6.5 10 3l6 3.5v8L10 18l-6-3.5v-8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 10.5 16 7M10 10.5v7.5M10 10.5 4 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                <span class="app-nav-item__label">Study Desk</span>
+            </button>
+            <button data-action="switchTab" data-tab-target="profile"
+                class="app-nav-item nav-btn text-xs font-medium px-3 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
+                data-tab="profile">
+                <span class="app-nav-item__icon app-nav-item__icon--classes" aria-hidden="true">
+                    <svg viewBox="0 0 20 20" fill="none"><path d="M3 7.5 10 4l7 3.5-7 3.5-7-3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 9v4.5c0 .8 1.8 1.5 4 1.5s4-.7 4-1.5V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                <span class="app-nav-item__label">My Classes</span>
+            </button>
+            <button data-action="switchTab" data-tab-target="dashboard" data-subtab-target="planner"
+                class="app-nav-item nav-btn tab-locked text-xs font-medium px-3 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
+                data-tab="dashboard"
+                title="Complete your first session to unlock Progress &amp; Planner">
+                <span class="app-nav-item__icon app-nav-item__icon--planner" aria-hidden="true">
+                    <svg viewBox="0 0 20 20" fill="none"><path d="M4 15V9M8 15V5M12 15v-4M16 15V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 16.5h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                <span class="app-nav-item__label">Progress</span>
+            </button>
         </nav>
 
-        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
-            <button id="verify-button" onclick="openVerificationModal()"
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
+            <span id="workspace-mode-pill" class="workspace-mode-pill hidden" role="status" aria-live="polite"></span>
+            <button data-action="openAI" id="header-uai-btn"
+                class="hidden xl:flex text-xs btn-uai px-4 py-2 font-bold items-center gap-1.5 rounded-full relative overflow-hidden">
+                <span class="app-nav-item__icon app-nav-item__icon--ai" aria-hidden="true">
+                    <svg viewBox="0 0 20 20" fill="none"><path d="M10 3.5a4 4 0 0 1 3.8 5.3l3.2 3.2a1.2 1.2 0 0 1-1.7 1.7l-3.2-3.2A4 4 0 1 1 10 3.5Z" stroke="currentColor" stroke-width="1.5"/></svg>
+                </span>
+                <span class="relative z-10">Study AI</span>
+            </button>
+            <button id="auth-action-button" data-action="signIn"
                 class="text-xs btn-outline px-3 sm:px-4 py-2 rounded-lg font-medium">
+                Sign in
+            </button>
+            <button id="verify-button" data-action="verifyStudent"
+                class="hidden md:inline-flex text-xs btn-outline px-3 sm:px-4 py-2 rounded-lg font-medium">
                 Verify .edu
             </button>
         </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto no-scrollbar relative bg-surface-100" id="main-scroll">
+    <div id="global-mode-banner" class="global-mode-banner hidden shrink-0" role="status" aria-live="polite"></div>
+    <div id="flow-compass" class="flow-compass-shell hidden shrink-0" role="navigation" aria-label="Your current path"></div>
 
-        <section id="tab-landing" class="tab-pane active">
+    <main class="flex-1 overflow-y-auto scrollbar-subtle relative bg-surface-100" id="main-scroll">
 
-            <div class="relative min-h-[85vh] flex items-center justify-center px-6 overflow-hidden scene-3d">
-                <div class="text-center max-w-3xl mx-auto relative z-10 space-y-7" id="hero-content">
-                    <div class="hero-logo-strip" aria-label="Google Cloud, Gemini, and XPRIZE project partners">
-                        <img src="assets/logos/google-cloud.svg" alt="Google Cloud" class="hero-brand-logo hero-brand-logo-cloud">
-                        <span class="hero-logo-divider" aria-hidden="true"></span>
-                        <img src="assets/logos/google-gemini.svg" alt="Gemini" class="hero-brand-logo hero-brand-logo-gemini">
-                        <span class="hero-logo-divider" aria-hidden="true"></span>
-                        <img src="assets/logos/xprize.png" alt="XPRIZE" class="hero-brand-logo hero-brand-logo-xprize">
+        <section id="tab-landing" class="tab-pane active landing-page">
+
+            <div class="landing-hero">
+                <div class="landing-hero__grid max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-16 lg:pt-16 lg:pb-20">
+                    <div class="landing-hero__copy reveal space-y-6">
+                        <div class="hero-logo-strip" aria-label="Google Cloud, Gemini, and XPRIZE project partners">
+                            <img src="assets/logos/google-cloud.svg" alt="Google Cloud" class="hero-brand-logo hero-brand-logo-cloud">
+                            <span class="hero-logo-divider" aria-hidden="true"></span>
+                            <img src="assets/logos/google-gemini.svg" alt="Gemini" class="hero-brand-logo hero-brand-logo-gemini">
+                            <span class="hero-logo-divider" aria-hidden="true"></span>
+                            <img src="assets/logos/xprize-logo.png" alt="XPRIZE" class="hero-brand-logo hero-brand-logo-xprize">
+                        </div>
+                        <h1 class="su-display hero-shadow-text" id="hero-title">
+                            Stop rereading.<br><span class="text-ink-100">Start remembering.</span>
+                        </h1>
+                        <p class="su-lead text-base md:text-lg max-w-xl">
+                            Upload your notes and StudentU turns them into explanations, quizzes, and a study plan designed for how you learn.
+                        </p>
+                        <div class="landing-hero__actions">
+                            <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">
+                                <button type="button" data-action="enterExplorePath" data-demo-course="neuro" data-testid="enter-explore-path"
+                                    class="w-full sm:w-auto px-8 py-3.5 btn-primary rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
+                                    <img src="assets/icons/start.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
+                                    <span>Explore demo</span>
+                                </button>
+                                <button type="button" data-action="enterSetupPath" data-testid="enter-setup-path"
+                                    class="w-full sm:w-auto px-8 py-3.5 btn-outline rounded-xl text-sm font-medium flex items-center justify-center gap-2">
+                                    <img src="assets/icons/upload.svg" alt="" class="asset-icon w-4 h-4">
+                                    <span>Set up my class</span>
+                                </button>
+                            </div>
+                            <p class="text-xs text-ink-50 max-w-lg">
+                                <strong class="text-ink-100">Two paths:</strong> explore with sample notes in ~2 minutes, or set up your real class in five steps.
+                            </p>
+                            <button type="button" data-action="enterExplorePath" data-demo-course="neuro" data-open-ai="true"
+                                class="landing-hero__ai-link text-sm font-medium text-accent-blue hover:underline">
+                                Or ask Study AI first →
+                            </button>
+                        </div>
+                        <p class="text-xs text-ink-50 max-w-md">Verified students unlock expanded study access, extra AI quizzes, and smarter review planning.</p>
                     </div>
-                    <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] text-ink-500 hero-shadow-text break-words"
-                        id="hero-title">
-                        Stop rereading.<br><span class="text-ink-100">Start remembering.</span>
-                    </h1>
-                    <p class="text-lg md:text-xl text-ink-100 max-w-lg mx-auto font-normal leading-[1.5]">
-                        Upload your notes and StudentU turns them into explanations, quizzes, and a study plan designed
-                        for how you learn.
-                    </p>
-                    <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-                        <button onclick="handleHeroAction('upload')"
-                            class="w-full sm:w-auto px-8 py-3.5 btn-primary rounded-xl text-sm font-medium flex items-center justify-center space-x-2">
-                            <img src="assets/icons/upload.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
-                            <span>Upload Notes</span>
-                        </button>
-                        <button onclick="handleHeroAction('demo')"
-                            class="w-full sm:w-auto px-8 py-3.5 btn-outline rounded-xl text-sm font-medium flex items-center justify-center space-x-2">
-                            <img src="assets/icons/start.svg" alt="" class="asset-icon w-4 h-4">
-                            <span>Try Demo</span>
-                        </button>
+
+                    <div class="landing-hero__preview reveal reveal-d1" id="landing-hero-preview">
+                        <div class="landing-mock" id="landing-mock">
+                            <div class="landing-mock__chrome">
+                                <span class="landing-mock__dot"></span>
+                                <span class="landing-mock__dot"></span>
+                                <span class="landing-mock__dot"></span>
+                                <span class="landing-mock__title" id="landing-mock-title">Study AI · Neural Networks</span>
+                            </div>
+                            <div class="landing-mock__body">
+                                <aside class="landing-mock__rail">
+                                    <span class="su-card-label">Tasks</span>
+                                    <div class="landing-mock__task is-active" data-mock-task="0">
+                                        <img src="assets/icons/reading.svg" alt="" class="asset-icon w-3.5 h-3.5">
+                                        <span>Explain</span>
+                                    </div>
+                                    <div class="landing-mock__task" data-mock-task="1">
+                                        <img src="assets/icons/answers.svg" alt="" class="asset-icon w-3.5 h-3.5">
+                                        <span>Quiz</span>
+                                    </div>
+                                    <div class="landing-mock__task" data-mock-task="2">
+                                        <img src="assets/icons/bookmark.svg" alt="" class="asset-icon w-3.5 h-3.5">
+                                        <span>Review</span>
+                                    </div>
+                                    <div class="landing-mock__task" data-mock-task="3">
+                                        <img src="assets/icons/calendar.svg" alt="" class="asset-icon w-3.5 h-3.5">
+                                        <span>Plan</span>
+                                    </div>
+                                </aside>
+                                <div class="landing-mock__stage">
+                                    <span class="su-card-label">Your answer</span>
+                                    <p class="landing-mock__headline" id="landing-mock-headline">Backpropagation, step by step</p>
+                                    <div class="landing-mock__recall">
+                                        <strong>Recall first</strong>
+                                        <p id="landing-mock-recall">Can you explain the chain rule before looking at the layers?</p>
+                                    </div>
+                                    <div class="landing-mock__grid" id="landing-mock-grid">
+                                        <div><small>Key idea</small><p>Gradients flow backward through each layer.</p></div>
+                                        <div><small>Example</small><p>Loss → weights update via partial derivatives.</p></div>
+                                        <div><small>Next step</small><p>Quiz yourself on matrix shapes.</p></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="landing-mock__composer">
+                                <div id="landing-mock-chips">
+                                    <span class="landing-mock__chip">Explain chain rule</span>
+                                    <span class="landing-mock__chip">Quiz me</span>
+                                </div>
+                                <div class="landing-mock__input-row" id="landing-mock-composer">
+                                    <span class="landing-mock__placeholder">Ask about this class…</span>
+                                    <span class="landing-mock__uai" id="landing-mock-uai">( UAI )</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-xs text-surface-400">Free for verified college students with a .edu email.</p>
                 </div>
             </div>
 
-            <div class="border-y border-surface-300/60 py-3 overflow-hidden bg-surface-200/40" style="mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);">
-                <div class="flex whitespace-nowrap marquee-track">
-                    <span
-                        class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Understand</span>
-                    <span class="text-surface-300 mx-4">&bull;</span>
-                    <span class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Practice</span>
-                    <span class="text-surface-300 mx-4">&bull;</span>
-                    <span class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Remember</span>
-                    <span class="text-surface-300 mx-4">&bull;</span>
-                    <span class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Repeat</span>
-                    <span class="text-surface-300 mx-4">&bull;</span>
-                    <span
-                        class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Understand</span>
-                    <span class="text-surface-300 mx-4">&bull;</span>
-                    <span class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Practice</span>
-                    <span class="text-surface-300 mx-4">&bull;</span>
-                    <span class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Remember</span>
-                    <span class="text-surface-300 mx-4">&bull;</span>
-                    <span class="text-[11px] tracking-[0.3em] uppercase text-surface-400 font-mono mx-8">Repeat</span>
-                    <span class="text-surface-300 mx-4">&bull;</span>
-                </div>
-            </div>
+            <section class="landing-loop border-y border-surface-300/60" aria-label="How StudentU keeps you learning">
+                <div class="landing-loop__wrap max-w-5xl mx-auto px-4 sm:px-6 py-10 lg:py-12">
+                    <div class="landing-loop__header text-center mb-8 reveal">
+                        <span class="su-eyebrow">The study loop</span>
+                        <p class="text-sm md:text-base text-ink-100 mt-2 max-w-xl mx-auto leading-relaxed">
+                            Not a one-off chat — a cycle grounded in <strong class="font-semibold text-ink-300">your class</strong> that adapts as you learn.
+                        </p>
+                    </div>
 
-            <div class="max-w-5xl mx-auto px-6 py-32">
+                    <div class="landing-loop__rail reveal reveal-d1" id="landing-study-loop">
+                        <div class="landing-loop__progress-track" aria-hidden="true">
+                            <span class="landing-loop__progress-fill" id="landing-loop-progress"></span>
+                        </div>
+
+                        <div class="landing-loop__steps" role="tablist" aria-label="Study loop steps">
+                            <button type="button" class="landing-loop__step is-active" role="tab" aria-selected="true" data-loop-step="0" id="landing-loop-step-0">
+                                <span class="landing-loop__icon landing-loop__icon--red" aria-hidden="true">
+                                    <img src="assets/icons/reading.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
+                                </span>
+                                <span class="landing-loop__num">01</span>
+                                <strong class="landing-loop__title">Understand</strong>
+                                <span class="landing-loop__detail">Turn messy notes into clear explanations tied to your syllabus — not generic AI summaries.</span>
+                            </button>
+                            <button type="button" class="landing-loop__step" role="tab" aria-selected="false" data-loop-step="1" id="landing-loop-step-1">
+                                <span class="landing-loop__icon landing-loop__icon--blue" aria-hidden="true">
+                                    <img src="assets/icons/answers.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
+                                </span>
+                                <span class="landing-loop__num">02</span>
+                                <strong class="landing-loop__title">Practice</strong>
+                                <span class="landing-loop__detail">Generate quizzes from your materials. Test recall on topics you actually missed in class.</span>
+                            </button>
+                            <button type="button" class="landing-loop__step" role="tab" aria-selected="false" data-loop-step="2" id="landing-loop-step-2">
+                                <span class="landing-loop__icon landing-loop__icon--teal" aria-hidden="true">
+                                    <img src="assets/icons/bookmark.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
+                                </span>
+                                <span class="landing-loop__num">03</span>
+                                <strong class="landing-loop__title">Remember</strong>
+                                <span class="landing-loop__detail">Spaced review schedules bring weak concepts back before you forget them — before exam day.</span>
+                            </button>
+                            <button type="button" class="landing-loop__step" role="tab" aria-selected="false" data-loop-step="3" id="landing-loop-step-3">
+                                <span class="landing-loop__icon landing-loop__icon--yellow" aria-hidden="true">
+                                    <img src="assets/icons/calendar.svg" alt="" class="asset-icon w-4 h-4">
+                                </span>
+                                <span class="landing-loop__num">04</span>
+                                <strong class="landing-loop__title">Repeat</strong>
+                                <span class="landing-loop__detail">The loop updates as you study. StudentU tracks what sticks and what still needs work.</span>
+                            </button>
+                        </div>
+
+                        <p class="landing-loop__live text-center text-xs text-ink-50 mt-5" id="landing-loop-live" aria-live="polite">
+                            <span class="landing-loop__live-label">Now showing:</span>
+                            <span class="landing-loop__live-text">Understand — explanations from your notes</span>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 py-24 lg:py-32">
                 <div class="text-center mb-14 reveal">
-                    <span class="text-[10px] uppercase tracking-[0.25em] text-surface-400 font-mono">How It Works</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-ink-400 mt-3 tracking-tight">Three steps to study
-                        smarter.</h2>
+                    <span class="su-eyebrow">How It Works</span>
+                    <h2 class="su-display text-3xl md:text-4xl mt-3">Three steps to study smarter.</h2>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="steps-grid">
-                    <div
-                        class="bg-surface-50 border border-surface-300/70 rounded-2xl p-7 space-y-4 reveal reveal-d1 cursor-default shadow-sm hover:shadow-md hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300">
-                        <div class="w-12 h-12 bg-accent-red rounded-xl flex items-center justify-center shadow-md">
-                            <img src="assets/icons/reading.svg" alt="" class="asset-icon w-7 h-7">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5 su-bento" id="steps-grid">
+                    <article class="landing-step su-card reveal reveal-d1">
+                        <div class="landing-step__icon landing-step__icon--red">
+                            <img src="assets/icons/reading.svg" alt="" class="asset-icon w-6 h-6 invert-soft">
                         </div>
-                        <h3 class="text-ink-400 font-bold text-lg">1. Understand</h3>
-                        <p class="text-sm text-ink-50 leading-relaxed">
-                            Paste notes, slides, or textbook pages. StudentU explains concepts in simple language
-                            without assuming prior knowledge.
+                        <h3 class="su-card-title mt-4">1. Understand</h3>
+                        <p class="su-card-body text-sm mt-2">
+                            Paste notes, slides, or textbook pages. StudentU explains concepts in simple language without assuming prior knowledge.
                         </p>
-                    </div>
-                    <div
-                        class="bg-surface-50 border border-surface-300/70 rounded-2xl p-7 space-y-4 reveal reveal-d2 cursor-default shadow-sm hover:shadow-md hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300">
-                        <div class="w-12 h-12 bg-accent-blue rounded-xl flex items-center justify-center shadow-md">
-                            <img src="assets/icons/todo_list.svg" alt="" class="asset-icon w-7 h-7">
+                    </article>
+                    <article class="landing-step su-card reveal reveal-d2">
+                        <div class="landing-step__icon landing-step__icon--blue">
+                            <img src="assets/icons/todo_list.svg" alt="" class="asset-icon w-6 h-6 invert-soft">
                         </div>
-                        <h3 class="text-ink-400 font-bold text-lg">2. Practice</h3>
-                        <p class="text-sm text-ink-50 leading-relaxed">
-                            Generate quizzes from your class materials. Not generic questions, but ones built from what
-                            you actually need to learn.
+                        <h3 class="su-card-title mt-4">2. Practice</h3>
+                        <p class="su-card-body text-sm mt-2">
+                            Generate quizzes from your class materials — not generic questions, but ones built from what you actually need to learn.
                         </p>
-                    </div>
-                    <div
-                        class="bg-surface-50 border border-surface-300/70 rounded-2xl p-7 space-y-4 reveal reveal-d3 cursor-default shadow-sm hover:shadow-md hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300">
-                        <div class="w-12 h-12 bg-accent-yellow rounded-xl flex items-center justify-center shadow-md">
-                            <img src="assets/icons/light_at_the_end_of_tunnel.svg" alt="" class="asset-icon w-7 h-7">
+                    </article>
+                    <article class="landing-step su-card reveal reveal-d3">
+                        <div class="landing-step__icon landing-step__icon--yellow">
+                            <img src="assets/icons/light_at_the_end_of_tunnel.svg" alt="" class="asset-icon w-6 h-6">
                         </div>
-                        <h3 class="text-ink-400 font-bold text-lg">3. Remember</h3>
-                        <p class="text-sm text-ink-50 leading-relaxed">
-                            StudentU tracks concepts you struggle with and automatically brings them back before you
-                            forget them.
+                        <h3 class="su-card-title mt-4">3. Remember</h3>
+                        <p class="su-card-body text-sm mt-2">
+                            StudentU tracks concepts you struggle with and brings them back before you forget them.
                         </p>
-                    </div>
+                    </article>
                 </div>
             </div>
 
-            <div class="bg-ink-400 text-surface-100 relative overflow-hidden">
-                <div class="grain-overlay" style="opacity: 0.15; mix-blend-mode: overlay;"></div>
-                <div class="max-w-5xl mx-auto px-6 py-32 grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10">
+            <div class="landing-compare bg-ink-400 text-surface-100 relative overflow-hidden">
+                <div class="grain-overlay" style="opacity: 0.12; mix-blend-mode: overlay;"></div>
+                <div class="max-w-5xl mx-auto px-4 sm:px-6 py-24 lg:py-32 grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10">
                     <div class="reveal space-y-6">
-                        <div class="flex items-center space-x-2 mb-2">
+                        <div class="flex items-center gap-2 mb-2">
                             <div class="w-2 h-2 rounded-full bg-surface-400/50"></div>
-                            <span class="text-[10px] uppercase tracking-[0.2em] text-surface-400/70 font-mono">Regular
-                                AI Chatbots</span>
+                            <span class="su-eyebrow text-surface-400/80">Generic AI Tools</span>
                         </div>
                         <div class="space-y-5">
                             <div>
                                 <h3 class="text-surface-200 font-semibold text-sm">Forgets everything each session</h3>
-                                <p class="text-sm text-surface-400/70 leading-relaxed mt-1">It doesn't remember what you
-                                    got wrong yesterday or what exam you have tomorrow.</p>
+                                <p class="text-sm text-surface-400/70 leading-relaxed mt-1">It doesn't remember what you got wrong yesterday or what exam you have tomorrow.</p>
                             </div>
                             <div>
                                 <h3 class="text-surface-200 font-semibold text-sm">Dumps walls of text</h3>
-                                <p class="text-sm text-surface-400/70 leading-relaxed mt-1">Generic summaries that feel
-                                    overwhelming and don't help you retain anything long-term.</p>
+                                <p class="text-sm text-surface-400/70 leading-relaxed mt-1">Generic summaries that feel overwhelming and don't help you retain anything long-term.</p>
                             </div>
                         </div>
                     </div>
-                    <div
-                        class="reveal reveal-d2 space-y-6 bg-surface-50/[0.05] border border-surface-100/[0.08] rounded-2xl p-8">
-                        <div class="flex items-center space-x-2 mb-2">
+                    <div class="reveal reveal-d2 landing-compare__studentu soft-card-dark rounded-3xl p-8 space-y-5">
+                        <div class="flex items-center gap-2 mb-2">
                             <div class="w-2 h-2 rounded-full bg-accent-warm"></div>
-                            <span
-                                class="text-[10px] uppercase tracking-[0.2em] text-accent-soft font-mono">StudentU</span>
+                            <span class="su-eyebrow text-accent-warm">StudentU</span>
                         </div>
                         <div class="space-y-5">
                             <div>
                                 <h3 class="text-surface-100 font-semibold text-sm">Remembers how you learn</h3>
-                                <p class="text-sm text-surface-400/80 leading-relaxed mt-1">Tracks your accuracy and
-                                    patterns to build a personal learning profile that improves over time.</p>
+                                <p class="text-sm text-surface-400/80 leading-relaxed mt-1">Tracks your accuracy and patterns to build a personal learning profile that improves over time.</p>
                             </div>
                             <div>
                                 <h3 class="text-surface-100 font-semibold text-sm">Spots your weak points early</h3>
-                                <p class="text-sm text-surface-400/80 leading-relaxed mt-1">Identifies slipping concepts
-                                    and updates your study plan so you review before exam day.</p>
+                                <p class="text-sm text-surface-400/80 leading-relaxed mt-1">Identifies slipping concepts and updates your study plan so you review before exam day.</p>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="landing-use-cases">
+                <div class="max-w-5xl mx-auto px-4 sm:px-6 py-20 lg:py-28 relative z-10">
+                    <div class="text-center mb-12 reveal">
+                        <span class="su-eyebrow">Built for real classes</span>
+                        <h2 class="su-display text-2xl md:text-3xl mt-2 max-w-2xl mx-auto">Study smarter across STEM, humanities, and more</h2>
+                        <p class="su-lead text-sm mx-auto mt-3 max-w-xl">Each workflow starts from your syllabus and notes — not generic prompts.</p>
+                    </div>
+                    <div class="landing-use-cases__grid reveal reveal-d1">
+                        <article class="landing-use-case landing-use-case--stem">
+                            <div class="landing-use-case__accent" aria-hidden="true"></div>
+                            <header class="landing-use-case__head">
+                                <div class="landing-use-case__icon landing-use-case__icon--blue">
+                                    <img src="assets/icons/biotech.svg" alt="" class="asset-icon w-5 h-5">
+                                </div>
+                                <span class="landing-use-case__tag">STEM</span>
+                            </header>
+                            <blockquote class="landing-use-case__quote">Turned my neural networks notes into recall quizzes before the final.</blockquote>
+                            <ol class="landing-use-case__steps" aria-label="Sample workflow">
+                                <li><span class="landing-use-case__step-label">Paste notes</span></li>
+                                <li><span class="landing-use-case__step-label">Generate guide</span></li>
+                                <li><span class="landing-use-case__step-label">Flag weak topics</span></li>
+                            </ol>
+                            <div class="landing-use-case__stat">
+                                <span class="landing-use-case__stat-value">12 cards</span>
+                                <span class="landing-use-case__stat-label">from one lecture</span>
+                            </div>
+                            <footer class="landing-use-case__foot">
+                                <div class="landing-use-case__course">
+                                    <strong>Neural Networks</strong>
+                                    <span>CS 489 · sample class</span>
+                                </div>
+                                <button type="button" data-action="loadUseCaseDemo" data-demo-course="neuro" class="landing-use-case__cta">Try this class</button>
+                            </footer>
+                        </article>
+                        <article class="landing-use-case landing-use-case--quant">
+                            <div class="landing-use-case__accent" aria-hidden="true"></div>
+                            <header class="landing-use-case__head">
+                                <div class="landing-use-case__icon landing-use-case__icon--teal">
+                                    <img src="assets/icons/calculator.svg" alt="" class="asset-icon w-5 h-5">
+                                </div>
+                                <span class="landing-use-case__tag">Quant</span>
+                            </header>
+                            <blockquote class="landing-use-case__quote">Spaced review caught weak topics in multivariable calc a week early.</blockquote>
+                            <ol class="landing-use-case__steps" aria-label="Sample workflow">
+                                <li><span class="landing-use-case__step-label">Upload syllabus</span></li>
+                                <li><span class="landing-use-case__step-label">Schedule reviews</span></li>
+                                <li><span class="landing-use-case__step-label">Drill weak spots</span></li>
+                            </ol>
+                            <div class="landing-use-case__stat">
+                                <span class="landing-use-case__stat-value">3 due</span>
+                                <span class="landing-use-case__stat-label">topics flagged early</span>
+                            </div>
+                            <footer class="landing-use-case__foot">
+                                <div class="landing-use-case__course">
+                                    <strong>Calculus III</strong>
+                                    <span>MATH 321 · sample class</span>
+                                </div>
+                                <button type="button" data-action="loadUseCaseDemo" data-demo-course="calc" class="landing-use-case__cta">Try this class</button>
+                            </footer>
+                        </article>
+                        <article class="landing-use-case landing-use-case--humanities">
+                            <div class="landing-use-case__accent" aria-hidden="true"></div>
+                            <header class="landing-use-case__head">
+                                <div class="landing-use-case__icon landing-use-case__icon--warm">
+                                    <img src="assets/icons/reading.svg" alt="" class="asset-icon w-5 h-5 invert-soft">
+                                </div>
+                                <span class="landing-use-case__tag">Humanities</span>
+                            </header>
+                            <blockquote class="landing-use-case__quote">Explanations tied to my syllabus beat generic AI summaries.</blockquote>
+                            <ol class="landing-use-case__steps" aria-label="Sample workflow">
+                                <li><span class="landing-use-case__step-label">Load class packet</span></li>
+                                <li><span class="landing-use-case__step-label">Feynman explain</span></li>
+                                <li><span class="landing-use-case__step-label">Recall check</span></li>
+                            </ol>
+                            <div class="landing-use-case__stat">
+                                <span class="landing-use-case__stat-value">Syllabus-aware</span>
+                                <span class="landing-use-case__stat-label">not generic chat</span>
+                            </div>
+                            <footer class="landing-use-case__foot">
+                                <div class="landing-use-case__course">
+                                    <strong>History of Art</strong>
+                                    <span>ART 210 · sample class</span>
+                                </div>
+                                <button type="button" data-action="loadUseCaseDemo" data-demo-course="hist" class="landing-use-case__cta">Try this class</button>
+                            </footer>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+            <div class="landing-faq max-w-3xl mx-auto px-4 sm:px-6 py-24 lg:py-28">
+                <div class="text-center mb-10 reveal">
+                    <span class="su-eyebrow">FAQ</span>
+                    <h2 class="su-display text-2xl md:text-3xl mt-2">Questions before you upload</h2>
+                    <p class="su-lead text-sm mx-auto mt-3 max-w-lg">Your notes stay scoped to your study space. Here is how StudentU handles privacy, verification, and academic use.</p>
+                </div>
+                <div class="landing-faq__list space-y-3 reveal reveal-d1">
+                    <details class="landing-faq__item su-panel">
+                        <summary class="landing-faq__question">Is my class material private?</summary>
+                        <p class="landing-faq__answer">Yes. Materials are tied to your study space, not shared publicly. You can export or remove class data anytime from Account Settings.</p>
+                    </details>
+                    <details class="landing-faq__item su-panel">
+                        <summary class="landing-faq__question">What does .edu verification unlock?</summary>
+                        <p class="landing-faq__answer">Verified students get expanded study access, more AI-generated quizzes, and smarter spaced-review planning. You can still try the demo without verifying.</p>
+                    </details>
+                    <details class="landing-faq__item su-panel">
+                        <summary class="landing-faq__question">How is this different from ChatGPT?</summary>
+                        <p class="landing-faq__answer">StudentU remembers your class context, tracks weak topics, and builds a study plan from your syllabus and notes — not one-off chat sessions.</p>
+                    </details>
+                    <details class="landing-faq__item su-panel">
+                        <summary class="landing-faq__question">Can I use StudentU for exams and homework?</summary>
+                        <p class="landing-faq__answer">StudentU is built for learning and review — understanding concepts, practicing recall, and planning study time. Follow your school's academic integrity policies for graded work.</p>
+                    </details>
+                </div>
+            </div>
+
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 py-24 lg:py-28 reveal">
+                <div class="landing-cta su-panel text-center px-6 py-10 sm:px-10 sm:py-12">
+                    <span class="su-eyebrow">Ready when you are</span>
+                    <h2 class="su-display text-2xl md:text-3xl mt-2">Start remembering, not rereading.</h2>
+                    <p class="su-lead text-sm md:text-base mx-auto mt-3 max-w-md">Try the demo with sample notes, or upload your own class materials in minutes.</p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+                        <button type="button" data-action="heroAction" data-hero-type="demo"
+                            class="w-full sm:w-auto px-8 py-3.5 btn-primary rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
+                            <img src="assets/icons/start.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
+                            <span>Try Demo</span>
+                        </button>
+                        <button type="button" data-action="heroAction" data-hero-type="upload"
+                            class="w-full sm:w-auto px-8 py-3.5 btn-outline rounded-xl text-sm font-medium flex items-center justify-center gap-2">
+                            <img src="assets/icons/upload.svg" alt="" class="asset-icon w-4 h-4">
+                            <span>Upload Notes</span>
+                        </button>
+                    </div>
+                    <button type="button" data-action="verifyStudent" class="mt-5 text-xs font-medium text-ink-50 hover:text-accent-blue transition-colors">
+                        Verify your .edu email for expanded access →
+                    </button>
                 </div>
             </div>
 
         </section>
 
         <section id="tab-dashboard" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
-            <!-- Greeting & Stats Block -->
+            <!-- Dashboard Sub-navigation (Local Tab Bar) -->
+            <div class="mb-8 flex flex-wrap items-center justify-start bg-surface-200/80 border border-surface-300 rounded-2xl md:rounded-full px-1.5 py-1.5 gap-1 md:space-x-1 shadow-sm w-fit reveal">
+                <button id="btn-subtab-overview" data-action="switchDashboardSubTab" data-subtab-target="overview"
+                    class="dash-sub-nav-btn text-xs font-semibold px-4 py-1.5 rounded-full transition-all duration-300 text-ink-400 bg-white shadow-sm"
+                    data-subtab="overview">Overview</button>
+                <button id="btn-subtab-planner" data-action="switchDashboardSubTab" data-subtab-target="planner"
+                    class="dash-sub-nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
+                    data-subtab="planner">Study Planner</button>
+                <button id="btn-subtab-progress" data-action="switchDashboardSubTab" data-subtab-target="progress"
+                    class="dash-sub-nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
+                    data-subtab="progress">Progress & Analytics</button>
+                <button id="btn-subtab-account" data-action="switchDashboardSubTab" data-subtab-target="account"
+                    class="dash-sub-nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
+                    data-subtab="account">Account Settings</button>
+            </div>
+
+            <div id="dash-sub-pane-overview" class="dash-sub-pane space-y-8">
+                <div id="dashboard-data-mode-banner" class="hidden" role="status" aria-live="polite"></div>
+                <!-- Greeting & Stats Block -->
             <div class="mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6 reveal">
                 <div>
-                    <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight" id="dashboard-welcome-msg">Good morning, Alex</h1>
-                    <p class="text-sm text-ink-50 mt-1">Welcome back to StudentU. Here is your AI-optimized spacing study plan today.</p>
+                    <p class="su-step-indicator mb-2">Step 3 — Track your progress</p>
+                    <h1 class="su-display" id="dashboard-welcome-msg">Welcome back</h1>
+                    <p class="su-lead text-sm mt-1">Welcome back to StudentU. Here is your AI-optimized spacing study plan today.</p>
                 </div>
-                <!-- Mini Stats Widgets (Inspired by Trenning and School mockups) -->
-                <div class="flex flex-wrap items-center gap-3">
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
-                        <div class="w-8 h-8 rounded-xl bg-accent-yellow/10 flex items-center justify-center">
-                            <img src="assets/icons/ratings.svg" alt="" class="asset-icon w-5 h-5">
+                <!-- Priority stats — study actions first -->
+                <div class="dash-stats flex flex-col items-start lg:items-end gap-3">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="dash-stat-priority bg-surface-50 border border-accent-red/20 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
+                            <div class="w-8 h-8 rounded-xl bg-accent-red/10 flex items-center justify-center">
+                                <img src="assets/icons/alarm_clock.svg" alt="" class="asset-icon w-5 h-5">
+                            </div>
+                            <div>
+                                <span class="text-xs text-ink-100 block leading-none font-medium">Due Reviews</span>
+                                <span class="text-sm font-bold text-ink-400" id="dash-stat-reviews">—</span>
+                            </div>
                         </div>
-                        <div>
-                            <span class="text-[10px] text-ink-50 block leading-none font-medium">Points</span>
-                            <span class="text-sm font-bold text-ink-400" id="dash-stat-points">100</span>
+                        <div class="dash-stat-priority bg-surface-50 border border-accent-teal/20 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
+                            <div class="w-8 h-8 rounded-xl bg-accent-teal/10 flex items-center justify-center">
+                                <img src="assets/icons/bullish.svg" alt="" class="asset-icon w-5 h-5">
+                            </div>
+                            <div>
+                                <span class="text-xs text-ink-100 block leading-none font-medium">Study Streak</span>
+                                <span class="text-sm font-bold text-ink-400" id="dash-stat-streak">—</span>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
-                        <div class="w-8 h-8 rounded-xl bg-accent-pink/10 flex items-center justify-center">
-                            <img src="assets/icons/vip.svg" alt="" class="asset-icon w-5 h-5">
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-ink-50 block leading-none font-medium">Badges</span>
-                            <span class="text-sm font-bold text-ink-400" id="dash-stat-badges">32</span>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
-                        <div class="w-8 h-8 rounded-xl bg-accent-blue/10 flex items-center justify-center">
-                            <img src="assets/icons/diploma_1.svg" alt="" class="asset-icon w-5 h-5">
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-ink-50 block leading-none font-medium">Certificates</span>
-                            <span class="text-sm font-bold text-ink-400" id="dash-stat-certs">12</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
-                        <div class="w-8 h-8 rounded-xl bg-accent-red/10 flex items-center justify-center">
-                            <img src="assets/icons/alarm_clock.svg" alt="" class="asset-icon w-5 h-5">
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-ink-50 block leading-none font-medium">Review Queue</span>
-                            <span class="text-sm font-bold text-ink-400">3 Topics</span>
+                        <div class="dash-stat-priority bg-surface-50 border border-accent-blue/20 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
+                            <div class="w-8 h-8 rounded-xl bg-accent-blue/10 flex items-center justify-center">
+                                <img src="assets/icons/light_at_the_end_of_tunnel.svg" alt="" class="asset-icon w-5 h-5">
+                            </div>
+                            <div>
+                                <span class="text-xs text-ink-100 block leading-none font-medium">Today's Sessions</span>
+                                <span class="text-sm font-bold text-ink-400" id="dash-stat-today">—</span>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
-                        <div class="w-8 h-8 rounded-xl bg-accent-teal/10 flex items-center justify-center">
-                            <img src="assets/icons/bullish.svg" alt="" class="asset-icon w-5 h-5">
+                    <details class="dash-stats__more w-full lg:w-auto">
+                        <summary class="text-xs font-semibold text-accent-blue cursor-pointer select-none list-none flex items-center gap-1">
+                            <span>Points, badges &amp; certificates</span>
+                            <span class="dash-stats__chevron" aria-hidden="true">▾</span>
+                        </summary>
+                        <div class="flex flex-wrap items-center gap-3 mt-3 pt-3 border-t border-surface-300/60">
+                            <div class="bg-surface-50 border border-surface-300/60 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
+                                <div class="w-8 h-8 rounded-xl bg-accent-yellow/10 flex items-center justify-center">
+                                    <img src="assets/icons/ratings.svg" alt="" class="asset-icon w-5 h-5">
+                                </div>
+                                <div>
+                                    <span class="text-xs text-ink-100 block leading-none font-medium">Points</span>
+                                    <span class="text-sm font-bold text-ink-400" id="dash-stat-points">0</span>
+                                </div>
+                            </div>
+                            <div class="bg-surface-50 border border-surface-300/60 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
+                                <div class="w-8 h-8 rounded-xl bg-accent-pink/10 flex items-center justify-center">
+                                    <img src="assets/icons/vip.svg" alt="" class="asset-icon w-5 h-5">
+                                </div>
+                                <div>
+                                    <span class="text-xs text-ink-100 block leading-none font-medium">Badges</span>
+                                    <span class="text-sm font-bold text-ink-400" id="dash-stat-badges">0</span>
+                                </div>
+                            </div>
+                            <div class="bg-surface-50 border border-surface-300/60 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
+                                <div class="w-8 h-8 rounded-xl bg-accent-blue/10 flex items-center justify-center">
+                                    <img src="assets/icons/diploma_1.svg" alt="" class="asset-icon w-5 h-5">
+                                </div>
+                                <div>
+                                    <span class="text-xs text-ink-100 block leading-none font-medium">Certificates</span>
+                                    <span class="text-sm font-bold text-ink-400" id="dash-stat-certs">0</span>
+                                </div>
+                            </div>
+                            <button type="button" data-action="switchDashboardSubTab" data-subtab-target="progress"
+                                class="text-xs font-semibold text-ink-100 hover:text-accent-blue transition-colors px-2 py-1">
+                                Full analytics →
+                            </button>
                         </div>
-                        <div>
-                            <span class="text-[10px] text-ink-50 block leading-none font-medium">Study Streak</span>
-                            <span class="text-sm font-bold text-ink-400">3 Days</span>
-                        </div>
-                    </div>
+                    </details>
                 </div>
             </div>
 
-            <!-- Dashboard Body: AI Coach Sessions + Memory Retention Cards -->
+            <!-- Dashboard Body: StudentU AI Sessions + Memory Retention Cards -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 reveal reveal-d1">
-                <!-- Left: AI Coach Weekly Plan -->
-                <div class="lg:col-span-2 bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                <!-- Left: StudentU AI Weekly Plan -->
+                <div class="lg:col-span-2 bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm su-panel">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-base font-bold text-ink-400">AI Coach Study Sessions</h2>
+                        <h2 class="text-lg font-bold text-ink-400 tracking-tight">StudentU AI Study Sessions</h2>
                         <div class="flex gap-2" id="day-tabs">
-                            <button onclick="switchDayTab(this,'today')" class="active-day-tab px-3 py-1 rounded-lg text-xs font-semibold border border-surface-300 transition-all">
+                            <button data-action="switchDayTab" data-day="today" class="active-day-tab px-3 py-1 rounded-lg text-xs font-semibold border border-surface-300 transition-all">
                                 <span>Today</span>
                             </button>
-                            <button onclick="switchDayTab(this,'tomorrow')" class="px-3 py-1 rounded-lg text-xs font-semibold border border-surface-300 transition-all">
+                            <button data-action="switchDayTab" data-day="tomorrow" class="px-3 py-1 rounded-lg text-xs font-semibold border border-surface-300 transition-all">
                                 <span>Tomorrow</span>
                             </button>
-                            <button onclick="switchDayTab(this,'week')" class="px-3 py-1 rounded-lg text-xs font-semibold border border-surface-300 transition-all">
+                            <button data-action="switchDayTab" data-day="week" class="px-3 py-1 rounded-lg text-xs font-semibold border border-surface-300 transition-all">
                                 <span>Week</span>
                             </button>
                         </div>
                     </div>
-                    <div id="schedule-list" class="space-y-3">
-                        <div class="flex items-center gap-3 py-3 border-b border-surface-200">
-                            <div class="w-10 h-10 rounded-xl bg-accent-blue/10 flex items-center justify-center flex-shrink-0">
-                                <img src="assets/icons/light_at_the_end_of_tunnel.svg" alt="" class="asset-icon w-5 h-5">
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="text-sm font-semibold text-ink-300 truncate">Neural Networks &mdash; AI Explainer Pass</div>
-                                <div class="text-[11px] text-ink-50">9:00 AM &middot; 45 min &middot; Feynman Method</div>
-                            </div>
-                            <button onclick="startSpecificPlannedSession('neuro')" class="flex-shrink-0 px-3 py-1.5 btn-primary rounded-lg text-xs font-medium">Start</button>
-                        </div>
-                        <div class="flex items-center gap-3 py-3 border-b border-surface-200">
-                            <div class="w-10 h-10 rounded-xl bg-accent-teal/10 flex items-center justify-center flex-shrink-0">
-                                <img src="assets/icons/exam.svg" alt="" class="asset-icon w-5 h-5">
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="text-sm font-semibold text-ink-300 truncate">Calculus III &mdash; AI Practice Drill</div>
-                                <div class="text-[11px] text-ink-50">2:00 PM &middot; 30 min &middot; Active Recall</div>
-                            </div>
-                            <button onclick="startSpecificPlannedSession('calc')" class="flex-shrink-0 px-3 py-1.5 btn-primary rounded-lg text-xs font-medium">Start</button>
-                        </div>
-                        <div class="flex items-center gap-3 py-3">
-                            <div class="w-10 h-10 rounded-xl bg-accent-yellow/10 flex items-center justify-center flex-shrink-0">
-                                <img src="assets/icons/ratings.svg" alt="" class="asset-icon w-5 h-5">
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="text-sm font-semibold text-ink-300 truncate">Macroeconomics &mdash; Spaced Review</div>
-                                <div class="text-[11px] text-ink-50">6:30 PM &middot; 20 min &middot; Spaced Repetition</div>
-                            </div>
-                            <button onclick="startSpecificPlannedSession('macro')" class="flex-shrink-0 px-3 py-1.5 btn-primary rounded-lg text-xs font-medium">Start</button>
-                        </div>
+                    <div id="dash-schedule-empty" class="hidden dash-empty-state">
+                        <img src="assets/icons/light_at_the_end_of_tunnel.svg" alt="" class="asset-icon w-8 h-8 mx-auto opacity-60">
+                        <p class="dash-empty-state__title">No sessions planned yet</p>
+                        <p class="dash-empty-state__body">Complete your first study guide to unlock AI-scheduled review sessions here.</p>
+                        <button type="button" data-action="focusStudyInput" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold mt-2">Start first guide</button>
                     </div>
+                    <div id="schedule-list" class="space-y-3"></div>
                 </div>
 
                 <!-- Right: Memory Retention Cards -->
                 <div class="space-y-4">
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm su-panel">
                         <div class="flex items-center gap-2 mb-3">
                             <div class="w-8 h-8 rounded-xl bg-accent-blue/10 flex items-center justify-center">
-                                <img src="assets/icons/exam.svg" alt="" class="asset-icon w-4 h-4">
+                                <img src="assets/icons/diploma_1.svg" alt="" class="asset-icon w-4 h-4">
                             </div>
-                            <span class="text-sm font-semibold text-ink-400">Exam Readiness</span>
+                            <span class="text-sm font-semibold text-ink-400 tracking-tight">Exam Readiness</span>
                         </div>
-                        <div class="text-3xl font-extrabold text-ink-400 mb-1" id="stat-speed">74%</div>
+                        <div class="su-metric-value mb-1" id="stat-speed">—</div>
                         <div class="text-[11px] text-ink-50 mb-3">Memory retention across all subjects</div>
                         <div class="progress-track">
-                            <div class="progress-fill bg-accent-blue" style="width: 74%"></div>
+                            <div id="stat-speed-fill" class="progress-fill bg-accent-blue" style="width: 0%"></div>
                         </div>
                     </div>
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm su-panel">
                         <div class="flex items-center gap-2 mb-3">
                             <div class="w-8 h-8 rounded-xl bg-accent-teal/10 flex items-center justify-center">
-                                <img src="assets/icons/graduate.svg" alt="" class="asset-icon w-4 h-4">
+                                <img src="assets/icons/graduation_cap.svg" alt="" class="asset-icon w-4 h-4">
                             </div>
-                            <span class="text-sm font-semibold text-ink-400">AI Recommended Review Queue</span>
+                            <span class="text-sm font-semibold text-ink-400 tracking-tight">AI Recommended Review Queue</span>
                         </div>
-                        <div class="space-y-2">
-                            <div class="flex items-center justify-between text-xs py-2 border-b border-surface-200">
-                                <span class="font-medium text-ink-300">Backpropagation</span>
-                                <span class="text-rose-600 font-semibold">High Risk</span>
-                            </div>
-                            <div class="flex items-center justify-between text-xs py-2 border-b border-surface-200">
-                                <span class="font-medium text-ink-300">Gradient Descent</span>
-                                <span class="text-amber-700 font-semibold">Medium Risk</span>
-                            </div>
-                            <div class="flex items-center justify-between text-xs py-2">
-                                <span class="font-medium text-ink-300">Chain Rule</span>
-                                <span class="text-emerald-700 font-semibold">Low Risk</span>
-                            </div>
+                        <div id="dash-review-queue-empty" class="hidden dash-empty-state py-4 text-center">
+                            <p class="text-xs text-ink-50">No review topics yet — complete a study guide to populate your queue.</p>
                         </div>
-                        <button onclick="drillWeakSpots()" class="mt-4 w-full py-2 btn-primary rounded-xl text-xs font-medium">Drill Weak Spots</button>
+                        <div id="dash-review-queue-list" class="space-y-2"></div>
+                        <button data-action="drillWeakSpots" class="mt-4 w-full py-2 btn-primary rounded-xl text-xs font-medium">Drill Weak Spots</button>
                     </div>
                 </div>
             </div>
 
             <!-- Classes Progress Row -->
-            <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm reveal reveal-d2">
+            <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm reveal reveal-d2 su-panel">
                 <div class="flex items-center justify-between mb-5">
-                    <h2 class="text-base font-bold text-ink-400">My Classes</h2>
-                    <button onclick="switchTab('profile')" class="text-xs text-accent-blue font-medium hover:underline">View All</button>
+                    <h2 class="text-lg font-bold text-ink-400 tracking-tight">My Classes</h2>
+                    <button data-action="switchTab" data-tab-target="profile" class="text-xs text-accent-blue font-medium hover:underline">View All</button>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="space-y-2">
-                        <div class="text-sm font-semibold text-ink-300">Neural Networks</div>
-                        <div class="text-[11px] text-ink-50">78% retention &middot; 12 cards</div>
-                        <div class="progress-track"><div class="progress-fill bg-accent-blue" style="width:78%"></div></div>
+                <div id="dash-classes-empty" class="hidden dash-empty-state text-center py-6">
+                    <p class="dash-empty-state__title">No classes yet</p>
+                    <p class="dash-empty-state__body">Add a class or try the demo to see progress here.</p>
+                    <button type="button" data-action="switchTab" data-tab-target="profile" class="btn-outline px-4 py-2 rounded-xl text-xs font-semibold mt-2">Add a class</button>
+                </div>
+                <div id="dash-classes-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+            </div>
+            </div> <!-- End #dash-sub-pane-overview -->
+
+            <!-- Study Planner Sub-pane (filled by renderFirstStudyPlan) -->
+            <div id="dash-sub-pane-planner" class="dash-sub-pane hidden"></div>
+
+            <!-- Progress & Analytics Sub-pane -->
+            <div id="dash-sub-pane-progress" class="dash-sub-pane hidden space-y-8">
+                <div class="mb-8 reveal">
+                    <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">My Progress</h1>
+                    <p class="text-sm text-ink-50 mt-1">Track your learning milestones, badges, and memory retention trends.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 reveal reveal-d1">
+                    <div class="lg:col-span-2 space-y-5">
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                            <h2 class="text-base font-bold text-ink-400 mb-4">Weekly Activity</h2>
+                            <div id="dash-progress-activity" class="grid grid-cols-7 gap-2"></div>
+                        </div>
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                            <h2 class="text-base font-bold text-ink-400 mb-4">Memory Retention by Subject</h2>
+                            <div id="dash-progress-retention" class="space-y-4"></div>
+                        </div>
                     </div>
-                    <div class="space-y-2">
-                        <div class="text-sm font-semibold text-ink-300">Calculus III</div>
-                        <div class="text-[11px] text-ink-50">65% retention &middot; 8 cards</div>
-                        <div class="progress-track"><div class="progress-fill bg-accent-teal" style="width:65%"></div></div>
+                    <div class="space-y-4">
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                            <h3 class="text-sm font-bold text-ink-400 mb-4">Badges Earned</h3>
+                            <div id="dash-progress-badges" class="grid grid-cols-3 gap-3"></div>
+                        </div>
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                            <h3 class="text-sm font-bold text-ink-400 mb-3">Account</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs"><span class="text-ink-50">Plan</span><span class="font-semibold text-ink-300" id="user-tier-display">Free</span></div>
+                                <div class="flex justify-between text-xs"><span class="text-ink-50">University</span><span class="font-semibold text-ink-300" id="user-university-display">&mdash;</span></div>
+                                <div class="flex justify-between text-xs"><span class="text-ink-50">Sessions This Week</span><span class="font-semibold text-ink-300" id="user-sessions-display">0</span></div>
+                            </div>
+                            <button data-action="openUpgradeModal" class="mt-4 w-full py-2 btn-primary rounded-xl text-xs font-medium">Upgrade to Premium</button>
+                        </div>
                     </div>
-                    <div class="space-y-2">
-                        <div class="text-sm font-semibold text-ink-300">History of Art</div>
-                        <div class="text-[11px] text-ink-50">82% retention &middot; 15 cards</div>
-                        <div class="progress-track"><div class="progress-fill bg-accent-warm" style="width:82%"></div></div>
+                </div>
+            </div>
+
+            <!-- Account Settings Sub-pane -->
+            <div id="dash-sub-pane-account" class="dash-sub-pane hidden space-y-8">
+                <div class="mb-8 reveal">
+                    <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">Account & Privacy</h1>
+                    <p class="text-sm text-ink-50 mt-1">Control your sign-in, student verification, saved study data, and privacy choices.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 reveal reveal-d1">
+                    <div class="lg:col-span-5 space-y-4">
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                            <h2 class="text-base font-bold text-ink-400 mb-4">Profile</h2>
+                            <div id="account-profile-panel" class="space-y-3"></div>
+                            <div id="account-sync-status" class="rounded-xl px-4 py-3 text-xs font-semibold bg-surface-100 border border-surface-300 text-ink-100 mt-4">Sign in to sync progress across devices.</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-5">
+                                <button data-action="signIn" class="btn-primary rounded-xl py-2.5 text-xs font-semibold">Sign In</button>
+                                <button data-action="signOut" class="btn-outline rounded-xl py-2.5 text-xs font-semibold">Sign Out</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                            <h2 class="text-base font-bold text-ink-400 mb-3">Student Verification</h2>
+                            <p class="text-xs text-ink-50 leading-relaxed mb-4">Verify your school email to unlock student advantages like more sessions, more AI explanations, and better study planning.</p>
+                            <button id="account-verify-button" data-action="verifyStudent" class="btn-outline rounded-xl px-4 py-2.5 text-xs font-semibold">Verify .edu Email</button>
+                        </div>
                     </div>
-                    <div class="space-y-2">
-                        <div class="text-sm font-semibold text-ink-300">Macroeconomics</div>
-                        <div class="text-[11px] text-ink-50">71% retention &middot; 10 cards</div>
-                        <div class="progress-track"><div class="progress-fill bg-accent-yellow" style="width:71%"></div></div>
+
+                    <div class="lg:col-span-7 space-y-4">
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                            <h2 class="text-base font-bold text-ink-400 mb-4">Saved Study Data</h2>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5" id="account-data-summary"></div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                <button data-action="exportActiveClassData" class="btn-outline rounded-xl py-2.5 text-xs font-semibold">Export Class</button>
+                                <button data-action="clearActiveClassMaterials" class="btn-outline rounded-xl py-2.5 text-xs font-semibold">Remove Materials</button>
+                                <button data-action="clearAllClassStudyData" class="btn-outline rounded-xl py-2.5 text-xs font-semibold">Reset Classes</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                            <h2 class="text-base font-bold text-ink-400 mb-3">Study Generation</h2>
+                            <p class="text-xs text-ink-50 leading-relaxed mb-3">StudentU can generate explanations and quizzes from your class packet. When live generation is unavailable, the study tools continue with built-in practice content.</p>
+                            <div id="account-study-status" class="bg-surface-100 border border-surface-300 rounded-xl px-4 py-3 text-xs text-ink-100">Checking study generation status...</div>
+                        </div>
+
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                            <h2 class="text-base font-bold text-ink-400 mb-3">Privacy Promise</h2>
+                            <p class="text-xs text-ink-50 leading-relaxed">Your class materials should help you study, not become public content. StudentU keeps class context scoped to your study space and gives you export and removal controls before launch-level sharing features are added.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -434,15 +748,89 @@
 
         <!-- ===== WORKSPACE / STUDY DESK TAB ===== -->
         <section id="tab-workspace" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
-
             <!-- Setup Pane -->
             <div id="study-desk-setup">
-                <div class="mb-8 reveal">
-                    <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">Study Desk</h1>
-                    <p class="text-sm text-ink-50 mt-1">Paste your notes or pick a topic to generate your personalized study guide.</p>
+                <div class="mb-8 reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+                    <div>
+                        <p class="su-step-indicator mb-2">Step 1 of 3 — Set up your workspace</p>
+                        <h1 class="su-display mt-1">Study Desk</h1>
+                        <p class="su-lead text-sm mt-1">Start from one class, one packet, and one next action.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button data-action="continuePreviousSession" class="btn-outline px-4 py-2.5 rounded-xl text-xs font-semibold">Continue Session</button>
+                        <button data-action="focusStudyInput" class="btn-primary px-4 py-2.5 rounded-xl text-xs font-semibold">Start New Guide</button>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 reveal reveal-d1">
+                <div id="flow-next-action" class="mb-6 reveal hidden"></div>
+                <div id="happy-path-strip" class="mb-6 reveal hidden" role="region" aria-label="Setup progress"></div>
+                <div id="study-desk-checklist" class="mb-6 reveal hidden"></div>
+
+                <div id="study-flow-home" class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6 reveal reveal-d1 su-bento">
+                    <div id="student-mode-banner" class="hidden lg:col-span-12 student-mode-banner">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                            <div>
+                                <p id="student-mode-title" class="text-xs font-bold text-ink-400">Demo workspace</p>
+                                <p id="student-mode-copy" class="text-xs text-ink-50 mt-1">You can try StudentU with sample notes. Nothing here affects a real class.</p>
+                            </div>
+                            <button id="student-mode-action" data-action="switchTab" data-tab-target="profile" class="btn-outline rounded-xl px-4 py-2.5 text-xs font-semibold w-fit">Set up my class</button>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5 su-card">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="su-card-label">Class Status</span>
+                                <h2 id="flow-selected-class" class="su-card-title mt-1">Loading...</h2>
+                                <p id="flow-selected-context" class="su-card-body text-xs mt-1">Preparing your class context.</p>
+                            </div>
+                            <button data-action="switchTab" data-tab-target="profile" class="btn-outline px-3 py-2 rounded-xl text-[11px] font-semibold shrink-0">Manage</button>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mt-4">
+                            <div class="su-metric p-3">
+                                <span class="text-xs font-semibold text-ink-100">Materials</span>
+                                <p id="flow-material-count" class="su-metric-value mt-1">0</p>
+                            </div>
+                            <div class="su-metric p-3">
+                                <span class="text-xs font-semibold text-ink-100">Retention</span>
+                                <p id="flow-retention-score" class="su-metric-value mt-1">--</p>
+                            </div>
+                            <div class="su-metric p-3">
+                                <span class="text-xs font-semibold text-ink-100">Weak</span>
+                                <p id="flow-weak-count" class="su-metric-value mt-1">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-4 su-card">
+                        <span class="su-card-label">Due Reviews</span>
+                        <h2 id="flow-next-review" class="su-card-title mt-1">No reviews yet</h2>
+                        <p id="flow-next-review-meta" class="su-card-body text-xs mt-1">Complete a study guide to see due topics.</p>
+                        <button data-action="startReviewQueue" class="mt-4 btn-outline px-4 py-2.5 rounded-xl text-xs font-semibold">Review Due Items</button>
+                    </div>
+
+                    <div class="lg:col-span-3 su-card">
+                        <span class="su-card-label">Saved Session</span>
+                        <h2 id="flow-last-session" class="su-card-title mt-1">No saved session yet</h2>
+                        <p id="flow-last-session-meta" class="su-card-body text-xs mt-1">Generate a guide to create one.</p>
+                        <button data-action="continuePreviousSession" class="mt-4 btn-outline px-4 py-2.5 rounded-xl text-xs font-semibold w-full">Continue</button>
+                    </div>
+                </div>
+
+                <div id="first-run-study-gate" class="hidden mb-6 bg-accent-blue/5 border border-accent-blue/15 rounded-2xl p-5 reveal reveal-d1">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <div>
+                            <h2 class="text-lg font-extrabold text-ink-400 mt-1">Add one class and one source first.</h2>
+                            <p class="text-xs text-ink-50 mt-1">StudentU can run from pasted notes, but a syllabus and notes make the study guide much smarter.</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button data-action="startSetupFlow" class="btn-primary px-4 py-2.5 rounded-xl text-xs font-semibold">Set Up Class</button>
+                            <button data-action="dismissOnboardingGate" class="btn-outline px-4 py-2.5 rounded-xl text-xs font-semibold">Study Without Setup</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="study-guide-panel" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6 reveal reveal-d2">
                     <!-- Left: Input Area -->
                     <div class="lg:col-span-2 space-y-4">
                         <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
@@ -450,27 +838,42 @@
                                 <label class="text-sm font-semibold text-ink-400">Select Subject</label>
                             </div>
                             <select id="course-selector" onchange="handleCourseChange()" class="w-full bg-surface-100 border border-surface-300 rounded-xl px-4 py-3 text-sm text-ink-300 mb-4 focus:outline-none focus:ring-2 focus:ring-ink-200">
-                                <option value="neuro">Neural Networks &amp; Backpropagation</option>
-                                <option value="calc">Calculus III &mdash; Multivariable</option>
-                                <option value="hist">History of Art &mdash; Renaissance</option>
-                                <option value="macro">Macroeconomics &mdash; Fiscal Policy</option>
+                                <option value="">Select a class or sample…</option>
                             </select>
                             <label class="text-sm font-semibold text-ink-400 block mb-2">Paste Your Notes</label>
+                            <div class="mb-3 flex flex-col md:flex-row md:items-center md:justify-between gap-2 rounded-xl bg-accent-blue/5 border border-accent-blue/10 px-3 py-2.5">
+                                <p class="text-xs text-ink-100">Use your selected class packet for syllabus-aware explanations and quizzes.</p>
+                                <div class="flex gap-2">
+                                    <button data-action="loadSelectedClassPacket" class="text-[11px] font-semibold text-accent-blue hover:text-accent-teal">Load Class Packet</button>
+                                    <button data-action="switchTab" data-tab-target="profile" class="text-[11px] font-semibold text-ink-100 hover:text-ink-400">Manage Classes</button>
+                                </div>
+                            </div>
                             <textarea id="study-material" rows="10" placeholder="Paste your class notes, textbook excerpt, or lecture transcript here..." class="w-full bg-surface-100 border border-surface-300 rounded-xl px-4 py-3 text-sm text-ink-300 placeholder:text-ink-50/70 resize-none focus:outline-none focus:ring-2 focus:ring-ink-200 no-scrollbar"></textarea>
                             <div class="flex items-center gap-3 mt-4 flex-wrap">
-                                <button onclick="startStudySession()" class="px-6 py-3 btn-primary rounded-xl text-sm font-medium flex items-center gap-2">
+                                <button data-action="startStudySession" class="px-6 py-3 btn-primary rounded-xl text-sm font-medium flex items-center gap-2">
                                     <img src="assets/icons/start.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
                                     Generate Study Guide
                                 </button>
-                                <button onclick="generateAdaptiveQuiz()" class="px-6 py-3 btn-outline rounded-xl text-sm font-medium flex items-center gap-2">
-                                    <img src="assets/icons/exam.svg" alt="" class="asset-icon w-4 h-4">
+                                <button data-action="generateAdaptiveQuiz" class="px-6 py-3 btn-outline rounded-xl text-sm font-medium flex items-center gap-2">
+                                    <img src="assets/icons/diploma_1.svg" alt="" class="asset-icon w-4 h-4">
                                     Quick Quiz
                                 </button>
                                 <label class="px-4 py-3 btn-outline rounded-xl text-sm font-medium flex items-center gap-2 cursor-pointer">
                                     <img src="assets/icons/upload.svg" alt="" class="asset-icon w-4 h-4">
                                     Upload File
-                                    <input type="file" accept=".txt,.pdf,.docx" class="hidden" onchange="handleFileUpload(event)">
+                                    <input type="file" accept=".txt,.md" class="hidden" onchange="handleFileUpload(event)">
                                 </label>
+                            </div>
+                            <p class="text-[11px] text-ink-50 mt-2">Supported: .txt, .md - Upload PDFs and DOCX via My Classes for full processing.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                                <div class="rounded-xl border border-surface-300 bg-white px-4 py-3">
+                                    <h3 class="text-xs font-bold text-ink-300">Generate Study Guide</h3>
+                                    <p class="text-[11px] text-ink-50 mt-1 leading-relaxed">Analyzes your notes and builds concept cards with explanations, analogies, mistakes, and recall checkpoints.</p>
+                                </div>
+                                <div class="rounded-xl border border-surface-300 bg-white px-4 py-3">
+                                    <h3 class="text-xs font-bold text-ink-300">Quick Quiz</h3>
+                                    <p class="text-[11px] text-ink-50 mt-1 leading-relaxed">Gives you a fast recall check based on the current notes or selected course packet.</p>
+                                </div>
                             </div>
                         </div>
 
@@ -478,7 +881,7 @@
                         <div id="quiz-area" class="hidden bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
                             <div class="flex items-center justify-between mb-4">
                                 <h3 class="text-base font-bold text-ink-400">Adaptive Quiz</h3>
-                                <button onclick="closeQuiz()" class="text-xs text-ink-50 hover:text-ink-300">Close</button>
+                                <button data-action="closeQuiz" class="text-xs text-ink-50 hover:text-ink-300">Close</button>
                             </div>
                             <div id="quiz-question-block" class="mb-4">
                                 <p class="text-sm font-semibold text-ink-300 mb-3" id="quiz-question-text">Question loads here...</p>
@@ -487,7 +890,8 @@
                             <div id="quiz-feedback" class="hidden mt-4 p-4 rounded-xl">
                                 <p class="text-sm font-semibold" id="quiz-feedback-title"></p>
                                 <p class="text-xs text-ink-50 mt-1" id="quiz-feedback-explanation"></p>
-                                <button onclick="advanceQuiz()" class="mt-3 px-4 py-2 btn-primary rounded-lg text-xs font-medium">Next Question &rarr;</button>
+                                <p class="text-[10px] text-ink-50 mt-2 font-semibold" id="quiz-feedback-source"></p>
+                                <button data-action="advanceQuiz" class="mt-3 px-4 py-2 btn-primary rounded-lg text-xs font-medium">Next Question &rarr;</button>
                             </div>
                         </div>
                     </div>
@@ -513,10 +917,78 @@
                         </div>
 
                         <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
-                            <h3 class="text-sm font-bold text-ink-400 mb-3">AI Backend</h3>
-                            <p class="text-xs text-ink-50 leading-relaxed">Live AI generation runs through the StudentU backend. When backend AI is not configured, StudentU automatically falls back to offline simulation.</p>
-                            <div class="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2">
-                                <p class="text-[10px] text-amber-700 font-semibold">No browser API keys. Backend-only AI with safe fallback.</p>
+                            <div class="flex items-start justify-between gap-3 mb-3">
+                                <div>
+                            <h3 class="text-sm font-bold text-ink-400">Study Engine</h3>
+                                    <p class="text-xs text-ink-50 leading-relaxed mt-1">StudentU uses your class portfolio, uploaded materials, and recent practice history to shape every study session.</p>
+                                </div>
+                                <button data-action="switchTab" data-tab-target="ai" class="btn-primary rounded-xl px-3 py-2 text-xs font-semibold flex items-center gap-1.5 shrink-0">
+                                    <img src="assets/icons/comments.svg" alt="" class="asset-icon w-3.5 h-3.5 invert-soft">
+                                    Study AI
+                                </button>
+                            </div>
+                            <div class="rounded-xl border border-accent-blue/15 bg-accent-blue/5 px-3 py-2">
+                                <p class="text-[10px] text-accent-blue font-semibold">Use Study AI to turn this class packet into explanations, recall drills, and a next-review plan.</p>
+                            </div>
+                            <div id="ai-status-panel" class="mt-3 rounded-xl border border-surface-300 bg-surface-100 px-3 py-2">
+                                <p id="ai-status-text" class="text-[10px] text-ink-100 font-semibold">Checking live study generation...</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                            <div class="flex items-start justify-between gap-3 mb-4">
+                                <div>
+                                    <h3 id="flow-readiness-title" class="text-sm font-bold text-ink-400 mt-1">Checking context</h3>
+                                </div>
+                                <button data-action="switchTab" data-tab-target="profile" class="btn-outline rounded-xl px-3 py-2 text-[11px] font-semibold">Improve</button>
+                            </div>
+                            <div id="flow-readiness-steps" class="space-y-2"></div>
+                        </div>
+
+                        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                            <div id="flow-context-snapshot" class="mt-3 space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="study-extra-panel hidden mt-8 su-card reveal reveal-d3">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+                        <div>
+                            <h2 class="text-lg font-extrabold text-ink-400 mt-1">Example visual cues</h2>
+                        </div>
+                        <span class="text-xs text-ink-50">Matched automatically by subject and concept type.</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div class="rounded-xl border border-surface-300 bg-white overflow-hidden">
+                            <img src="assets/learning-visuals/neural-concept-map.svg" alt="Connection map example" class="w-full h-36 object-contain bg-surface-50 p-2">
+                            <div class="p-3">
+                                <span class="text-[9px] font-bold uppercase tracking-wider text-accent-blue">STEM · Neuro</span>
+                                <h3 class="text-xs font-bold text-ink-300 mt-1">Connection Map</h3>
+                                <p class="text-[11px] text-ink-50 mt-1">Neural networks, gradients, and linked systems.</p>
+                            </div>
+                        </div>
+                        <div class="rounded-xl border border-surface-300 bg-white overflow-hidden">
+                            <img src="assets/learning-visuals/history-timeline.svg" alt="Timeline example" class="w-full h-36 object-contain bg-surface-50 p-2">
+                            <div class="p-3">
+                                <span class="text-[9px] font-bold uppercase tracking-wider text-accent-red">Humanities</span>
+                                <h3 class="text-xs font-bold text-ink-300 mt-1">Memory Timeline</h3>
+                                <p class="text-[11px] text-ink-50 mt-1">History sequences, chapters, and turning points.</p>
+                            </div>
+                        </div>
+                        <div class="rounded-xl border border-surface-300 bg-white overflow-hidden">
+                            <img src="assets/learning-visuals/economic-ripples.svg" alt="Economic ripple example" class="w-full h-36 object-contain bg-surface-50 p-2">
+                            <div class="p-3">
+                                <span class="text-[9px] font-bold uppercase tracking-wider text-accent-yellow">Economics</span>
+                                <h3 class="text-xs font-bold text-ink-300 mt-1">Economic Ripple</h3>
+                                <p class="text-[11px] text-ink-50 mt-1">Multipliers, fiscal policy, and spread effects.</p>
+                            </div>
+                        </div>
+                        <div class="rounded-xl border border-surface-300 bg-white overflow-hidden">
+                            <img src="assets/learning-visuals/process-funnel.svg" alt="Process funnel example" class="w-full h-36 object-contain bg-surface-50 p-2">
+                            <div class="p-3">
+                                <span class="text-[9px] font-bold uppercase tracking-wider text-accent-blue">STEM · Calc</span>
+                                <h3 class="text-xs font-bold text-ink-300 mt-1">Step Focus</h3>
+                                <p class="text-[11px] text-ink-50 mt-1">Algorithms, derivatives, and multi-step problems.</p>
                             </div>
                         </div>
                     </div>
@@ -535,15 +1007,20 @@
                         <div class="flex items-center gap-2 bg-surface-50 border border-surface-300/60 rounded-xl px-4 py-2.5 shadow-sm">
                             <div class="w-2 h-2 rounded-full bg-accent-red animate-pulse" id="timer-dot"></div>
                             <span class="font-mono text-sm font-bold text-ink-400" id="session-timer-display">25:00</span>
-                            <button id="session-play-pause-btn" onclick="toggleSessionTimer()" class="text-xs text-ink-100 hover:text-ink-400">
+                            <button id="session-play-pause-btn" data-action="toggleSessionTimer" class="text-xs text-ink-100 hover:text-ink-400">
                                 <span>Pause</span> <span id="play-pause-text">Pause</span>
                             </button>
                         </div>
-                        <button onclick="takeBreak()" class="px-4 py-2.5 btn-outline rounded-xl text-xs font-medium flex items-center gap-1.5">
-                            <img src="assets/icons/coffee.svg" alt="" class="asset-icon w-3.5 h-3.5">
+                        <button data-action="takeBreak" class="px-4 py-2.5 btn-outline rounded-xl text-xs font-medium flex items-center gap-1.5">
+                            <img src="assets/icons/icons8_cup.svg" alt="" class="asset-icon w-3.5 h-3.5">
                             Take Break
                         </button>
-                        <button onclick="returnToSetupPane()" class="text-xs text-ink-50 hover:text-ink-300 underline">Exit Session</button>
+                        <button data-action="openAI" data-prompt="Explain this card and quiz me on it." class="px-4 py-2.5 btn-outline rounded-xl text-xs font-medium flex items-center gap-1.5">
+                            <img src="assets/icons/comments.svg" alt="" class="asset-icon w-3.5 h-3.5">
+                            Ask AI
+                        </button>
+                        <button data-action="endSession" class="px-4 py-2.5 btn-primary rounded-xl text-xs font-medium">Finish Session</button>
+                        <button data-action="returnToSetupPane" class="text-xs text-ink-50 hover:text-ink-300 underline">Exit Session</button>
                     </div>
                 </div>
 
@@ -560,6 +1037,20 @@
                                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-200 text-ink-100 uppercase tracking-wider" id="card-difficulty-badge">Beginner</span>
                             </div>
                             <h3 class="text-xl font-extrabold text-ink-400 mb-3" id="card-title">Loading...</h3>
+                            <div id="card-source-panel" class="mb-4 flex flex-wrap items-center gap-2 text-[10px] text-ink-50">
+                                <span class="bg-white border border-surface-300 rounded-md px-2 py-1 font-semibold">Source: class packet</span>
+                                <span class="bg-white border border-surface-300 rounded-md px-2 py-1 font-semibold">Confidence: medium</span>
+                            </div>
+                            <div class="mb-5 rounded-2xl border border-surface-300/70 bg-white overflow-hidden">
+                                <div class="flex items-center justify-between gap-3 px-4 py-3 border-b border-surface-200">
+                                    <div>
+                                        <div class="text-[10px] font-mono uppercase tracking-widest text-ink-50">Visual Cue</div>
+                                        <h4 class="text-sm font-bold text-ink-400" id="card-visual-title">Concept map</h4>
+                                    </div>
+                                    <span class="text-[9px] font-mono uppercase tracking-widest text-accent-blue" id="card-visual-type">Map</span>
+                                </div>
+                                <div id="card-visual-panel" class="concept-visual-shell"></div>
+                            </div>
                             <div class="mb-4">
                                 <div class="text-xs font-mono uppercase tracking-widest text-ink-50 mb-1">Feynman Explanation</div>
                                 <p class="text-sm text-ink-200 leading-relaxed select-text" id="card-feynman" onmouseup="handleTextSelection(event)"></p>
@@ -578,23 +1069,23 @@
                             </div>
                             <!-- Navigation Buttons -->
                             <div class="flex items-center justify-between mt-6 pt-4 border-t border-surface-200">
-                                <button onclick="prevCard()" class="px-4 py-2 btn-outline rounded-xl text-xs font-medium">&larr; Prev</button>
+                                <button data-action="prevCard" class="px-4 py-2 btn-outline rounded-xl text-xs font-medium">&larr; Prev</button>
                                 <div class="flex gap-2">
-                                    <button onclick="markCard('learned')" class="px-4 py-2 bg-emerald-500 text-white rounded-xl text-xs font-semibold hover:bg-emerald-600 transition-colors">Got It &check;</button>
-                                    <button onclick="markCard('missed')" class="px-4 py-2 bg-rose-400 text-white rounded-xl text-xs font-semibold hover:bg-rose-500 transition-colors">Missed &times;</button>
+                                    <button data-action="markCard" data-status="learned" class="px-4 py-2 bg-emerald-500 text-white rounded-xl text-xs font-semibold hover:bg-emerald-600 transition-colors">Got It &check;</button>
+                                    <button data-action="markCard" data-status="missed" class="px-4 py-2 bg-rose-400 text-white rounded-xl text-xs font-semibold hover:bg-rose-500 transition-colors">Missed &times;</button>
                                 </div>
-                                <button onclick="nextCard()" class="px-4 py-2 btn-primary rounded-xl text-xs font-medium">Next &rarr;</button>
+                                <button data-action="nextCard" class="px-4 py-2 btn-primary rounded-xl text-xs font-medium">Next &rarr;</button>
                             </div>
                         </div>
 
                         <!-- Highlight Floating Toolbar -->
                         <div id="highlight-toolbar" class="hidden fixed z-50 bg-white border border-surface-300 rounded-xl shadow-xl px-3 py-2 flex gap-2 items-center" style="transform: translateX(-50%);">
-                            <button onclick="applyHighlight('yellow')" class="w-5 h-5 rounded-full bg-yellow-400 hover:scale-110 transition-transform" title="Key Term"></button>
-                            <button onclick="applyHighlight('green')" class="w-5 h-5 rounded-full bg-emerald-400 hover:scale-110 transition-transform" title="Understood"></button>
-                            <button onclick="applyHighlight('red')" class="w-5 h-5 rounded-full bg-rose-400 hover:scale-110 transition-transform" title="Got Wrong"></button>
-                            <button onclick="applyHighlight('blue')" class="w-5 h-5 rounded-full bg-sky-400 hover:scale-110 transition-transform" title="Flag for Review"></button>
+                            <button data-action="applyHighlight" data-color="yellow" class="w-5 h-5 rounded-full bg-yellow-400 hover:scale-110 transition-transform" title="Key Term"></button>
+                            <button data-action="applyHighlight" data-color="green" class="w-5 h-5 rounded-full bg-emerald-400 hover:scale-110 transition-transform" title="Understood"></button>
+                            <button data-action="applyHighlight" data-color="red" class="w-5 h-5 rounded-full bg-rose-400 hover:scale-110 transition-transform" title="Got Wrong"></button>
+                            <button data-action="applyHighlight" data-color="blue" class="w-5 h-5 rounded-full bg-sky-400 hover:scale-110 transition-transform" title="Flag for Review"></button>
                             <div class="w-px h-4 bg-surface-300 mx-1"></div>
-                            <button onclick="hideHighlightToolbar()" class="text-xs text-ink-50 hover:text-ink-300">&times;</button>
+                            <button data-action="hideHighlightToolbar" class="text-xs text-ink-50 hover:text-ink-300">&times;</button>
                         </div>
                     </div>
 
@@ -620,10 +1111,24 @@
 
                         <!-- Recall Checkpoint Overlay (shows inside sidebar at trigger) -->
                         <div id="recall-checkpoint-overlay" class="hidden bg-ink-400 text-surface-100 rounded-2xl p-5 shadow-xl border border-white/20">
-                            <div class="text-xs font-mono text-surface-400 uppercase tracking-widest mb-2">Recall Checkpoint</div>
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="text-xs font-mono text-surface-400 uppercase tracking-widest">Recall Checkpoint</div>
+                                <div id="recall-difficulty" class="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/10 text-surface-300 font-mono">MEDIUM</div>
+                            </div>
                             <p class="text-sm font-semibold text-surface-100 mb-4" id="recall-question-text"></p>
                             <div id="recall-options" class="space-y-2 mb-4"></div>
-                            <div id="recall-feedback" class="hidden text-xs font-medium mt-2" ></div>
+
+                            <!-- Feedback box -->
+                            <div id="recall-feedback-box" class="hidden border-t border-white/10 pt-4 mt-4 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span id="recall-feedback-badge" class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded font-semibold bg-emerald-100 text-emerald-700">CORRECT</span>
+                                    <span id="recall-points-badge" class="text-[10px] font-bold text-accent-yellow">+10 points!</span>
+                                </div>
+                                <p id="recall-feedback-explanation" class="text-[11px] text-surface-300 leading-relaxed"></p>
+                                <button id="recall-continue-btn" data-action="dismissRecallCheckpoint" disabled class="w-full bg-surface-200 text-ink-50 px-6 py-2.5 rounded-xl text-xs font-bold transition-all cursor-not-allowed">
+                                    Continue Session &rarr;
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -638,7 +1143,7 @@
                     <div class="font-mono text-3xl font-bold text-ink-400 mb-4" id="break-timer-display">5:00</div>
                     <div class="text-xs text-ink-50 mb-2 font-semibold">What you've covered:</div>
                     <div id="break-learned-list" class="text-left space-y-1 mb-6 max-h-36 overflow-y-auto"></div>
-                    <button onclick="skipBreak()" class="px-6 py-3 btn-primary rounded-xl text-sm font-medium w-full">Skip Break &amp; Resume Study &rarr;</button>
+                    <button data-action="skipBreak" class="px-6 py-3 btn-primary rounded-xl text-sm font-medium w-full">Skip Break &amp; Resume Study &rarr;</button>
                 </div>
             </div>
 
@@ -670,9 +1175,9 @@
                             <span class="text-xs text-ink-50">Before &rarr; After</span>
                         </div>
                         <div class="flex items-center gap-4">
-                            <span class="text-xl font-extrabold text-ink-200" id="readiness-before-percent">74%</span>
-                            <div class="flex-1 progress-track"><div class="progress-fill bg-accent-blue" id="readiness-after-bar" style="width:74%"></div></div>
-                            <span class="text-xl font-extrabold text-emerald-600" id="readiness-after-percent">74%</span>
+                            <span class="text-xl font-extrabold text-ink-200" id="readiness-before-percent">—</span>
+                            <div class="flex-1 progress-track"><div class="progress-fill bg-accent-blue" id="readiness-after-bar" style="width:0%"></div></div>
+                            <span class="text-xl font-extrabold text-emerald-600" id="readiness-after-percent">—</span>
                         </div>
                     </div>
                     <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm mb-6">
@@ -680,9 +1185,96 @@
                         <div id="forgetting-curve-list" class="space-y-1"></div>
                     </div>
                     <div class="flex gap-3">
-                        <button onclick="drillWeakSpots()" class="flex-1 py-3 btn-primary rounded-xl text-sm font-medium">Drill Weak Spots</button>
-                        <button onclick="returnToSetupPane()" class="flex-1 py-3 btn-outline rounded-xl text-sm font-medium">New Session</button>
+                        <button data-action="drillWeakSpots" class="flex-1 py-3 btn-primary rounded-xl text-sm font-medium">Drill Weak Spots</button>
+                        <button data-action="planNextReview" class="flex-1 py-3 btn-outline rounded-xl text-sm font-medium">Plan Next Review</button>
+                        <button data-action="openAI" data-prompt="What should I review next from this session?" class="flex-1 py-3 btn-outline rounded-xl text-sm font-medium">Ask AI</button>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== STUDENTU AI TAB ===== -->
+        <section id="tab-ai" class="tab-pane hidden study-ai-tab px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto">
+            <div class="study-ai">
+                <div id="study-ai-mode-banner" class="study-ai-mode-banner hidden mb-5 reveal" role="status"></div>
+                <header class="study-ai__header reveal">
+                    <div class="study-ai__header-top">
+                        <div class="study-ai__header-copy">
+                            <div class="study-ai__header-badge-row">
+                                <span class="study-ai__header-badge" aria-hidden="true">
+                                    <img src="assets/icons/assistant.svg" alt="" class="asset-icon w-4 h-4">
+                                </span>
+                                <span class="su-eyebrow">Study Coach</span>
+                            </div>
+                            <h1 class="su-display mt-1">Study AI</h1>
+                            <p id="study-ai-subtitle" class="su-lead text-sm mt-1">Pick a task, get a structured explanation grounded in your class.</p>
+                        </div>
+                        <div class="study-ai__controls">
+                            <label class="study-ai__class-picker">
+                                <span class="study-ai__class-picker-label">Class</span>
+                                <select id="ai-class-selector" class="study-ai__class-select"></select>
+                            </label>
+                            <button type="button" id="ai-thread-toggle" data-action="chatToggleThread" class="study-ai__thread-btn btn-outline rounded-xl px-4 py-2.5 text-xs font-semibold whitespace-nowrap">Show thread</button>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="study-ai__workspace reveal reveal-d1">
+                    <aside class="study-ai__rail">
+                        <div class="study-ai__group">
+                            <span class="su-card-label study-ai__group-label">Choose a task</span>
+                            <nav id="ai-task-rail" class="study-ai__tasks" aria-label="Study tasks">
+                                <button type="button" data-action="chatTask" data-task="explain" class="study-ai__task">
+                                    <span class="study-ai__task-icon"><img src="assets/icons/reading.svg" alt="" class="asset-icon w-4 h-4"></span>
+                                    <span class="study-ai__task-text"><strong>Explain</strong><small>Understand a topic</small></span>
+                                </button>
+                                <button type="button" data-action="chatTask" data-task="quiz" class="study-ai__task">
+                                    <span class="study-ai__task-icon"><img src="assets/icons/answers.svg" alt="" class="asset-icon w-4 h-4"></span>
+                                    <span class="study-ai__task-text"><strong>Quiz</strong><small>Test my recall</small></span>
+                                </button>
+                                <button type="button" data-action="chatTask" data-task="plan" class="study-ai__task">
+                                    <span class="study-ai__task-icon"><img src="assets/icons/calendar.svg" alt="" class="asset-icon w-4 h-4"></span>
+                                    <span class="study-ai__task-text"><strong>Plan</strong><small>Organize my week</small></span>
+                                </button>
+                                <button type="button" data-action="chatTask" data-task="review" class="study-ai__task">
+                                    <span class="study-ai__task-icon"><img src="assets/icons/bookmark.svg" alt="" class="asset-icon w-4 h-4"></span>
+                                    <span class="study-ai__task-text"><strong>Review</strong><small>Prioritize weak spots</small></span>
+                                </button>
+                                <button type="button" data-action="chatTask" data-task="summarize" class="study-ai__task">
+                                    <span class="study-ai__task-icon"><img src="assets/icons/data_sheet.svg" alt="" class="asset-icon w-4 h-4"></span>
+                                    <span class="study-ai__task-text"><strong>Summarize</strong><small>Condense my notes</small></span>
+                                </button>
+                            </nav>
+                            <div id="ai-task-rail-mobile" class="study-ai__task-mobile" aria-hidden="true"></div>
+                        </div>
+                        <div class="study-ai__group study-ai__prompts-group">
+                            <span class="su-card-label study-ai__group-label">Suggested prompts</span>
+                            <div id="ai-dynamic-chips" class="study-ai__prompt-list" aria-label="Suggested prompts"></div>
+                        </div>
+                        <div id="ai-grounding-panel" class="study-ai__group study-ai__grounding-slot"></div>
+                    </aside>
+
+                    <main class="study-ai__stage">
+                        <div class="study-ai__stage-header">
+                            <div>
+                                <span id="study-ai-answer-label" class="su-card-label">Study session</span>
+                                <h2 id="study-ai-answer-title" class="study-ai__stage-title">Your answers live here</h2>
+                            </div>
+                            <button type="button" id="study-ai-desk-btn" data-action="loadPacketAndWorkspace" class="btn-primary rounded-xl px-4 py-2 text-xs font-semibold shrink-0 hidden">Continue on Study Desk</button>
+                        </div>
+                        <div id="studentu-chat-messages" class="study-ai__hero"></div>
+                        <div id="ai-thread-history" class="study-ai__thread hidden" aria-label="Conversation thread"></div>
+                        <div class="study-ai__composer">
+                            <div id="study-ai-composer-field" class="study-ai__composer-field">
+                                <label class="sr-only" for="studentu-chat-input">Message for Study AI</label>
+                                <textarea id="studentu-chat-input" rows="1" placeholder="Ask about this class, card, or next review..." class="study-ai__input"></textarea>
+                                <button type="button" id="studentu-chat-send" data-action="chatSend" class="study-ai__send-btn btn-uai" aria-label="Send to Study AI">
+                                    <img src="assets/icons/start.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
+                                </button>
+                            </div>
+                            <p class="study-ai__composer-hint"><kbd>Enter</kbd> to send · <kbd>Shift+Enter</kbd> for a new line</p>
+                        </div>
+                    </main>
                 </div>
             </div>
         </section>
@@ -691,21 +1283,25 @@
         <section id="tab-profile" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
             <div class="mb-8 reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
                 <div>
-                    <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">My Classes</h1>
-                    <p class="text-sm text-ink-50 mt-1">Build a living portfolio for each class: syllabus, notes, photos, professor comments, chapters, and progress.</p>
+                    <p class="su-step-indicator mb-2">Step 2 — Add your class materials</p>
+                    <h1 class="su-display">My Classes</h1>
+                    <p class="su-lead text-sm mt-1">Build a living portfolio for each class: syllabus, notes, photos, professor comments, chapters, and progress.</p>
                 </div>
-                <button onclick="createClassPortfolio()" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 w-full sm:w-auto justify-center">
+                <button data-action="createClassPortfolio" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 w-full sm:w-auto justify-center">
                     <img src="assets/icons/plus.svg" alt="" class="asset-icon w-4 h-4 invert-soft">
                     Add Class
                 </button>
             </div>
 
+            <div id="first-run-class-flow" class="mb-6 reveal reveal-d1"></div>
+
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 reveal reveal-d1">
                 <div class="lg:col-span-4 space-y-4">
                     <div id="class-portfolio-list" class="space-y-3"></div>
 
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
-                        <h2 class="text-sm font-bold text-ink-400 mb-4">Add Material</h2>
+                    <div class="su-card">
+                        <span class="su-card-label">Materials</span>
+                        <h2 class="su-card-title mt-1 mb-4">Add Material</h2>
                         <div class="space-y-3">
                             <select id="class-material-type" class="w-full bg-surface-100 border border-surface-300 rounded-xl px-3 py-2.5 text-xs text-ink-300 focus:outline-none">
                                 <option value="Syllabus">Syllabus</option>
@@ -718,144 +1314,214 @@
                             </select>
                             <input id="class-material-title" type="text" placeholder="Title or topic" class="w-full bg-surface-100 border border-surface-300 rounded-xl px-3 py-2.5 text-xs text-ink-300 placeholder:text-ink-50/70 focus:outline-none">
                             <textarea id="class-material-notes" rows="4" placeholder="Paste notes, professor comments, chapter hints, or key reminders..." class="w-full bg-surface-100 border border-surface-300 rounded-xl px-3 py-2.5 text-xs text-ink-300 placeholder:text-ink-50/70 resize-none focus:outline-none"></textarea>
-                            <label class="btn-outline rounded-xl px-3 py-2.5 text-xs font-medium flex items-center justify-center gap-2 cursor-pointer">
+                            <div class="class-upload-mobile sm:hidden space-y-2">
+                                <label class="class-upload-photo-btn rounded-xl px-4 py-3.5 text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer">
+                                    <img src="assets/icons/upload.svg" alt="" class="asset-icon w-4 h-4">
+                                    Take or choose photos
+                                    <input id="class-material-photo-mobile" type="file" accept="image/*" capture="environment" multiple class="hidden" onchange="handleClassMaterialFileSelected(event)">
+                                </label>
+                                <label class="class-upload-file-btn btn-outline rounded-xl px-4 py-3 text-xs font-medium flex items-center justify-center gap-2 cursor-pointer">
+                                    Attach PDF or document
+                                    <input type="file" accept=".txt,.pdf,.doc,.docx,.ppt,.pptx" class="hidden" onchange="handleClassMaterialFileSelected(event)">
+                                </label>
+                            </div>
+                            <label class="hidden sm:flex btn-outline rounded-xl px-3 py-2.5 text-xs font-medium items-center justify-center gap-2 cursor-pointer">
                                 <img src="assets/icons/upload.svg" alt="" class="asset-icon w-4 h-4">
                                 Attach File or Photo
-                                <input id="class-material-file" type="file" accept=".txt,.pdf,.doc,.docx,.ppt,.pptx,image/*" class="hidden">
+                                <input id="class-material-file" type="file" accept=".txt,.pdf,.doc,.docx,.ppt,.pptx,image/*" multiple class="hidden" onchange="handleClassMaterialFileSelected(event)">
                             </label>
-                            <button onclick="addClassMaterial()" class="w-full btn-primary rounded-xl py-2.5 text-xs font-semibold">Save to Selected Class</button>
+                            <p id="class-material-file-name" class="text-[10px] text-ink-50 hidden"></p>
+                            <p class="text-[10px] text-ink-50">Tip: select multiple lecture photos at once — StudentU will read and combine them.</p>
+                            <label class="flex items-start gap-2 text-[11px] text-ink-50 leading-relaxed">
+                                <input id="class-material-consent" type="checkbox" class="mt-0.5 rounded border-surface-300">
+                                <span>I have permission to add this material. I will not upload Social Security numbers, payment details, private medical records, or another student's private work.</span>
+                            </label>
+                            <button data-action="addClassMaterial" class="w-full btn-primary rounded-xl py-2.5 text-xs font-semibold">Save to Selected Class</button>
+                        </div>
+                    </div>
+
+                    <div class="su-card">
+                        <span class="su-card-label">Privacy</span>
+                        <h2 class="su-card-title mt-1 mb-2">Privacy Controls</h2>
+                        <p class="su-card-body mb-4">Your class materials are for your study space. You can export or remove saved material at any time.</p>
+                        <div class="space-y-2">
+                            <button data-action="exportActiveClassData" class="w-full btn-outline rounded-xl py-2.5 text-xs font-semibold">Export Selected Class</button>
+                            <button data-action="clearActiveClassMaterials" class="w-full btn-outline rounded-xl py-2.5 text-xs font-semibold">Remove Selected Class Materials</button>
+                            <button data-action="clearAllClassStudyData" class="w-full btn-outline rounded-xl py-2.5 text-xs font-semibold">Reset My Class Portfolios</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="lg:col-span-8 space-y-5">
-                    <div id="class-portfolio-detail" class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm min-h-[360px]"></div>
-                    <div id="class-context-panel" class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm"></div>
+                    <!-- Classes Sub-tab bar -->
+                    <div class="flex items-center justify-start bg-surface-200/80 border border-surface-300 rounded-full px-1.5 py-1.5 space-x-1 shadow-sm w-fit reveal">
+                        <button id="btn-classview-detail" data-action="switchClassesSubView" data-class-view="detail"
+                            class="class-sub-nav-btn text-xs font-semibold px-4 py-1.5 rounded-full transition-all duration-300 text-ink-400 bg-white shadow-sm"
+                            data-subview="detail">Class Details</button>
+                        <button id="btn-classview-materials" data-action="switchClassesSubView" data-class-view="materials"
+                            class="class-sub-nav-btn text-xs font-medium px-4 py-1.5 rounded-full text-ink-100 hover:text-ink-400 transition-all duration-300"
+                            data-subview="materials">Materials Packet</button>
+                    </div>
+
+                    <!-- Sub-views -->
+                    <div id="class-view-detail" class="class-sub-view space-y-5">
+                        <div id="class-portfolio-detail" class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm min-h-[360px]"></div>
+                        <div id="class-context-panel" class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm"></div>
+                    </div>
+
+                    <div id="class-view-materials" class="class-sub-view hidden space-y-5">
+                        <!-- FIX: Duplicate DOM IDs - keep the single active materials view inside My Classes. -->
+                        <select id="materials-class-selector" class="hidden"></select>
+                        <div id="materials-page-summary" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+                        <div id="materials-page-list" class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm min-h-[280px]"></div>
+                        <div id="materials-page-insights" class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm"></div>
+                    </div>
                 </div>
             </div>
 
         </section>
 
-        <!-- ===== PROGRESS TAB ===== -->
-        <section id="tab-moat-profile" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+        <!-- Legacy progress tab — redirects to dashboard progress sub-pane via app.js -->
+        <section id="tab-moat-profile" class="tab-pane hidden" aria-hidden="true"></section>
+
+        <!-- ===== PLANNER TAB (filled by renderFirstStudyPlan) ===== -->
+        <section id="tab-planner" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto"></section>
+
+        <!-- ===== ONBOARDING TAB ===== -->
+        <section id="tab-onboarding" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+            <div class="mb-8 reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">Set Up StudentU</h1>
+                    <p class="text-sm text-ink-50 mt-1">A guided path from first class to first study plan.</p>
+                </div>
+                <button data-action="switchTab" data-tab-target="profile" class="btn-outline px-4 py-2.5 rounded-xl text-xs font-semibold">Manage Classes</button>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 reveal reveal-d1">
+                <div class="lg:col-span-7 bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
+                    <div id="onboarding-flow-panel" class="space-y-4"></div>
+                </div>
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                        <h2 class="text-sm font-bold text-ink-400 mb-3">First Study Path</h2>
+                        <div id="onboarding-class-snapshot"></div>
+                    </div>
+                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
+                        <h2 class="text-sm font-bold text-ink-400 mb-2">What Happens Next</h2>
+                        <p class="text-xs text-ink-50 leading-relaxed">Once a class has a syllabus and notes, StudentU can build a packet, create questions, schedule reviews, and track progress by chapter.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== COURSE DETAIL TAB ===== -->
+        <section id="tab-course-detail" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+            <div id="course-detail-page" class="reveal"></div>
+        </section>
+
+        <!-- ===== PRACTICE CENTER TAB ===== -->
+        <section id="tab-practice" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+            <div class="mb-8 reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">Practice Center</h1>
+                    <p class="text-sm text-ink-50 mt-1">Drill weak topics, retake missed questions, and start focused practice from your class packet.</p>
+                </div>
+                <button data-action="startPracticeFromActiveClass" class="btn-primary px-4 py-2.5 rounded-xl text-xs font-semibold">Start Focused Practice</button>
+            </div>
+            <div id="practice-center-page" class="grid grid-cols-1 lg:grid-cols-12 gap-6 reveal reveal-d1"></div>
+        </section>
+
+        <!-- ===== REVIEW QUEUE TAB ===== -->
+        <section id="tab-review-queue" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+            <div class="mb-8 reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">Review Queue</h1>
+                    <p class="text-sm text-ink-50 mt-1">See what is due today, what is slipping, and what can wait.</p>
+                </div>
+                <button data-action="startReviewQueue" class="btn-primary px-4 py-2.5 rounded-xl text-xs font-semibold">Start Reviews</button>
+            </div>
+            <div id="review-queue-page" class="grid grid-cols-1 lg:grid-cols-12 gap-6 reveal reveal-d1"></div>
+        </section>
+
+        <!-- ===== SESSION HISTORY TAB ===== -->
+        <section id="tab-session-history" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
             <div class="mb-8 reveal">
-                <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">My Progress</h1>
-                <p class="text-sm text-ink-50 mt-1">Track your learning milestones, badges, and memory retention trends.</p>
+                <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">Session History</h1>
+                <p class="text-sm text-ink-50 mt-1">Review completed study sessions, scores, and what each session changed.</p>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 reveal reveal-d1">
-                <div class="lg:col-span-2 space-y-5">
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
-                        <h2 class="text-base font-bold text-ink-400 mb-4">Weekly Activity</h2>
-                        <div class="grid grid-cols-7 gap-2">
-                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Mon</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue rounded-lg" style="height:60%"></div></div></div>
-                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Tue</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue rounded-lg" style="height:80%"></div></div></div>
-                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Wed</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue rounded-lg" style="height:45%"></div></div></div>
-                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Thu</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue rounded-lg" style="height:90%"></div></div></div>
-                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Fri</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue rounded-lg" style="height:70%"></div></div></div>
-                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Sat</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue/40 rounded-lg" style="height:20%"></div></div></div>
-                            <div class="text-center"><div class="text-[10px] text-ink-50 mb-1">Sun</div><div class="h-16 bg-accent-blue/20 rounded-lg relative"><div class="absolute bottom-0 left-0 right-0 bg-accent-blue/40 rounded-lg" style="height:10%"></div></div></div>
-                        </div>
-                    </div>
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
-                        <h2 class="text-base font-bold text-ink-400 mb-4">Memory Retention by Subject</h2>
-                        <div class="space-y-4">
-                            <div><div class="flex justify-between text-xs mb-1"><span class="font-medium text-ink-300">Neural Networks</span><span class="text-ink-50">78%</span></div><div class="progress-track"><div class="progress-fill bg-accent-blue" style="width:78%"></div></div></div>
-                            <div><div class="flex justify-between text-xs mb-1"><span class="font-medium text-ink-300">Calculus III</span><span class="text-ink-50">65%</span></div><div class="progress-track"><div class="progress-fill bg-accent-teal" style="width:65%"></div></div></div>
-                            <div><div class="flex justify-between text-xs mb-1"><span class="font-medium text-ink-300">History of Art</span><span class="text-ink-50">82%</span></div><div class="progress-track"><div class="progress-fill bg-accent-warm" style="width:82%"></div></div></div>
-                            <div><div class="flex justify-between text-xs mb-1"><span class="font-medium text-ink-300">Macroeconomics</span><span class="text-ink-50">71%</span></div><div class="progress-track"><div class="progress-fill bg-accent-yellow" style="width:71%"></div></div></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-4">
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
-                        <h3 class="text-sm font-bold text-ink-400 mb-4">Badges Earned</h3>
-                        <div class="grid grid-cols-3 gap-3">
-                            <div class="text-center"><div class="w-12 h-12 rounded-xl bg-accent-yellow/20 flex items-center justify-center mx-auto mb-1 text-xl">*</div><div class="text-[10px] text-ink-50">First Session</div></div>
-                            <div class="text-center"><div class="w-12 h-12 rounded-xl bg-accent-blue/20 flex items-center justify-center mx-auto mb-1 text-xl">3</div><div class="text-[10px] text-ink-50">3-Day Streak</div></div>
-                            <div class="text-center"><div class="w-12 h-12 rounded-xl bg-accent-teal/20 flex items-center justify-center mx-auto mb-1 text-xl">100%</div><div class="text-[10px] text-ink-50">Perfect Recall</div></div>
-                            <div class="text-center opacity-40"><div class="w-12 h-12 rounded-xl bg-surface-200 flex items-center justify-center mx-auto mb-1 text-xl">7</div><div class="text-[10px] text-ink-50">7-Day Streak</div></div>
-                            <div class="text-center opacity-40"><div class="w-12 h-12 rounded-xl bg-surface-200 flex items-center justify-center mx-auto mb-1 text-xl">100</div><div class="text-[10px] text-ink-50">100 Cards</div></div>
-                            <div class="text-center opacity-40"><div class="w-12 h-12 rounded-xl bg-surface-200 flex items-center justify-center mx-auto mb-1 text-xl">Premium</div><div class="text-[10px] text-ink-50">Top Learner</div></div>
-                        </div>
-                    </div>
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
-                        <h3 class="text-sm font-bold text-ink-400 mb-3">Account</h3>
-                        <div class="space-y-2">
-                            <div class="flex justify-between text-xs"><span class="text-ink-50">Plan</span><span class="font-semibold text-ink-300" id="user-tier-display">Free</span></div>
-                            <div class="flex justify-between text-xs"><span class="text-ink-50">University</span><span class="font-semibold text-ink-300" id="user-university-display">&mdash;</span></div>
-                            <div class="flex justify-between text-xs"><span class="text-ink-50">Sessions This Week</span><span class="font-semibold text-ink-300" id="user-sessions-display">0</span></div>
-                        </div>
-                        <button onclick="openUpgradeModal()" class="mt-4 w-full py-2 btn-primary rounded-xl text-xs font-medium">Upgrade to Premium</button>
-                    </div>
-                </div>
-            </div>
+            <div id="session-history-page" class="reveal reveal-d1"></div>
         </section>
 
-        <!-- ===== PLANNER TAB ===== -->
-        <section id="tab-planner" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
-            <div class="mb-8 reveal">
-                <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">Study Planner</h1>
-                <p class="text-sm text-ink-50 mt-1">Your AI-optimized weekly study schedule based on your exam dates and retention scores.</p>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 reveal reveal-d1">
-                <div class="lg:col-span-2 bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-sm">
-                    <h2 class="text-base font-bold text-ink-400 mb-4">This Week's Plan</h2>
-                    <div class="space-y-4">
-                        <div class="flex items-start gap-4 p-4 bg-surface-100 rounded-xl">
-                            <div class="w-12 h-12 rounded-xl bg-accent-blue/10 flex flex-col items-center justify-center text-center flex-shrink-0"><span class="text-xs font-bold text-accent-blue">MON</span><span class="text-[10px] text-ink-50">9AM</span></div>
-                            <div class="flex-1"><div class="text-sm font-semibold text-ink-300">Neural Networks &mdash; Feynman Pass</div><div class="text-xs text-ink-50 mt-0.5">45 min &middot; Focus on Backprop weak spots</div></div>
-                            <button onclick="startSpecificPlannedSession('neuro')" class="px-3 py-1.5 btn-primary rounded-lg text-xs font-medium flex-shrink-0">Start</button>
-                        </div>
-                        <div class="flex items-start gap-4 p-4 bg-surface-100 rounded-xl">
-                            <div class="w-12 h-12 rounded-xl bg-accent-teal/10 flex flex-col items-center justify-center text-center flex-shrink-0"><span class="text-xs font-bold text-accent-teal">TUE</span><span class="text-[10px] text-ink-50">2PM</span></div>
-                            <div class="flex-1"><div class="text-sm font-semibold text-ink-300">Calculus III &mdash; Active Recall</div><div class="text-xs text-ink-50 mt-0.5">30 min &middot; Spaced repetition priority</div></div>
-                            <button onclick="startSpecificPlannedSession('calc')" class="px-3 py-1.5 btn-primary rounded-lg text-xs font-medium flex-shrink-0">Start</button>
-                        </div>
-                        <div class="flex items-start gap-4 p-4 bg-surface-100 rounded-xl">
-                            <div class="w-12 h-12 rounded-xl bg-accent-warm/10 flex flex-col items-center justify-center text-center flex-shrink-0"><span class="text-xs font-bold text-accent-warm">WED</span><span class="text-[10px] text-ink-50">4PM</span></div>
-                            <div class="flex-1"><div class="text-sm font-semibold text-ink-300">History of Art &mdash; Quick Drill</div><div class="text-xs text-ink-50 mt-0.5">20 min &middot; High retention maintenance</div></div>
-                            <button onclick="startSpecificPlannedSession('hist')" class="px-3 py-1.5 btn-primary rounded-lg text-xs font-medium flex-shrink-0">Start</button>
-                        </div>
-                        <div class="flex items-start gap-4 p-4 bg-surface-100 rounded-xl">
-                            <div class="w-12 h-12 rounded-xl bg-accent-yellow/10 flex flex-col items-center justify-center text-center flex-shrink-0"><span class="text-xs font-bold text-ink-100">THU</span><span class="text-[10px] text-ink-50">7PM</span></div>
-                            <div class="flex-1"><div class="text-sm font-semibold text-ink-300">Macroeconomics &mdash; Concept Review</div><div class="text-xs text-ink-50 mt-0.5">25 min &middot; Focus on fiscal policy</div></div>
-                            <button onclick="startSpecificPlannedSession('macro')" class="px-3 py-1.5 btn-primary rounded-lg text-xs font-medium flex-shrink-0">Start</button>
-                        </div>
-                    </div>
+        <!-- ===== REMINDERS TAB ===== -->
+        <section id="tab-reminders" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+            <div class="mb-8 reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">Reminders</h1>
+                    <p class="text-sm text-ink-50 mt-1">Keep exams, reviews, and unfinished class setup from slipping.</p>
                 </div>
-                <div class="space-y-4">
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
-                        <h3 class="text-sm font-bold text-ink-400 mb-3">Upcoming Exams</h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between p-3 bg-rose-50 border border-rose-100 rounded-xl"><span class="text-xs font-semibold text-rose-700">Neural Networks Final</span><span class="text-[11px] text-rose-600 font-mono">Jun 20</span></div>
-                            <div class="flex items-center justify-between p-3 bg-amber-50 border border-amber-100 rounded-xl"><span class="text-xs font-semibold text-amber-700">Calculus III Midterm</span><span class="text-[11px] text-amber-700 font-mono">Jun 28</span></div>
-                            <div class="flex items-center justify-between p-3 bg-surface-100 border border-surface-200 rounded-xl"><span class="text-xs font-semibold text-ink-300">History of Art Quiz</span><span class="text-[11px] text-ink-50 font-mono">Jul 5</span></div>
-                        </div>
-                    </div>
-                    <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-5 shadow-sm">
-                        <h3 class="text-sm font-bold text-ink-400 mb-3">Weekly Goal</h3>
-                        <div class="text-2xl font-extrabold text-ink-400 mb-1">3 / 5</div>
-                        <div class="text-xs text-ink-50 mb-3">Sessions completed this week</div>
-                        <div class="progress-track"><div class="progress-fill bg-accent-teal" style="width:60%"></div></div>
-                        <button onclick="rescheduleReminders()" class="mt-4 w-full py-2 btn-outline rounded-xl text-xs font-medium">Adjust Schedule</button>
-                    </div>
-                </div>
+                <button data-action="rescheduleReminders" class="btn-outline px-4 py-2.5 rounded-xl text-xs font-semibold">Adjust Reminders</button>
             </div>
+            <div id="reminders-page" class="grid grid-cols-1 lg:grid-cols-12 gap-6 reveal reveal-d1"></div>
         </section>
+
+        <!-- ===== SETTINGS TAB ===== -->
+        <section id="tab-settings" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+            <div class="mb-8 reveal">
+                <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">Settings</h1>
+                <p class="text-sm text-ink-50 mt-1">Tune how StudentU builds sessions, reminders, and explanations.</p>
+            </div>
+            <div id="settings-page" class="grid grid-cols-1 lg:grid-cols-12 gap-6 reveal reveal-d1"></div>
+        </section>
+
+        <!-- ===== HELP TAB ===== -->
+        <section id="tab-help" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+            <div class="mb-8 reveal">
+                <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">Help</h1>
+                <p class="text-sm text-ink-50 mt-1">Understand the study flow, uploads, privacy, and academic integrity expectations.</p>
+            </div>
+            <div id="help-page" class="grid grid-cols-1 lg:grid-cols-12 gap-6 reveal reveal-d1"></div>
+        </section>
+
+        <!-- ===== BILLING TAB ===== -->
+        <section id="tab-billing" class="tab-pane hidden py-10 px-6 max-w-6xl mx-auto">
+            <div class="mb-8 reveal">
+                <h1 class="text-3xl font-extrabold text-ink-400 tracking-tight">Plan & Billing</h1>
+                <p class="text-sm text-ink-50 mt-1">Review your plan, limits, and upgrade options.</p>
+            </div>
+            <div id="billing-page" class="grid grid-cols-1 lg:grid-cols-12 gap-6 reveal reveal-d1"></div>
+        </section>
+
+        <!-- FIX: Duplicate DOM IDs - removed dead standalone Materials and Account tab panes. -->
 
         <footer class="mt-24 border-t border-surface-300 bg-surface-200 py-16 px-6 relative overflow-hidden pb-28 xl:pb-16">
             <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 relative z-10">
                 <div class="md:col-span-2 space-y-4">
-                    <div class="studentu-footer-lockup">
-                        <span class="font-extrabold tracking-tighter text-ink-400 text-2xl flex items-center gap-1">
-                            <img src="assets/logos/student-u-logo.svg" alt="StudentU logo" class="studentu-footer-vector-logo">
+                    <div class="studentu-footer-lockup cursor-pointer group" data-action="switchTab" data-tab-target="landing">
+                        <svg class="studentu-footer-vector-logo" viewBox="0 0 299 310" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="logo-color-grad-footer" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#1E88E5">
+                                        <animate attributeName="stop-color" values="#1E88E5;#E53935;#FDD835;#1E88E5" dur="3s" repeatCount="1" fill="freeze" />
+                                    </stop>
+                                    <stop offset="50%" stop-color="#E53935">
+                                        <animate attributeName="stop-color" values="#E53935;#FDD835;#1E88E5;#E53935" dur="3s" repeatCount="1" fill="freeze" />
+                                    </stop>
+                                    <stop offset="100%" stop-color="#FDD835">
+                                        <animate attributeName="stop-color" values="#FDD835;#1E88E5;#E53935;#FDD835" dur="3s" repeatCount="1" fill="freeze" />
+                                    </stop>
+                                </linearGradient>
+                            </defs>
+                            <rect x="5" y="5" width="288.08" height="299.79" rx="23" stroke="url(#logo-color-grad-footer)" stroke-width="10"/>
+                            <path d="M106.478 241.35C107.335 238.855 108.7 236.596 108.961 233.902C111.344 235.441 109.147 239.897 107.72 241.35C104.616 257.983 97.4048 273.498 97.7895 291C126.338 291 154.887 291 183.436 291C192.994 261.967 203.16 232.562 213.227 204.112C213.636 233.046 192.982 260.44 199.573 291C214.058 291 228.531 291 243.017 291C240.956 264.077 233.409 234.908 233 207.923C232.578 180.95 206.859 156.373 178.471 156.944C176.597 164.764 181.984 178.095 174.748 181.769C174.487 173.093 178.31 165.484 178.471 156.944C171.073 157.316 166.282 150.8 159.852 148.255C191.852 154.511 232.702 124.274 226.856 91.1822C220.997 58.1027 204.24 31.5522 172.538 21.3739C140.836 11.1956 106.131 35.1767 97.5165 66.0592C88.9022 96.9417 107.335 134.8 139.992 143.29C138.267 167.929 111.17 164.603 94.1651 175.662C77.1723 186.734 74.4539 208.804 67.7263 227.423C60.9863 246.029 52.1361 269.551 54.3455 291C67.1677 291 80.0023 291 92.8245 291C93.6437 273.411 100.93 257.561 106.478 241.35ZM193.366 41.5071C201.944 42.4628 204.414 51.6606 209.403 57.7427C214.406 63.8125 214.865 78.9434 204.538 77.5035C194.211 76.0637 192.485 68.9637 187.259 62.5091C182.046 56.0546 182.89 40.3403 193.366 41.5071ZM151.164 55.1609C173.295 58.9343 180.457 96.3707 156.129 96.1224C131.8 95.8742 126.823 51.0151 151.164 55.1609Z" fill="url(#logo-color-grad-footer)"/>
+                            <path d="M178.471 156.944C206.859 156.373 232.578 180.95 233 207.923C233.409 234.908 240.956 264.077 243.017 291C228.531 291 214.058 291 199.573 291C192.982 260.44 213.636 233.046 213.227 204.112C203.16 232.562 192.994 261.967 183.436 291C154.887 291 126.338 291 97.7895 291C97.4048 273.498 104.616 257.983 107.72 241.35C109.147 239.897 111.344 235.441 108.961 233.902C108.7 236.596 107.335 238.855 106.478 241.35C100.93 257.561 93.6437 273.411 92.8245 291C80.0023 291 67.1677 291 54.3455 291C52.1361 269.551 60.9863 246.029 67.7263 227.423C74.4539 208.804 77.1723 186.734 94.1651 175.662C111.17 164.603 138.267 167.929 139.992 143.29C107.335 134.8 88.9022 96.9417 97.5165 66.0592C106.131 35.1767 140.836 11.1956 172.538 21.3739C204.24 31.5522 220.997 58.1027 226.856 91.1822C232.702 124.274 191.852 154.511 159.852 148.255C166.282 150.8 171.073 157.316 178.471 156.944ZM178.471 156.944C176.597 164.764 181.984 178.095 174.748 181.769C174.487 173.093 178.31 165.484 178.471 156.944ZM193.366 41.5071C201.944 42.4628 204.414 51.6606 209.403 57.7427C214.406 63.8125 214.865 78.9434 204.538 77.5035C194.211 76.0637 192.485 68.9637 187.259 62.5091C182.046 56.0546 182.89 40.3403 193.366 41.5071ZM151.164 55.1609C173.295 58.9343 180.457 96.3707 156.129 96.1224C131.8 95.8742 126.823 51.0151 151.164 55.1609Z" stroke="#0D0D0D" stroke-opacity="0.18"/>
+                        </svg>
+                        <span class="studentu-wordmark font-extrabold tracking-tighter text-ink-400 text-2xl flex items-center gap-1">
                             StudentU
                             <span class="w-2 h-2 rounded-full bg-accent-yellow mt-1"></span>
                         </span>
-                        <span class="text-[10px] text-ink-100 block uppercase tracking-[0.2em] font-mono mt-1">Stop rereading. Start remembering.</span>
                     </div>
+                    <span class="text-[10px] text-ink-100 block uppercase tracking-[0.2em] font-mono mt-1">Stop rereading. Start remembering.</span>
                     <p class="text-xs text-ink-100 leading-relaxed max-w-xs">
-                        An AI-powered study coach built for college students. Turn static notes into explanations,
+                        An AI-powered study workspace built for college students. Turn static notes into explanations,
                         quizzes, and a study plan that helps you retain what matters.
                     </p>
                 </div>
@@ -863,27 +1529,25 @@
                 <div>
                     <h4 class="font-bold text-ink-300 text-sm mb-4">Product</h4>
                     <ul class="space-y-2 text-xs text-ink-100">
-                        <li><button onclick="switchTab('workspace')" class="hover:text-accent-blue transition-colors">Study Desk</button></li>
-                        <li><button onclick="switchTab('dashboard')" class="hover:text-accent-blue transition-colors">Dashboard</button></li>
-                        <li><button onclick="switchTab('planner')" class="hover:text-accent-blue transition-colors">Study Plan</button></li>
+                        <!-- FIX: Footer navigation cleanup - keep product links tied to reachable public or primary app entry points. -->
+                        <li><button data-action="openSetupGuide" class="hover:text-accent-blue transition-colors">Setup Guide</button></li>
+                        <li><button data-action="openAI" class="hover:text-accent-blue transition-colors">StudentU AI</button></li>
+                        <li><button data-action="switchTab" data-tab-target="workspace" class="hover:text-accent-blue transition-colors">Study Desk</button></li>
+                        <li><button data-action="switchTab" data-tab-target="planner" class="hover:text-accent-blue transition-colors">Study Plan</button></li>
                     </ul>
                 </div>
 
                 <div>
                     <h4 class="font-bold text-ink-300 text-sm mb-4">StudentU</h4>
                     <ul class="space-y-2 text-xs text-ink-100">
-                        <li><button onclick="switchTab('profile')" class="hover:text-accent-red transition-colors">Classes</button></li>
-                        <li><button onclick="switchTab('moat-profile')" class="hover:text-accent-red transition-colors">Learning Profile</button></li>
-                        <li><button onclick="openUpgradeModal()" class="hover:text-accent-red transition-colors">Upgrade</button></li>
+                        <!-- FIX: Footer navigation cleanup - remove context-only and duplicate destinations from global nav. -->
+                        <li><button data-action="switchTab" data-tab-target="profile" class="hover:text-accent-red transition-colors">Classes</button></li>
+                        <li><button data-action="switchTab" data-tab-target="materials" class="hover:text-accent-red transition-colors">Class Materials</button></li>
+                        <li><button data-action="switchTab" data-tab-target="progress" class="hover:text-accent-red transition-colors">Progress</button></li>
+                        <li><button data-action="switchTab" data-tab-target="account" class="hover:text-accent-red transition-colors">Account</button></li>
+                        <li><button data-action="switchTab" data-tab-target="billing" class="hover:text-accent-red transition-colors">Plan & Billing</button></li>
+                        <li><button data-action="switchTab" data-tab-target="help" class="hover:text-accent-red transition-colors">Help</button></li>
                     </ul>
-                </div>
-            </div>
-
-            <div class="max-w-6xl mx-auto mt-14 pt-8 border-t border-surface-300 flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] text-ink-50 font-mono uppercase tracking-widest relative z-10">
-                <span>&copy; 2026 StudentU</span>
-                <div class="flex flex-wrap justify-center gap-x-6 gap-y-2">
-                    <span>Partner logos shown in the hero</span>
-                    <span>Built for verified students</span>
                 </div>
             </div>
         </footer>
@@ -891,80 +1555,138 @@
     </main>
 
     <!-- ===== MOBILE BOTTOM NAV ===== -->
-    <nav id="mobile-nav" class="xl:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-surface-300/60 z-50 flex items-center px-2 py-2">
-        <button id="nav-btn-home" onclick="switchTab('landing')" class="active-tab-mobile flex flex-col items-center py-1 px-2 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
-            <img src="assets/icons/home.svg" alt="" class="asset-icon w-5 h-5">
-            <span class="text-[9px] font-medium">Home</span>
+    <nav id="mobile-nav" class="app-mobile-nav xl:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-surface-300/60 z-50 flex justify-around items-center px-2 py-2 shadow-lg" aria-label="Mobile navigation">
+        <button id="nav-btn-landing" data-action="switchTab" data-tab-target="landing" data-tab="landing" class="app-mobile-nav__item flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <span class="app-mobile-nav__icon app-mobile-nav__icon--home" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M4 8.5 10 4l6 4.5V16a1 1 0 0 1-1 1h-3.5v-4H8.5v4H5a1 1 0 0 1-1-1V8.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="app-mobile-nav__label text-[9px] font-medium">Home</span>
         </button>
-        <button id="nav-btn-dashboard" onclick="switchTab('dashboard')" class="flex flex-col items-center py-1 px-2 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
-            <img src="assets/icons/ratings.svg" alt="" class="asset-icon w-5 h-5">
-            <span class="text-[9px] font-medium">Dashboard</span>
+        <button id="nav-btn-workspace" data-action="switchTab" data-tab-target="workspace" data-tab="workspace" class="app-mobile-nav__item flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <span class="app-mobile-nav__icon app-mobile-nav__icon--desk" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M4 6.5 10 3l6 3.5v8L10 18l-6-3.5v-8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 10.5 16 7M10 10.5v7.5M10 10.5 4 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+            <span class="app-mobile-nav__label text-[9px] font-medium">Study</span>
         </button>
-        <button id="nav-btn-workspace" onclick="switchTab('workspace')" class="flex flex-col items-center py-1 px-2 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
-            <img src="assets/icons/start.svg" alt="" class="asset-icon w-5 h-5">
-            <span class="text-[9px] font-medium">Study</span>
+        <button id="nav-btn-profile" data-action="switchTab" data-tab-target="profile" data-tab="profile" class="app-mobile-nav__item flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <span class="app-mobile-nav__icon app-mobile-nav__icon--classes" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M3 7.5 10 4l7 3.5-7 3.5-7-3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 9v4.5c0 .8 1.8 1.5 4 1.5s4-.7 4-1.5V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+            <span class="app-mobile-nav__label text-[9px] font-medium">Classes</span>
         </button>
-        <button id="nav-btn-profile" onclick="switchTab('profile')" class="flex flex-col items-center py-1 px-2 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
-            <img src="assets/icons/graduate.svg" alt="" class="asset-icon w-5 h-5">
-            <span class="text-[9px] font-medium">Classes</span>
+        <button id="nav-btn-dashboard" data-action="switchTab" data-tab-target="dashboard" data-subtab-target="planner" data-tab="dashboard" class="app-mobile-nav__item tab-locked flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400" title="Complete your first session to unlock">
+            <span class="app-mobile-nav__icon app-mobile-nav__icon--planner" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M4 15V9M8 15V5M12 15v-4M16 15V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 16.5h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+            <span class="app-mobile-nav__label text-[9px] font-medium">Plan</span>
         </button>
-        <button id="nav-btn-moat-profile" onclick="switchTab('moat-profile')" class="flex flex-col items-center py-1 px-2 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
-            <img src="assets/icons/bullish.svg" alt="" class="asset-icon w-5 h-5">
-            <span class="text-[9px] font-medium">Progress</span>
-        </button>
-        <button id="nav-btn-planner" onclick="switchTab('planner')" class="flex flex-col items-center py-1 px-2 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
-            <img src="assets/icons/alarm_clock.svg" alt="" class="asset-icon w-5 h-5">
-            <span class="text-[9px] font-medium">Planner</span>
+        <button id="nav-btn-ai" data-action="openAI" data-tab="ai" class="app-mobile-nav__item flex flex-col items-center py-1 px-1.5 gap-0.5 text-ink-50 transition-colors hover:text-ink-400">
+            <span class="app-mobile-nav__icon app-mobile-nav__icon--ai" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M10 3.5a4 4 0 0 1 3.8 5.3l3.2 3.2a1.2 1.2 0 0 1-1.7 1.7l-3.2-3.2A4 4 0 1 1 10 3.5Z" stroke="currentColor" stroke-width="1.5"/></svg>
+            </span>
+            <span class="app-mobile-nav__label text-[9px] font-medium">AI</span>
         </button>
     </nav>
 
     <!-- ===== NOTIFICATION TOAST ===== -->
-    <div id="alert-box" class="hidden fixed bottom-6 right-6 z-[9998] max-w-xs bg-white border border-surface-300 rounded-2xl shadow-xl px-5 py-4 flex items-start gap-3">
-        <div id="alert-icon" class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-sm"></div>
-        <div class="flex-1">
-            <div class="text-xs font-bold text-ink-400" id="alert-title"></div>
-            <div class="text-[11px] text-ink-50 mt-0.5" id="alert-body"></div>
+    <div id="alert-box" class="hidden fixed bottom-24 right-4 z-[9999] max-w-sm bg-surface-50 border border-surface-300/80 rounded-2xl shadow-2xl p-4">
+        <div class="flex items-start gap-3">
+            <div id="alert-icon" class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-sm bg-accent-blue/10 text-accent-blue">i</div>
+            <div class="min-w-0 flex-1">
+                <div class="text-xs font-bold text-ink-400" id="alert-title"></div>
+                <div class="text-[11px] text-ink-50 mt-0.5" id="alert-body"></div>
+            </div>
+            <button data-action="hideAlert" class="text-ink-50 hover:text-ink-300 text-xs flex-shrink-0">&times;</button>
         </div>
-        <button onclick="document.getElementById('alert-box').classList.add('hidden')" class="text-ink-50 hover:text-ink-300 text-xs flex-shrink-0">&times;</button>
     </div>
 
-    <!-- ===== UPGRADE MODAL ===== -->
-    <div id="upgrade-modal" class="hidden fixed inset-0 z-[9998] bg-ink-500/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-8 max-w-md w-full shadow-2xl">
-            <div class="text-center mb-6">
-                <div class="text-4xl mb-2">Premium</div>
-                <h3 class="text-xl font-extrabold text-ink-400">Upgrade to Premium</h3>
-                <p class="text-sm text-ink-50 mt-2">Unlock unlimited sessions, AI card generation, and advanced analytics.</p>
+    <div id="modals-slot">
+        <!-- Verification + upgrade modals (also in public/partials/modals.html for hot edits) -->
+        <div id="verification-modal" class="hidden fixed inset-0 z-[9998] bg-ink-500/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="w-full max-w-md bg-surface-50 border border-surface-300/60 rounded-2xl p-6 shadow-2xl">
+                <div class="flex items-start justify-between gap-4 mb-5">
+                    <div>
+                        <h2 class="text-base font-bold text-ink-400">Verify Your Student Email</h2>
+                        <p class="text-xs text-ink-50 mt-1">Use your college email to unlock the student plan.</p>
+                    </div>
+                    <button data-action="closeVerificationModal" class="text-ink-50 hover:text-ink-300 text-sm" aria-label="Close verification modal">&times;</button>
+                </div>
+                <div class="space-y-4">
+                    <label class="block">
+                        <span class="text-[10px] uppercase tracking-widest text-ink-50 font-mono">Email Address</span>
+                        <input id="modal-email" type="email" placeholder="you@university.edu" class="mt-1.5 w-full bg-surface-100 border border-surface-300 focus:border-ink-200 rounded-xl px-3 py-2.5 text-sm text-ink-300 focus:outline-none">
+                    </label>
+                    <label class="block">
+                        <span class="text-[10px] uppercase tracking-widest text-ink-50 font-mono">University</span>
+                        <input id="modal-school" type="text" placeholder="Your school name" class="mt-1.5 w-full bg-surface-100 border border-surface-300 focus:border-ink-200 rounded-xl px-3 py-2.5 text-sm text-ink-300 focus:outline-none">
+                    </label>
+                    <button data-action="submitVerification" class="w-full btn-primary rounded-xl py-3 text-sm font-semibold">Verify .edu Email</button>
+                </div>
             </div>
-            <div class="space-y-3 mb-6">
-                <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Unlimited study sessions</span></div>
-                <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Live Gemini AI card generation</span></div>
-                <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Full Firestore sync across devices</span></div>
-                <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Advanced forgetting curve analytics</span></div>
+        </div>
+        <div id="upgrade-modal" class="hidden fixed inset-0 z-[9998] bg-ink-500/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-surface-50 border border-surface-300/60 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+                <div class="text-center mb-6">
+                    <div class="text-4xl mb-2">Premium</div>
+                    <h3 class="text-xl font-extrabold text-ink-400">Upgrade to Premium</h3>
+                    <p class="text-sm text-ink-50 mt-2">Unlock unlimited sessions, AI card generation, and advanced analytics.</p>
+                </div>
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Higher daily session limits on this device</span></div>
+                    <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">More AI-generated quizzes per day</span></div>
+                    <div class="flex items-center gap-3 text-sm"><span class="text-emerald-600">&check;</span><span class="text-ink-300">Preview premium limits locally</span></div>
+                </div>
+                <button data-action="startStripeCheckout" class="w-full py-3.5 btn-primary rounded-xl text-sm font-semibold">Enable preview access</button>
+                <p class="upgrade-modal-note text-[11px] text-ink-50 text-center mt-2">Billing is not connected yet — this unlocks premium limits on this device only.</p>
+                <button data-action="closeUpgradeModal" class="w-full py-2 text-xs text-ink-50 hover:text-ink-300 mt-3">Maybe Later</button>
             </div>
-            <button onclick="simulateStripeCheckout()" class="w-full py-3.5 btn-primary rounded-xl text-sm font-semibold">Pay $10.00 &amp; Upgrade</button>
-            <button onclick="closeUpgradeModal()" class="w-full py-2 text-xs text-ink-50 hover:text-ink-300 mt-3">Maybe Later</button>
         </div>
     </div>
 
     <!-- ===== GRAIN OVERLAY ===== -->
     <div class="grain-overlay"></div>
+    <script src="js/store-bridge.js"></script>
+    <script src="js/workspace-mode.js"></script>
+    <script src="js/user-flow.core.js"></script>
+    <script src="js/happy-path-bridge.js"></script>
+    <script src="js/algorithms.js"></script>
+    <script src="js/silent-algorithms-bridge.js"></script>
+    <script src="js/image-prep.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/ui/actions-bridge.js"></script>
     <script src="js/notifications.js"></script>
     <script src="js/usage.js"></script>
+    <script src="js/study-settings-prompts.js"></script>
+    <script src="js/firebase-config.js"></script>
     <script src="js/sync.js"></script>
+    <script src="js/firebase-client.js"></script>
+    <script src="js/cloud-sync.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/api/analytics.js"></script>
+    <script src="js/concept-visuals.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/gamification.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/quiz.js"></script>
     <script src="js/learning-profile.js"></script>
     <script src="js/planner.js"></script>
+    <script src="js/data/demo-decks.js"></script>
+    <script src="js/profile/context.js"></script>
+    <script src="js/profile/photo-notes.js"></script>
+    <script src="js/profile/views.js"></script>
+    <script src="js/profile/views-class.js"></script>
+    <script src="js/profile/views-flow.js"></script>
     <script src="js/profile.js"></script>
+    <script src="js/profile/init.js"></script>
+    <script src="js/setup-progress.js"></script>
+    <script src="js/happy-path.js"></script>
+    <script src="js/user-flow.js"></script>
+    <script src="js/dashboard-live.js"></script>
     <script src="js/study-session.js"></script>
+    <script src="js/session/generation.js"></script>
+    <script src="js/session/cards.js"></script>
+    <script src="js/session/highlights.js"></script>
+    <script src="js/session/recall-timer-summary.js"></script>
 </body>
 
 </html>
-
-
-
-
-

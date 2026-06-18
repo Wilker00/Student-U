@@ -1,0 +1,12 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="34" fill="#FAFAF8"/>
+  <path d="M92 262H868" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round"/>
+  <path d="M868 262L850 251M868 262L850 273" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <circle cx="155" cy="262" r="9" fill="#E53935"/><path d="M155 262V148" stroke="#ABABAB" stroke-dasharray="5 5"/><rect x="124" y="110" width="145" height="38" rx="10" fill="#FF8C3A"/><text x="140" y="134" font-size="15" font-weight="800" fill="#1A1A1A">Origin idea</text>
+    <circle cx="330" cy="262" r="9" fill="#FDD835"/><path d="M330 262V380" stroke="#ABABAB" stroke-dasharray="5 5"/><text x="300" y="410" font-size="15" font-weight="800" fill="#1A1A1A">Evidence</text><text x="300" y="433" font-size="12" fill="#666">facts and examples</text>
+    <circle cx="502" cy="262" r="9" fill="#1E88E5"/><path d="M502 262V150" stroke="#ABABAB" stroke-dasharray="5 5"/><rect x="456" y="112" width="148" height="38" rx="10" fill="#FDD835"/><text x="474" y="136" font-size="15" font-weight="800" fill="#1A1A1A">Turning point</text>
+    <circle cx="682" cy="262" r="9" fill="#1B8B77"/><path d="M682 262V374" stroke="#ABABAB" stroke-dasharray="5 5"/><text x="641" y="404" font-size="15" font-weight="800" fill="#1A1A1A">Consequence</text><text x="641" y="427" font-size="12" fill="#666">why it changed</text>
+    <circle cx="790" cy="262" r="9" fill="#F03893"/><path d="M790 262V152" stroke="#ABABAB" stroke-dasharray="5 5"/><rect x="735" y="114" width="140" height="38" rx="10" fill="#29C5F6"/><text x="758" y="138" font-size="15" font-weight="800" fill="#1A1A1A">Memory hook</text>
+  </g>
+</svg>
