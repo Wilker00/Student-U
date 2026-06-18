@@ -45,6 +45,45 @@ async function fetchWithTimeout(url, options, timeoutMs = DEFAULT_TIMEOUT_MS) {
   }
 }
 
+async function readErrorBody(response) {
+  try {
+    const text = await response.text();
+    if (!text) return '';
+    try {
+      const parsed = JSON.parse(text);
+      return parsed.error?.message || text.slice(0, 1000);
+    } catch (_error) {
+      return text.slice(0, 1000);
+    }
+  } catch (_error) {
+    return '';
+  }
+}
+
+function mapGeminiErrorStatus(status) {
+  if (status === 401 || status === 403) return 502;
+  if (status === 429) return 429;
+  if (status >= 500) return 502;
+  return 400;
+}
+
+function mapGeminiPublicMessage(status) {
+  if (status === 401 || status === 403) return 'AI service credentials are not valid.';
+  if (status === 429) return 'AI service usage limit reached. Try again later.';
+  if (status >= 500) return 'AI service is temporarily unavailable.';
+  return 'AI generation failed on the backend.';
+}
+
+function extractText(data) {
+  const parts = data?.candidates?.[0]?.content?.parts;
+  if (!Array.isArray(parts)) return '';
+  return parts
+    .map(part => part?.text || '')
+    .filter(Boolean)
+    .join('\n')
+    .trim();
+}
+
 async function generateContent({ prompt, systemInstruction = '', jsonMode = false, imagePart = null }) {
   const apiKey = getApiKey();
   if (!apiKey) {
@@ -74,24 +113,30 @@ async function generateContent({ prompt, systemInstruction = '', jsonMode = fals
       });
 
       if (!response.ok) {
-        const error = new Error(`Gemini API error: ${response.status}`);
-        error.statusCode = response.status >= 500 ? 502 : 400;
-        error.publicMessage = response.status >= 500
-          ? 'AI service is temporarily unavailable.'
-          : 'AI generation failed on the backend.';
+        const upstreamMessage = await readErrorBody(response);
+        const error = new Error(`Gemini API error: ${response.status}${upstreamMessage ? ` - ${upstreamMessage}` : ''}`);
+        error.statusCode = mapGeminiErrorStatus(response.status);
+        error.publicMessage = mapGeminiPublicMessage(response.status);
+        error.upstreamStatus = response.status;
+        error.retryable = response.status === 429 || response.status >= 500;
+        console.warn('Gemini API request failed:', {
+          status: response.status,
+          message: upstreamMessage || 'No response body',
+        });
         throw error;
       }
 
       const data = await response.json();
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      return extractText(data);
     } catch (error) {
       lastError = error;
       if (error.name === 'AbortError') {
         lastError = new Error('Gemini request timed out.');
         lastError.statusCode = 504;
         lastError.publicMessage = 'AI generation timed out. Try a shorter prompt.';
+        lastError.retryable = true;
       }
-      if (attempt < MAX_RETRIES && (error.statusCode >= 500 || error.name === 'AbortError')) {
+      if (attempt < MAX_RETRIES && (lastError.retryable || lastError.statusCode >= 500)) {
         await sleep(400 * (attempt + 1));
         continue;
       }

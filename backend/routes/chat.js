@@ -142,6 +142,59 @@ function normalizeStructured(payload = {}) {
   };
 }
 
+function buildDemoStructuredReply({ message, taskType, classContext, extraContext }) {
+  const context = [classContext, extraContext]
+    .map(item => String(item || '').trim())
+    .filter(Boolean)
+    .join('\n')
+    .slice(0, 500);
+  const topicMatch = String(message || context || 'your class material')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 90);
+  const title = taskType === 'plan'
+    ? 'Demo study plan'
+    : taskType === 'quiz'
+      ? 'Demo practice prompt'
+      : 'Demo study explanation';
+  const suggestedActionByTask = {
+    quiz: 'start_quiz',
+    plan: 'open_planner',
+    review: 'mark_weak',
+    summarize: 'open_workspace',
+  };
+
+  return normalizeStructured({
+    title,
+    summary: `Demo mode: Gemini is not configured, so StudentU is using a local study-coach response for "${topicMatch}". Focus on the main idea, one worked example, and one recall question before moving on.`,
+    breakdown: [
+      'Name the concept in one plain sentence.',
+      'Connect it to a concrete class example or uploaded note.',
+      'Test yourself without looking, then patch the weakest part.',
+    ],
+    example: context
+      ? `Using your class context: ${context}`
+      : 'Example: turn a note heading into a question, answer it from memory, then compare against the source.',
+    memoryHook: 'One idea, one example, one recall check.',
+    recallQuestion: `How would you explain ${topicMatch || 'this topic'} in your own words?`,
+    visualId: taskType === 'plan' ? 'timeline' : 'recall',
+    suggestedAction: suggestedActionByTask[taskType] || 'none',
+    weakTopicLabel: taskType === 'review' ? topicMatch : '',
+    planItems: taskType === 'plan'
+      ? [
+        { day: 'Today', topic: 'Preview notes and mark weak spots', minutes: 20 },
+        { day: 'Tomorrow', topic: 'Practice active recall questions', minutes: 25 },
+        { day: 'Fri', topic: 'Review misses and summarize corrections', minutes: 20 },
+      ]
+      : [],
+    reviewItems: taskType === 'review'
+      ? [
+        { title: topicMatch || 'Current topic', reason: 'Demo mode review target from the current request.', daysUntil: 0 },
+      ]
+      : [],
+  });
+}
+
 function validateChatPost(body) {
   if (!body || typeof body !== 'object') return { error: 'Request body must be an object.' };
   if (!body.message || typeof body.message !== 'string') return { error: 'Message is required.' };
@@ -163,6 +216,19 @@ async function saveChatTurn(userId, turn) {
     db.chat[userId] = [turn, ...(db.chat[userId] || [])].slice(0, 100);
     return turn;
   });
+}
+
+async function createAndSaveTurn(userId, { message, reply, structured, taskType }) {
+  const turn = {
+    id: `chat_${Date.now()}`,
+    userMessage: message.slice(0, 4000),
+    assistantMessage: reply,
+    structured,
+    taskType,
+    createdAt: new Date().toISOString(),
+  };
+  await saveChatTurn(userId, turn);
+  return turn;
 }
 
 router.get('/', async (req, res) => {
@@ -191,6 +257,24 @@ router.post('/', validateBody(validateChatPost), async (req, res) => {
   const safeTask = TASK_TYPES.includes(taskType) ? taskType : 'freeform';
 
   try {
+    if (!process.env.GEMINI_API_KEY) {
+      const structured = buildDemoStructuredReply({
+        message,
+        taskType: safeTask,
+        classContext,
+        extraContext,
+      });
+      const reply = structured.summary;
+      const turn = await createAndSaveTurn(req.user.id, {
+        message,
+        reply,
+        structured,
+        taskType: safeTask,
+      });
+
+      return res.status(201).json({ reply, structured, turn, fallback: true, mode: 'demo' });
+    }
+
     const rawReply = await generateContent({
       prompt: buildPrompt({ message, messages, classContext, taskType: safeTask, extraContext }),
       systemInstruction: buildSystemInstruction(safeTask, studyPreferences),
@@ -200,15 +284,12 @@ router.post('/', validateBody(validateChatPost), async (req, res) => {
     const structured = parseStructuredReply(rawReply);
     const reply = structured.summary || rawReply;
 
-    const turn = {
-      id: `chat_${Date.now()}`,
-      userMessage: message.slice(0, 4000),
-      assistantMessage: reply,
+    const turn = await createAndSaveTurn(req.user.id, {
+      message,
+      reply,
       structured,
       taskType: safeTask,
-      createdAt: new Date().toISOString(),
-    };
-    await saveChatTurn(req.user.id, turn);
+    });
 
     return res.status(201).json({ reply, structured, turn });
   } catch (error) {
